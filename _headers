@@ -9,3 +9,7 @@
 
 /*.pdf
   X-Robots-Tag: noindex
+
+/dashboard/*
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store

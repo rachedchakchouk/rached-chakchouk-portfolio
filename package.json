@@ -1,0 +1,9 @@
+{
+  "name": "rached-chakchouk-portfolio",
+  "private": true,
+  "type": "module",
+  "description": "Portfolio + privacy-friendly visit analytics (Netlify Functions + Blobs)",
+  "dependencies": {
+    "@netlify/blobs": "^10.7.13"
+  }
+}

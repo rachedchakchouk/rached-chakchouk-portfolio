@@ -396,7 +396,7 @@ body.noscroll { overflow: hidden; }
 .fchip { font: 500 13.5px var(--body); color: var(--muted); background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 15px; min-height: 38px; cursor: pointer; transition: all .2s; }
 .fchip:hover { color: var(--fg); border-color: var(--accent); }
 .fchip[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+.projects { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-flow: dense; gap: 14px; }
 .pcard { position: relative; display: flex; flex-direction: column; text-align: left; font: inherit; color: var(--fg); background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r); padding: 0; overflow: hidden; cursor: pointer; transition: border-color .25s, transform .25s, box-shadow .25s, opacity .3s; min-width: 0; }
 .pcard:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--rule)); transform: translateY(-3px); box-shadow: 0 24px 48px -32px var(--shadow); }
 .pcard.feat { grid-column: span 2; }
@@ -752,7 +752,7 @@ body.noscroll { overflow: hidden; }
 </div>
 
 <footer>
-  <div class="wrap"><span>© <span id="yr">2026</span> Rached Chakchouk · <span data-l="fr">Tous droits réservés</span><span data-l="en">All rights reserved</span></span><span>Ariana, <span data-l="fr">Tunisie</span><span data-l="en">Tunisia</span> · Java · Spring Boot · Angular</span></div>
+  <div class="wrap"><span>© <span id="yr">2026</span> Rached Chakchouk · <span data-l="fr">Tous droits réservés</span><span data-l="en">All rights reserved</span></span><span><span data-l="fr">Statistiques de visite anonymes, sans cookie</span><span data-l="en">Anonymous, cookie-free visit statistics</span></span><span>Ariana, <span data-l="fr">Tunisie</span><span data-l="en">Tunisia</span> · Java · Spring Boot · Angular</span></div>
 </footer>
 
 <script>
@@ -977,6 +977,18 @@ body.noscroll { overflow: hidden; }
 
   // ---- projects (data-driven: edit PROJECTS to update the section) ----
   var PROJECTS = [
+    { id: 'analytics', feat: true, cats: ['fullstack', 'backend', 'devops'], mono: 'Analytics',
+      shots: ['projects/analytics-1.webp', 'projects/analytics-2.webp'],
+      kind: { fr: 'Serverless · Analytics', en: 'Serverless · Analytics' },
+      title: { fr: 'Portfolio Analytics', en: 'Portfolio Analytics' },
+      org: { name: 'Projet personnel', url: 'https://github.com/rachedchakchouk/rached-chakchouk-portfolio', when: { fr: 'Oct. 2026', en: 'Oct 2026' } },
+      desc: { fr: 'Dashboard privé des visites de ce portfolio : visiteurs, pays et villes, sources, appareils et actions, sans cookie.', en: 'Private dashboard for this portfolio’s visits: visitors, countries and cities, sources, devices and actions, cookie-free.' },
+      problem: { fr: 'Savoir qui consulte mon portfolio (pays, source, actions) sans outil tiers ni cookie, dans le respect du RGPD.', en: 'Know who views my portfolio (country, source, actions) without third-party tools or cookies, GDPR-friendly.' },
+      role: { fr: 'Conception et développement de bout en bout : tracker front, API serverless, stockage et dashboard.', en: 'End-to-end design and development: front-end tracker, serverless API, storage and dashboard.' },
+      items: { fr: ['Tracker léger sans cookie (sendBeacon) intégré au portfolio, désactivé si « Do Not Track ».', 'API serverless Netlify Functions : /api/track (collecte) et /api/stats (agrégation).', 'Stockage Netlify Blobs ; géolocalisation pays/ville côté serveur, adresse IP jamais enregistrée (hash journalier salé pour les visiteurs uniques).', 'Dashboard protégé par mot de passe (variable d’environnement, comparaison à temps constant, anti-force brute).', 'Graphiques SVG faits main avec infobulles, périodes 7 / 30 / 90 jours, thème clair/sombre, responsive.', 'Filtrage des robots, validation et limitation des données, tests unitaires de la logique d’agrégation.'],
+               en: ['Lightweight cookie-free tracker (sendBeacon) in the portfolio, disabled with “Do Not Track”.', 'Netlify Functions serverless API: /api/track (collection) and /api/stats (aggregation).', 'Netlify Blobs storage; server-side country/city geolocation, IP never stored (daily salted hash for unique visitors).', 'Password-protected dashboard (environment variable, constant-time comparison, brute-force delay).', 'Hand-made SVG charts with tooltips, 7 / 30 / 90-day ranges, light/dark theme, responsive.', 'Bot filtering, input validation and size limits, unit tests for the aggregation logic.'] },
+      stack: ['JavaScript', 'Netlify Functions', 'Netlify Blobs', 'Node.js', 'HTML / CSS', 'SVG'],
+      links: [{ label: 'GitHub', url: 'https://github.com/rachedchakchouk/rached-chakchouk-portfolio' }, { label: 'Dashboard (démo)', url: '/dashboard/' }] },
     { id: 'novia', feat: true, cats: ['erp', 'fullstack'], mono: 'Novia',
       shots: [], // e.g. ['projects/novia-1.webp', 'projects/novia-2.webp']
       kind: { fr: 'ERP SaaS · Facturation', en: 'SaaS ERP · Invoicing' },
@@ -1019,7 +1031,7 @@ body.noscroll { overflow: hidden; }
       role: { fr: 'Développeur : analyse, conception de la base et back-end.', en: 'Developer: analysis, database design and back-end.' },
       items: { fr: ['Analyse des besoins, acteurs, rôles et contrôle d’accès.', 'Back-end Spring Boot / Spring Data avec MongoDB.', 'Tests unitaires et d’intégration.'], en: ['Requirements, actors, roles and access control.', 'Spring Boot / Spring Data back-end with MongoDB.', 'Unit and integration testing.'] },
       stack: ['Java 11', 'Spring Boot', 'MongoDB', 'ReactJS', 'SonarQube'], links: [] },
-    { id: 'timesheet', cats: ['devops', 'backend'], mono: 'CI/CD',
+    { id: 'timesheet', feat: true, cats: ['devops', 'backend'], mono: 'CI/CD',
       kind: { fr: 'DevOps · GitHub', en: 'DevOps · GitHub' },
       title: { fr: 'Timesheet DevOps', en: 'Timesheet DevOps' },
       org: { name: 'GitHub', url: 'https://github.com/rachedchakchouk/Timesheet_DevOps', when: { fr: 'Projet d’équipe (fork)', en: 'Team project (fork)' } },
@@ -1093,6 +1105,31 @@ body.noscroll { overflow: hidden; }
   }
 
   var yr = document.getElementById('yr'); if (yr) { var y = new Date().getFullYear(); if (y > 2026) yr.textContent = '2026–' + y; }
+
+  // ---- cookieless visit tracking (only on the production site) ----
+  var TRACK = location.hostname === 'rached-chakchouk.netlify.app' && navigator.doNotTrack !== '1';
+  try { if (localStorage.getItem('rc_ignore') === '1') TRACK = false; } catch (e) {}
+  function track(payload) {
+    if (!TRACK) return;
+    var body = JSON.stringify(payload);
+    try {
+      if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
+      else fetch('/api/track', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'application/json' } });
+    } catch (e) {}
+  }
+  track({ type: 'pageview', path: location.pathname, ref: document.referrer, lang: root.getAttribute('data-lang') || 'fr' });
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var href = el.getAttribute('href') || '';
+    if (el.classList.contains('btn-pdf') || el.id === 'cvPdf') track({ type: 'event', name: 'cv_download' });
+    else if (el.hasAttribute('data-open-cv')) track({ type: 'event', name: 'cv_view' });
+    else if (el.classList.contains('pcard')) track({ type: 'event', name: 'project_open', label: el.getAttribute('data-id') });
+    else if (el.hasAttribute('data-copy')) track({ type: 'event', name: el.getAttribute('data-copy').indexOf('@') > -1 ? 'email_copy' : 'phone_copy' });
+    else if (/linkedin\.com/.test(href)) track({ type: 'event', name: 'linkedin' });
+    else if (/github\.com/.test(href)) track({ type: 'event', name: 'github' });
+  }, true);
+  var cf = document.getElementById('contactForm');
+  if (cf) cf.addEventListener('submit', function () { setTimeout(function () { if (!cf.querySelector('[aria-invalid="true"]')) track({ type: 'event', name: 'contact_submit' }); }, 0); });
 })();
 </script>
 </body>

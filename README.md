@@ -33,9 +33,29 @@ Rached_Chakchouk_CV_FR.pdf / _EN.pdf
 cv/                   # resume pages for the online viewer
 bg/                   # background images
 favicon-32.png, apple-touch-icon.png
-netlify.toml          # Netlify config (static, published from the repo root)
+netlify.toml          # Netlify config (static site + functions)
+netlify/              # serverless functions (track, stats) and shared lib
+dashboard/            # private analytics dashboard
+projects/             # project screenshots
 _headers              # security headers (CSP, HSTS, X-Frame-Options...)
 ```
+
+## Portfolio Analytics (visits dashboard)
+
+A small privacy-friendly analytics system built for this site:
+
+- **Tracker** in `index.html`: cookie-free `sendBeacon` on page view and key actions (resume download/view, LinkedIn, GitHub, project opened, contact). Disabled with *Do Not Track* and on the owner's own devices.
+- **API** (Netlify Functions): `netlify/functions/track.mjs` → `POST /api/track`, `netlify/functions/stats.mjs` → `GET /api/stats?days=30`.
+- **Storage**: Netlify Blobs. Country/city come from Netlify's edge geolocation; **IP addresses are never stored** (a daily-salted hash only counts unique visitors).
+- **Dashboard**: `/dashboard/` — password-protected (env var `DASHBOARD_PASSWORD`, constant-time comparison), hand-made SVG charts, 7/30/90-day ranges, light/dark theme. A clearly labelled demo mode shows fictitious data.
+- Shared logic in `netlify/lib/analytics.mjs` (unit-testable).
+
+Environment variables (Netlify → Project configuration → Environment variables):
+
+| Name | Purpose |
+|---|---|
+| `DASHBOARD_PASSWORD` | password for `/dashboard/` (required) |
+| `ANALYTICS_SALT` | random string used to hash visitors (recommended) |
 
 ## Deployment
 
