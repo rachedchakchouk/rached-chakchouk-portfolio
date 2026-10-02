@@ -99,3 +99,73 @@ export function aggregate(events, days, now = Date.now()) {
     recent: recent.slice(0, 25)
   };
 }
+
+// ---- media management (CV PDFs + profile photo) ----
+export const MEDIA = {
+  'cv-fr.pdf': { kind: 'pdf', fallback: '/Rached_Chakchouk_CV_FR.pdf', file: 'Rached_Chakchouk_CV_FR.pdf', max: 4 * 1024 * 1024 },
+  'cv-en.pdf': { kind: 'pdf', fallback: '/Rached_Chakchouk_CV_EN.pdf', file: 'Rached_Chakchouk_Resume.pdf', max: 4 * 1024 * 1024 },
+  'photo': { kind: 'image', fallback: '/photo.jpg', file: 'Rached_Chakchouk.jpg', max: 3 * 1024 * 1024 }
+};
+
+export function sniff(bytes) {
+  const b = bytes;
+  if (b.length > 4 && b[0] === 0x25 && b[1] === 0x50 && b[2] === 0x44 && b[3] === 0x46 && b[4] === 0x2d) return 'application/pdf';
+  if (b.length > 3 && b[0] === 0xff && b[1] === 0xd8 && b[2] === 0xff) return 'image/jpeg';
+  if (b.length > 8 && b[0] === 0x89 && b[1] === 0x50 && b[2] === 0x4e && b[3] === 0x47) return 'image/png';
+  if (b.length > 12 && b[0] === 0x52 && b[1] === 0x49 && b[2] === 0x46 && b[3] === 0x46 && b[8] === 0x57 && b[9] === 0x45 && b[10] === 0x42 && b[11] === 0x50) return 'image/webp';
+  return null;
+}
+
+export function slotFor(name) {
+  if (MEDIA[name]) return MEDIA[name];
+  if (/^img-[a-z0-9-]{1,40}$/.test(name || '')) return { kind: 'image', fallback: null, file: name + '.img', max: 3 * 1024 * 1024 };
+  return null;
+}
+
+export function checkUpload(name, bytes) {
+  const slot = slotFor(name);
+  if (!slot) return { error: 'unknown_slot' };
+  if (!bytes || !bytes.length) return { error: 'empty' };
+  if (bytes.length > slot.max) return { error: 'too_large', max: slot.max };
+  const type = sniff(bytes);
+  if (slot.kind === 'pdf' && type !== 'application/pdf') return { error: 'not_pdf' };
+  if (slot.kind === 'image' && !/^image\/(jpeg|png|webp)$/.test(type || '')) return { error: 'not_image' };
+  return { type };
+}
+
+export async function authorized(req, secret) {
+  const auth = req.headers.get('authorization') || '';
+  const given = auth.startsWith('Bearer ') ? auth.slice(7) : '';
+  if (given && secret && safeEqual(given, secret)) return true;
+  await new Promise(r => setTimeout(r, 600));
+  return false;
+}
+
+// ---- editable site content ----
+const URL_KEYS = new Set(['url', 'logoImg']);
+const SAFE_URL = /^(https:\/\/|http:\/\/|\/(?!\/)|[\w.-]+\/[\w./-]*$|#)/;
+export function safeUrl(u) { u = String(u || '').trim(); return !u || SAFE_URL.test(u) ? u.slice(0, 500) : ''; }
+
+export function sanitizeContent(c, depth = 0) {
+  if (depth > 8) return null;
+  if (Array.isArray(c)) return c.slice(0, 200).map(v => sanitizeContent(v, depth + 1));
+  if (c && typeof c === 'object') {
+    const o = {};
+    for (const [k, v] of Object.entries(c).slice(0, 60)) {
+      if (!/^[\w-]{1,40}$/.test(k)) continue;
+      if (URL_KEYS.has(k)) o[k] = safeUrl(v);
+      else if (k === 'shots' && Array.isArray(v)) o[k] = v.slice(0, 12).map(safeUrl).filter(Boolean);
+      else o[k] = sanitizeContent(v, depth + 1);
+    }
+    return o;
+  }
+  if (typeof c === 'string') return c.slice(0, 4000);
+  if (typeof c === 'number' || typeof c === 'boolean' || c === null) return c;
+  return null;
+}
+
+export function validContent(c) {
+  if (!c || typeof c !== 'object' || c.version !== 1) return false;
+  for (const k of ['skills', 'experiences', 'internships', 'projects', 'education', 'languages']) if (!Array.isArray(c[k])) return false;
+  return true;
+}
