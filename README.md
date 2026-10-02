@@ -34,11 +34,20 @@ cv/                   # resume pages for the online viewer
 bg/                   # background images
 favicon-32.png, apple-touch-icon.png
 netlify.toml          # Netlify config (static, published from the repo root)
+_headers              # security headers (CSP, HSTS, X-Frame-Options...)
 ```
 
 ## Deployment
 
 Hosted on **Netlify**. Every push to `main` redeploys the site automatically.
+
+## Security
+
+Security headers (CSP, HSTS, clickjacking protection, strict referrer and permissions policies) are defined in `_headers`. See [SECURITY.md](SECURITY.md) to report a vulnerability.
+
+## License
+
+© 2026 Rached Chakchouk — **All rights reserved.** The code is shared for viewing only; photos, resumes and personal content may not be reused without permission. See [LICENSE](LICENSE).
 
 ## Contact
 
