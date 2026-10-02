@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Portfolio Analytics</title>
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: sticky toolbar (range + theme), KPI row, one time-series card, breakdown grid, recent-visits table */
+:root {
+  --bg: #f6f7fb; --surface: #ffffff; --surface-2: #eef2f8; --fg: #0b1324; --muted: #5a667a; --rule: #e2e7ef;
+  --s1: #2563c9; --s2: #0d9488; --bar: #2563c9; --bar-bg: #e6eefb; --grid: #e9edf3;
+  --good: #15803d; --bad: #b91c1c;
+  --display: "Geist", "Segoe UI", system-ui, sans-serif; --mono: "Geist Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #070b14; --surface: #0f1522; --surface-2: #151d2d; --fg: #eef2f8; --muted: #97a3b8; --rule: #1e2738;
+  --s1: #3b82f6; --s2: #0d9488; --bar: #3b82f6; --bar-bg: #14213a; --grid: #1a2334; --good: #4ade80; --bad: #f87171; color-scheme: dark; } }
+:root[data-theme="dark"] {
+  --bg: #070b14; --surface: #0f1522; --surface-2: #151d2d; --fg: #eef2f8; --muted: #97a3b8; --rule: #1e2738;
+  --s1: #3b82f6; --s2: #0d9488; --bar: #3b82f6; --bar-bg: #14213a; --grid: #1a2334; --good: #4ade80; --bad: #f87171; color-scheme: dark; }
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--display); -webkit-font-smoothing: antialiased; }
+.wrap { max-width: 1180px; margin: 0 auto; padding-inline: 20px; }
+:focus-visible { outline: 2px solid var(--s1); outline-offset: 2px; border-radius: 6px; }
+.btn { font: 500 14px var(--display); color: var(--fg); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 999px; padding: 8px 16px; min-height: 38px; cursor: pointer; }
+.btn:hover { border-color: var(--s1); }
+.btn.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.mono { font-family: var(--mono); }
+
+/* login */
+.login { min-height: 100vh; display: grid; place-items: center; padding: 20px; }
+.login-card { width: min(420px, 100%); background: var(--surface); border: 1px solid var(--rule); border-radius: 22px; padding: 32px; display: grid; gap: 14px; }
+.badge { width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; color: #fff; font: 700 14px var(--mono); background: linear-gradient(135deg, #2563c9, #0ea5a4); }
+.login h1 { margin: 4px 0 0; font-size: 24px; letter-spacing: -.02em; }
+.login p { margin: 0; color: var(--muted); }
+.login label { display: grid; gap: 6px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.login input { font: 400 15px var(--display); color: var(--fg); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
+.err { color: var(--bad); font-size: 14px; min-height: 20px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* app */
+.top { position: sticky; top: 0; z-index: 5; background: color-mix(in srgb, var(--bg) 85%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--rule); }
+.top .wrap { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 64px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 600; }
+.brand .badge { width: 34px; height: 34px; border-radius: 10px; font-size: 11px; }
+.brand small { display: block; color: var(--muted); font: 400 12px var(--mono); }
+.seg { display: inline-flex; background: var(--surface-2); border: 1px solid var(--rule); border-radius: 999px; padding: 3px; }
+.seg button { font: 500 13px var(--display); color: var(--muted); background: transparent; border: 0; border-radius: 999px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--fg); box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.demo-bar { background: #fef3c7; color: #78350f; text-align: center; padding: 8px 16px; font-size: 14px; font-weight: 500; }
+main { padding-block: 24px 48px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 16px; }
+#content { min-width: 0; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.kpi { background: var(--surface); border: 1px solid var(--rule); border-radius: 18px; padding: 18px 20px; }
+.kpi .k { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.kpi .v { font-size: 34px; font-weight: 700; letter-spacing: -.03em; line-height: 1.15; font-variant-numeric: tabular-nums; margin-top: 4px; }
+.kpi .s { font-size: 13px; color: var(--muted); }
+.card { background: var(--surface); border: 1px solid var(--rule); border-radius: 18px; padding: 20px; min-width: 0; }
+.card h2 { font-size: 15px; margin: 0 0 14px; font-weight: 600; display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.card h2 span { font: 400 12px var(--mono); color: var(--muted); }
+.legend { display: flex; gap: 16px; font-size: 13px; color: var(--muted); margin-bottom: 8px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 16px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+.chart { position: relative; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart text { font: 11px var(--mono); fill: var(--muted); }
+.tip { position: absolute; pointer-events: none; background: var(--fg); color: var(--bg); font-size: 12.5px; padding: 8px 10px; border-radius: 10px; white-space: nowrap; transform: translate(-50%, -110%); box-shadow: 0 8px 20px rgba(0,0,0,.25); }
+.tip b { font-variant-numeric: tabular-nums; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.bars { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.bars li { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 10px; font-size: 14px; }
+.bars .lab { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.bars .val { font-variant-numeric: tabular-nums; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+.bars .track { grid-column: 1 / -1; height: 6px; border-radius: 4px; background: var(--bar-bg); overflow: hidden; }
+.bars .fill { height: 100%; border-radius: 4px; background: var(--bar); }
+.empty { color: var(--muted); font-size: 14px; padding: 10px 0; }
+.tbl-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 14px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+th { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+td.num { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: 13px; }
+.state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.foot { color: var(--muted); font-size: 12.5px; text-align: center; }
+@media (max-width: 960px) { .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); } .grid3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .grid3, .grid2 { grid-template-columns: minmax(0, 1fr); } .kpi .v { font-size: 28px; } }
+</style>
+</head>
+<body>
+
+<section class="login" id="login">
+  <form class="login-card" id="loginForm" novalidate>
+    <div class="badge" aria-hidden="true">RC</div>
+    <h1>Portfolio Analytics</h1>
+    <p>Visites de rached-chakchouk.netlify.app — accès privé.</p>
+    <label for="pw">Mot de passe
+      <input id="pw" type="password" autocomplete="current-password" required>
+    </label>
+    <div class="err" id="loginErr" role="alert"></div>
+    <div class="row">
+      <button class="btn primary" type="submit">Se connecter</button>
+      <button class="btn" type="button" id="demoBtn">Voir une démo</button>
+    </div>
+  </form>
+</section>
+
+<div id="app" hidden>
+  <div class="demo-bar" id="demoBar" hidden>Données fictives de démonstration — pas de vraies visites.</div>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand"><span class="badge" aria-hidden="true">RC</span><div>Portfolio Analytics<small>rached-chakchouk.netlify.app</small></div></div>
+      <div class="row">
+        <div class="seg" role="group" aria-label="Période">
+          <button type="button" data-days="7" aria-pressed="false">7 j</button>
+          <button type="button" data-days="30" aria-pressed="true">30 j</button>
+          <button type="button" data-days="90" aria-pressed="false">90 j</button>
+        </div>
+        <button class="btn" type="button" id="refresh" aria-label="Actualiser">↻</button>
+        <button class="btn" type="button" id="themeBtn" aria-label="Changer de thème">◐</button>
+        <button class="btn" type="button" id="logout">Déconnexion</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap" id="main">
+    <div class="state" id="state">Chargement…</div>
+    <div id="content" hidden>
+      <div class="kpis">
+        <div class="kpi"><div class="k">Visites</div><div class="v" id="kVisits">0</div><div class="s" id="kRange"></div></div>
+        <div class="kpi"><div class="k">Visiteurs uniques</div><div class="v" id="kVisitors">0</div><div class="s">par jour, sans cookie</div></div>
+        <div class="kpi"><div class="k">Pays</div><div class="v" id="kCountries">0</div><div class="s" id="kTopCountry"></div></div>
+        <div class="kpi"><div class="k">Actions</div><div class="v" id="kActions">0</div><div class="s" id="kTopAction"></div></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Visites par jour <span id="chartRange"></span></h2>
+        <div class="legend"><span><i style="background:var(--s1)"></i>Visites</span><span><i style="background:var(--s2)"></i>Visiteurs uniques (pointillés)</span></div>
+        <div class="chart" id="chart"></div>
+      </div>
+
+      <div class="grid3" style="margin-top:16px">
+        <div class="card"><h2>Pays</h2><ul class="bars" id="bCountries"></ul></div>
+        <div class="card"><h2>Villes</h2><ul class="bars" id="bCities"></ul></div>
+        <div class="card"><h2>Sources</h2><ul class="bars" id="bSources"></ul></div>
+        <div class="card"><h2>Appareils</h2><ul class="bars" id="bDevices"></ul></div>
+        <div class="card"><h2>Navigateurs</h2><ul class="bars" id="bBrowsers"></ul></div>
+        <div class="card"><h2>Langues</h2><ul class="bars" id="bLangs"></ul></div>
+      </div>
+
+      <div class="grid2" style="margin-top:16px">
+        <div class="card"><h2>Actions des visiteurs</h2><ul class="bars" id="bActions"></ul></div>
+        <div class="card"><h2>Projets consultés</h2><ul class="bars" id="bProjects"></ul></div>
+      </div>
+
+      <div class="card" style="margin-top:16px">
+        <h2>Dernières visites <span>25 max · adresse IP jamais enregistrée</span></h2>
+        <div class="tbl-wrap"><table><thead><tr><th>Date</th><th>Lieu</th><th>Source</th><th>Appareil</th><th>Navigateur</th></tr></thead><tbody id="recent"></tbody></table></div>
+      </div>
+      <p class="foot">Statistiques anonymes et sans cookie · vos propres visites sont exclues sur cet appareil.</p>
+    </div>
+  </main>
+</div>
+
+<script>
+(function () {
+  var root = document.documentElement;
+  function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k, v) { try { v == null ? sessionStorage.removeItem(k) : sessionStorage.setItem(k, v); } catch (e) {} }
+  function lset(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function lget(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+  var t = lget('theme'); if (t === 'dark' || t === 'light') root.setAttribute('data-theme', t);
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = root.getAttribute('data-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var n = cur === 'dark' ? 'light' : 'dark'; root.setAttribute('data-theme', n); lset('theme', n); if (last) render(last);
+  });
+
+  var LABELS = { cv_download: 'Téléchargement du CV', cv_view: 'Lecture du CV en ligne', linkedin: 'Clic LinkedIn', github: 'Clic GitHub',
+    project_open: 'Projet ouvert', contact_submit: 'Formulaire de contact', email_copy: 'E-mail copié', phone_copy: 'Téléphone copié' };
+  var PROJ = { novia: 'Axeane Novia', tds: 'TDS-ERP RH & Paie', pfe: 'Réseau social RH', stock: 'Gestion de stock', timesheet: 'Timesheet DevOps', analytics: 'Portfolio Analytics' };
+  var days = 30, pw = sget('rc_pw'), demo = false, last = null;
+
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function flag(cc) { return cc && /^[A-Z]{2}$/.test(cc) ? String.fromCodePoint.apply(null, cc.split('').map(function (c) { return 127397 + c.charCodeAt(0); })) + ' ' : ''; }
+  function fmt(n) { return Number(n || 0).toLocaleString('fr-FR'); }
+
+  function showApp() { document.getElementById('login').hidden = true; document.getElementById('app').hidden = false; document.getElementById('demoBar').hidden = !demo; lset('rc_ignore', '1'); load(); }
+  function showLogin(msg) { document.getElementById('app').hidden = true; document.getElementById('login').hidden = false; document.getElementById('loginErr').textContent = msg || ''; document.getElementById('pw').focus(); }
+
+  document.getElementById('loginForm').addEventListener('submit', function (e) {
+    e.preventDefault(); var v = document.getElementById('pw').value;
+    if (!v) { document.getElementById('loginErr').textContent = 'Saisissez votre mot de passe.'; return; }
+    pw = v; demo = false; sset('rc_pw', v); showApp();
+  });
+  document.getElementById('demoBtn').addEventListener('click', function () { demo = true; showApp(); });
+  document.getElementById('logout').addEventListener('click', function () { pw = null; demo = false; sset('rc_pw', null); last = null; showLogin(); });
+  document.getElementById('refresh').addEventListener('click', load);
+  document.querySelectorAll('.seg button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      days = +b.getAttribute('data-days');
+      document.querySelectorAll('.seg button').forEach(function (x) { x.setAttribute('aria-pressed', x === b ? 'true' : 'false'); });
+      load();
+    });
+  });
+
+  function setState(msg) { var s = document.getElementById('state'); s.textContent = msg; s.hidden = !msg; document.getElementById('content').hidden = !!msg; }
+
+  function load() {
+    if (demo) { last = demoData(days); render(last); return; }
+    setState('Chargement…');
+    fetch('/api/stats?days=' + days, { headers: { Authorization: 'Bearer ' + pw }, cache: 'no-store' })
+      .then(function (r) {
+        if (r.status === 401) { sset('rc_pw', null); throw { login: 'Mot de passe incorrect.' }; }
+        if (r.status === 503) throw { msg: 'Le dashboard n’est pas encore configuré : ajoutez la variable DASHBOARD_PASSWORD dans Netlify (Project configuration → Environment variables), puis redéployez.' };
+        if (r.status === 429) throw { msg: 'Trop de requêtes. Réessayez dans une minute.' };
+        if (!r.ok) throw { msg: 'Le serveur a répondu ' + r.status + '. Réessayez avec ↻.' };
+        return r.json();
+      })
+      .then(function (d) { last = d; render(d); })
+      .catch(function (e) {
+        if (e && e.login) return showLogin(e.login);
+        setState(e && e.msg ? e.msg : 'Impossible de joindre le serveur. Vérifiez votre connexion puis réessayez avec ↻.');
+      });
+  }
+
+  function bars(id, items, labeler) {
+    var el = document.getElementById(id);
+    if (!items || !items.length) { el.innerHTML = '<li class="empty">Pas encore de données.</li>'; return; }
+    var max = Math.max.apply(null, items.map(function (i) { return i.value; }));
+    el.innerHTML = items.map(function (i) {
+      var lab = labeler ? labeler(i.label) : i.label;
+      return '<li><span class="lab" title="' + esc(lab) + '">' + esc(lab) + '</span><span class="val">' + fmt(i.value) + '</span><span class="track"><span class="fill" style="width:' + Math.max(2, i.value / max * 100) + '%"></span></span></li>';
+    }).join('');
+  }
+
+  function render(d) {
+    setState('');
+    var t = d.totals;
+    document.getElementById('kVisits').textContent = fmt(t.visits);
+    document.getElementById('kVisitors').textContent = fmt(t.visitors);
+    document.getElementById('kCountries').textContent = fmt(t.countries);
+    document.getElementById('kActions').textContent = fmt(t.actions);
+    document.getElementById('kRange').textContent = d.range.days + ' derniers jours';
+    document.getElementById('chartRange').textContent = d.range.from + ' → ' + d.range.to + ' (UTC)';
+    var tc = (d.countries || []).filter(function (c) { return c.label !== 'Unknown'; })[0];
+    document.getElementById('kTopCountry').textContent = tc ? 'En tête : ' + tc.label : '—';
+    document.getElementById('kTopAction').textContent = d.actions && d.actions[0] ? 'En tête : ' + (LABELS[d.actions[0].label] || d.actions[0].label) : '—';
+    chart(d.series);
+    bars('bCountries', d.countries, function (l) { return l === 'Unknown' ? 'Inconnu' : l; });
+    bars('bCities', d.cities); bars('bSources', d.sources); bars('bDevices', d.devices); bars('bBrowsers', d.browsers);
+    bars('bLangs', d.languages); bars('bActions', d.actions, function (l) { return LABELS[l] || l; });
+    bars('bProjects', d.projects, function (l) { return PROJ[l] || l; });
+    var rows = (d.recent || []).map(function (r) {
+      var dt = new Date(r.ts).toLocaleString('fr-FR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' });
+      var place = flag(r.cc) + (r.city ? r.city + ', ' : '') + (r.country || 'Inconnu');
+      return '<tr><td class="num">' + esc(dt) + '</td><td>' + esc(place) + '</td><td>' + esc(r.src) + '</td><td>' + esc(r.device) + '</td><td>' + esc(r.browser) + '</td></tr>';
+    }).join('');
+    document.getElementById('recent').innerHTML = rows || '<tr><td colspan="5" class="empty">Pas encore de visite enregistrée.</td></tr>';
+  }
+
+  function chart(series) {
+    var box = document.getElementById('chart');
+    var W = Math.max(320, box.clientWidth || 800), H = 240, L = 36, R = 44, T = 14, B = 28;
+    var n = series.length, max = Math.max(1, Math.max.apply(null, series.map(function (s) { return s.visits; })));
+    var step = Math.pow(10, Math.floor(Math.log10(max))), nice = Math.ceil(max / step) * step; if (nice / step > 5) step *= 2; nice = Math.ceil(max / step) * step;
+    var x = function (i) { return L + (n === 1 ? 0 : i * (W - L - R) / (n - 1)); }, y = function (v) { return T + (H - T - B) * (1 - v / nice); };
+    var g = '';
+    for (var v = 0; v <= nice; v += step) g += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="var(--grid)"/><text x="' + (L - 8) + '" y="' + (y(v) + 4) + '" text-anchor="end">' + v + '</text>';
+    var every = Math.ceil(n / 7);
+    series.forEach(function (s, i) { if (i % every === 0 || i === n - 1) g += '<text x="' + x(i) + '" y="' + (H - 8) + '" text-anchor="middle">' + s.date.slice(8) + '/' + s.date.slice(5, 7) + '</text>'; });
+    var line = function (k) { return series.map(function (s, i) { return (i ? 'L' : 'M') + x(i).toFixed(1) + ' ' + y(s[k]).toFixed(1); }).join(' '); };
+    var area = line('visits') + ' L' + x(n - 1) + ' ' + y(0) + ' L' + x(0) + ' ' + y(0) + ' Z';
+    var lastS = series[n - 1];
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Visites et visiteurs uniques par jour">' + g +
+      '<path d="' + area + '" fill="var(--s1)" fill-opacity=".10"/>' +
+      '<path d="' + line('visits') + '" fill="none" stroke="var(--s1)" stroke-width="2" stroke-linejoin="round"/>' +
+      '<path d="' + line('visitors') + '" fill="none" stroke="var(--s2)" stroke-width="2" stroke-dasharray="5 4" stroke-linejoin="round"/>' +
+      '<circle cx="' + x(n - 1) + '" cy="' + y(lastS.visits) + '" r="4" fill="var(--s1)" stroke="var(--surface)" stroke-width="2"/>' +
+      '<text x="' + (x(n - 1) + 8) + '" y="' + (y(lastS.visits) + 4) + '" style="fill:var(--fg)">' + lastS.visits + '</text>' +
+      '<line id="xh" y1="' + T + '" y2="' + (H - B) + '" stroke="var(--muted)" stroke-dasharray="3 3" visibility="hidden"/>' +
+      '<rect x="' + L + '" y="' + T + '" width="' + (W - L - R) + '" height="' + (H - T - B) + '" fill="transparent" id="hit"/></svg><div class="tip" id="tip" hidden></div>';
+    box.innerHTML = svg;
+    var svgEl = box.querySelector('svg'), tip = box.querySelector('#tip'), xh = box.querySelector('#xh');
+    function move(ev) {
+      var rect = svgEl.getBoundingClientRect(), px = (ev.clientX - rect.left) * W / rect.width;
+      var i = Math.round((px - L) / ((W - L - R) / Math.max(1, n - 1))); i = Math.max(0, Math.min(n - 1, i));
+      var s = series[i]; xh.setAttribute('x1', x(i)); xh.setAttribute('x2', x(i)); xh.setAttribute('visibility', 'visible');
+      tip.hidden = false; tip.style.left = (x(i) * rect.width / W) + 'px'; tip.style.top = (y(s.visits) * rect.height / H) + 'px';
+      tip.innerHTML = s.date + '<br>Visites <b>' + s.visits + '</b> · Uniques <b>' + s.visitors + '</b>';
+    }
+    box.querySelector('#hit').addEventListener('pointermove', move);
+    box.querySelector('#hit').addEventListener('pointerleave', function () { tip.hidden = true; xh.setAttribute('visibility', 'hidden'); });
+  }
+  var rt; addEventListener('resize', function () { clearTimeout(rt); rt = setTimeout(function () { if (last) chart(last.series); }, 150); });
+
+  // Clearly labelled fictitious data for the demo button only.
+  function demoData(nd) {
+    var series = [], now = Date.now(), seed = 7;
+    function rnd() { seed = (seed * 9301 + 49297) % 233280; return seed / 233280; }
+    for (var i = nd - 1; i >= 0; i--) { var v = Math.round(6 + rnd() * 18 + (i < 5 ? 10 : 0)); series.push({ date: new Date(now - i * 864e5).toISOString().slice(0, 10), visits: v, visitors: Math.round(v * .7) }); }
+    var vis = series.reduce(function (a, s) { return a + s.visits; }, 0);
+    return { range: { days: nd, from: series[0].date, to: series[nd - 1].date },
+      totals: { visits: vis, visitors: Math.round(vis * .68), countries: 5, actions: Math.round(vis * .4) }, series: series,
+      countries: [{ label: 'Tunisia', value: 120 }, { label: 'France', value: 64 }, { label: 'Luxembourg', value: 22 }, { label: 'Germany', value: 9 }, { label: 'Canada', value: 6 }],
+      cities: [{ label: 'Tunis, TN', value: 70 }, { label: 'Paris, FR', value: 31 }, { label: 'Ariana, TN', value: 25 }, { label: 'Luxembourg, LU', value: 20 }],
+      sources: [{ label: 'LinkedIn', value: 98 }, { label: 'Direct', value: 61 }, { label: 'Google', value: 30 }, { label: 'GitHub', value: 14 }],
+      devices: [{ label: 'Mobile', value: 118 }, { label: 'Desktop', value: 95 }, { label: 'Tablet', value: 8 }],
+      browsers: [{ label: 'Chrome', value: 140 }, { label: 'Safari', value: 44 }, { label: 'Edge', value: 22 }, { label: 'Firefox', value: 15 }],
+      languages: [{ label: 'fr', value: 150 }, { label: 'en', value: 71 }],
+      actions: [{ label: 'cv_download', value: 41 }, { label: 'linkedin', value: 33 }, { label: 'project_open', value: 29 }, { label: 'cv_view', value: 18 }, { label: 'github', value: 12 }, { label: 'contact_submit', value: 3 }],
+      projects: [{ label: 'novia', value: 14 }, { label: 'tds', value: 7 }, { label: 'analytics', value: 5 }, { label: 'pfe', value: 3 }],
+      recent: [{ ts: now - 6e5, cc: 'FR', city: 'Paris', country: 'France', src: 'LinkedIn', device: 'Desktop', browser: 'Chrome' },
+        { ts: now - 36e5, cc: 'TN', city: 'Tunis', country: 'Tunisia', src: 'Direct', device: 'Mobile', browser: 'Chrome' },
+        { ts: now - 9e6, cc: 'LU', city: 'Luxembourg', country: 'Luxembourg', src: 'Google', device: 'Mobile', browser: 'Safari' }] };
+  }
+
+  if (pw) showApp(); else showLogin();
+})();
+</script>
+</body>
+</html>
