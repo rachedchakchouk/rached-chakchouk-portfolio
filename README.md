@@ -37,6 +37,8 @@ netlify.toml          # Netlify config (static site + functions)
 netlify/              # serverless functions (track, stats) and shared lib
 dashboard/            # private analytics dashboard
 projects/             # project screenshots
+content.json          # default site content (editable from the dashboard)
+logos/, photo.jpg     # default logo and profile photo
 _headers              # security headers (CSP, HSTS, X-Frame-Options...)
 ```
 
@@ -56,6 +58,14 @@ Environment variables (Netlify → Project configuration → Environment variabl
 |---|---|
 | `DASHBOARD_PASSWORD` | password for `/dashboard/` (required) |
 | `ANALYTICS_SALT` | random string used to hash visitors (recommended) |
+
+## Content management (dashboard)
+
+Logged into `/dashboard/`, the owner can edit the site without touching the code:
+
+- **Contenu du site**: profile, experiences, internships, projects, skills, education and languages (FR / EN). Add, edit, reorder, delete, then *Publier*. Stored in Netlify Blobs (`/api/admin/content`) and served publicly by `/api/content`; the page falls back to the defaults in `content.json` (also embedded in `index.html`).
+- **CV, photo et images**: replace or reset the French / English resume (PDF, 4 MB max) and the profile photo; upload images for projects or logos (JPG / PNG / WebP, 3 MB max). Files are served by `/media/:name`; the real file type is checked server-side.
+- All admin endpoints require `DASHBOARD_PASSWORD`; content is sanitized (unsafe URLs removed) and always rendered escaped.
 
 ## Deployment
 

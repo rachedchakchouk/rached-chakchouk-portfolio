@@ -1,0 +1,1015 @@
+{
+ "version": 1,
+ "profile": {
+  "lead": {
+   "fr": "**3 ans d'expérience** dans le développement d'ERP avec **Spring Boot, Angular et PostgreSQL** : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
+   "en": "**3 years of experience** building ERP systems with **Spring Boot, Angular and PostgreSQL**: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
+  },
+  "now": {
+   "role": {
+    "fr": "Ingénieur Full Stack chez",
+    "en": "Full Stack Engineer at"
+   },
+   "company": "Axeane",
+   "desc": {
+    "fr": "Axeane Novia · ERP SaaS de facturation, conforme à la fiscalité tunisienne",
+    "en": "Axeane Novia · SaaS invoicing ERP, compliant with Tunisian tax rules"
+   }
+  },
+  "stats": [
+   {
+    "value": 3,
+    "unit": {
+     "fr": "ans",
+     "en": "yrs"
+    },
+    "label": {
+     "fr": "en développement Full Stack",
+     "en": "in full stack development"
+    }
+   },
+   {
+    "value": 5,
+    "unit": {
+     "fr": "ans",
+     "en": "yrs"
+    },
+    "label": {
+     "fr": "en gestion de projets techniques",
+     "en": "in technical project management"
+    }
+   },
+   {
+    "value": 2,
+    "unit": {
+     "fr": "",
+     "en": ""
+    },
+    "label": {
+     "fr": "ERP : facturation, RH et paie",
+     "en": "ERPs: invoicing, HR & payroll"
+    }
+   }
+  ]
+ },
+ "skills": [
+  {
+   "title": {
+    "fr": "Back-end",
+    "en": "Back-end"
+   },
+   "items": [
+    {
+     "name": "Java 8 / 11 / 17",
+     "key": true
+    },
+    {
+     "name": "Spring Boot 2 / 3",
+     "key": true
+    },
+    {
+     "name": "Spring Security",
+     "key": false
+    },
+    {
+     "name": "Spring Data JPA",
+     "key": false
+    },
+    {
+     "name": "Hibernate",
+     "key": false
+    },
+    {
+     "name": "Spring MVC",
+     "key": false
+    },
+    {
+     "name": "REST API",
+     "key": false
+    },
+    {
+     "name": "Swagger",
+     "key": false
+    },
+    {
+     "name": "Microservices",
+     "key": false
+    },
+    {
+     "name": "Maven",
+     "key": false
+    },
+    {
+     "name": "Log4j",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Front-end",
+    "en": "Front-end"
+   },
+   "items": [
+    {
+     "name": "Angular 13 → 16",
+     "key": true
+    },
+    {
+     "name": "TypeScript",
+     "key": true
+    },
+    {
+     "name": "HTML",
+     "key": false
+    },
+    {
+     "name": "Bootstrap",
+     "key": false
+    },
+    {
+     "name": "ReactJS",
+     "key": false
+    },
+    {
+     "name": "Capacitor (mobile)",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Bases de données",
+    "en": "Databases"
+   },
+   "items": [
+    {
+     "name": "PostgreSQL",
+     "key": true
+    },
+    {
+     "name": "MySQL",
+     "key": false
+    },
+    {
+     "name": "SQL Server",
+     "key": false
+    },
+    {
+     "name": "MongoDB",
+     "key": false
+    },
+    {
+     "name": "SQL",
+     "key": false
+    },
+    {
+     "name": "Liquibase",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Reporting / PDF",
+    "en": "Reporting / PDF"
+   },
+   "items": [
+    {
+     "name": "JasperReports",
+     "key": true
+    },
+    {
+     "name": "Thymeleaf",
+     "key": false
+    },
+    {
+     "name": "Flying Saucer",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "DevOps & outils",
+    "en": "DevOps & tools"
+   },
+   "items": [
+    {
+     "name": "Git",
+     "key": false
+    },
+    {
+     "name": "GitLab",
+     "key": false
+    },
+    {
+     "name": "Jenkins",
+     "key": false
+    },
+    {
+     "name": "Docker",
+     "key": false
+    },
+    {
+     "name": "SonarQube",
+     "key": false
+    },
+    {
+     "name": "IntelliJ IDEA",
+     "key": false
+    },
+    {
+     "name": "Eclipse / STS",
+     "key": false
+    },
+    {
+     "name": "Visual Studio",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "IA",
+    "en": "AI"
+   },
+   "items": [
+    {
+     "name": "Claude",
+     "key": true
+    },
+    {
+     "name": "GitHub Copilot",
+     "key": true
+    },
+    {
+     "name": "Analyse et revue de code",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Code analysis & review",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Génération de code",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Code generation",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Documentation",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Méthodes",
+    "en": "Methods"
+   },
+   "items": [
+    {
+     "name": "Agile Scrum",
+     "key": false
+    },
+    {
+     "name": "UML",
+     "key": false
+    },
+    {
+     "name": "Spécification fonctionnelle",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Functional specification",
+     "key": false,
+     "lang": "en"
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Domaines métier",
+    "en": "Business domains"
+   },
+   "items": [
+    {
+     "name": "ERP",
+     "key": false
+    },
+    {
+     "name": "Facturation",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Invoicing",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Fiscalité tunisienne (TVA, timbre, retenue, TEJ)",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Tunisian taxation (VAT, stamp duty, withholding, TEJ)",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "RH et paie",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "HR & payroll",
+     "key": false,
+     "lang": "en"
+    }
+   ]
+  }
+ ],
+ "experiences": [
+  {
+   "role": {
+    "fr": "Ingénieur Full Stack Java / Angular",
+    "en": "Full Stack Engineer – Java / Angular"
+   },
+   "company": "AXEANE",
+   "url": "https://axeane.com",
+   "logoText": "AX",
+   "logoImg": "",
+   "when": {
+    "fr": "Fév. 2026 – aujourd'hui",
+    "en": "Feb 2026 – present"
+   },
+   "current": true,
+   "context": {
+    "fr": "Application Axeane Novia – ERP SaaS de facturation et de gestion commerciale",
+    "en": "Axeane Novia – SaaS ERP for invoicing and sales management"
+   },
+   "items": {
+    "fr": [
+     "Développement full stack de fonctionnalités de facturation conformes à la fiscalité tunisienne : TVA, timbre fiscal, retenue à la source, ajustements financiers.",
+     "Fiabilisation des calculs financiers (avoirs, net à payer, TVA au prorata, retenue) et migration SQL pour corriger les données existantes.",
+     "Évolution du module de retenue à la source : retenue par paiement, statut « déposée » et génération des fichiers XML TEJ.",
+     "Templates PDF des documents commerciaux avec Thymeleaf / Flying Saucer : affichage conditionnel et paramètres d'impression.",
+     "Centralisation de l'envoi d'e-mails pour tous les documents et gestion fine des droits d'accès (rôles et groupes).",
+     "Évolutions fonctionnelles : multicontact entreprise, comptes bancaires, conversions Devis → BL → Facture, adaptation de l'application mobile (Capacitor)."
+    ],
+    "en": [
+     "Full stack development of invoicing features compliant with Tunisian tax rules: VAT, stamp duty, withholding tax, financial adjustments.",
+     "Hardened financial calculations (credit notes, net payable, prorated VAT, withholding tax) and wrote SQL migrations to fix existing data.",
+     "Extended the withholding tax module: per-payment withholding, \"filed\" status and generation of TEJ XML files.",
+     "Built PDF templates for business documents with Thymeleaf / Flying Saucer: conditional display and print settings.",
+     "Centralized e-mail sending for all documents and implemented fine-grained access rights (roles and groups).",
+     "Functional enhancements: company multi-contact, bank accounts, Quote → Delivery Note → Invoice conversions, mobile app adaptation (Capacitor)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Spring Boot",
+    "Angular",
+    "TypeScript",
+    "PostgreSQL",
+    "Liquibase",
+    "Thymeleaf",
+    "Flying Saucer",
+    "REST",
+    "Git"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Ingénieur Full Stack Java / Angular",
+    "en": "Full Stack Engineer – Java / Angular"
+   },
+   "company": "C&A TRADE DIGITAL SERVICES",
+   "url": "https://tradigiservices.com",
+   "logoText": "C&A",
+   "logoImg": "",
+   "when": {
+    "fr": "Août 2023 – nov. 2025",
+    "en": "Aug 2023 – Nov 2025"
+   },
+   "current": false,
+   "context": {
+    "fr": "TDS-ERP – ERP cloud pour le marché tunisien : conception et développement du module Ressources Humaines et Paie",
+    "en": "TDS-ERP – cloud ERP for the Tunisian market: design and development of the Human Resources and Payroll module"
+   },
+   "items": {
+    "fr": [
+     "Conception et développement du module RH et Paie : employés, contrats, congés, présence, évaluation des performances et calcul automatique de la paie.",
+     "Intégration de données externes (API, CSV, Excel) et mise en place du multilingue.",
+     "Tableaux de bord et rapports de suivi RH / paie, génération de documents PDF avec JasperReports.",
+     "Contribution à une architecture multitenant sécurisée (Spring Security), en veillant à la scalabilité et à la maintenabilité.",
+     "Amélioration de l'interface et de l'expérience utilisateur des écrans Angular."
+    ],
+    "en": [
+     "Designed and developed the HR and Payroll module: employees, contracts, leave, attendance, performance reviews and automated payroll calculation.",
+     "Integrated external data sources (APIs, CSV, Excel) and implemented multilingual support.",
+     "Built HR / payroll dashboards and tracking reports, with PDF generation using JasperReports.",
+     "Contributed to a secure multitenant architecture (Spring Security), with a focus on scalability and maintainability.",
+     "Improved the user interface and user experience of the Angular screens."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "Angular 16",
+    "PostgreSQL",
+    "Spring Security",
+    "Swagger",
+    "Docker",
+    "GitLab",
+    "Multitenancy",
+    "JasperReports"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Chef de projet technique",
+    "en": "Technical Project Manager"
+   },
+   "company": "SHILDOM TUNISIE",
+   "url": "",
+   "logoText": "SH",
+   "logoImg": "",
+   "when": {
+    "fr": "Sept. 2013 – juin 2018",
+    "en": "Sep 2013 – Jun 2018"
+   },
+   "current": false,
+   "context": {
+    "fr": "Sécurité électronique et réseaux informatiques",
+    "en": "Electronic security systems and computer networks"
+   },
+   "items": {
+    "fr": [
+     "**Chef de projet et pilote de travaux (2015 – 2018) :** planification et pilotage de projets pour des clients publics et privés, interface clients – équipes – direction, respect des délais et du budget, reporting et indicateurs.",
+     "**Chef d'équipe technique (2014 – 2015) :** encadrement de 5 à 10 techniciens, coordination des installations et de la maintenance, formation.",
+     "**Technicien supérieur (2013 – 2014) :** vidéosurveillance, alarme, contrôle d'accès, maintenance réseaux (TCP/IP, LAN/WAN), audits de sécurité."
+    ],
+    "en": [
+     "**Project Manager and Works Supervisor (2015 – 2018):** planned and managed projects for public and private clients, liaison between clients, teams and management, met deadlines and budgets, reporting and KPIs.",
+     "**Technical Team Leader (2014 – 2015):** led 5 to 10 technicians, coordinated installations and maintenance, trained new members.",
+     "**Senior Technician (2013 – 2014):** CCTV, alarm and access control systems, network maintenance (TCP/IP, LAN/WAN), security audits."
+    ]
+   },
+   "stack": []
+  }
+ ],
+ "internships": [
+  {
+   "role": {
+    "fr": "Stage de fin d'études – Développeur Full Stack",
+    "en": "Final-year project – Full Stack Developer Intern"
+   },
+   "company": "DITRIOT CONSULTING",
+   "url": "https://www.ditriot.com",
+   "logoText": "",
+   "logoImg": "logos/ditriot.png",
+   "when": {
+    "fr": "Fév. – août 2022",
+    "en": "Feb – Aug 2022"
+   },
+   "current": false,
+   "context": {
+    "fr": "Plateforme de réseau social interne pour la gestion RH, en architecture microservices",
+    "en": "Internal social network platform for HR management, on a microservices architecture"
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, spécifications, modélisation UML et définition de l'architecture microservices.",
+     "Microservices d'authentification, d'entreprises et d'employés (Spring Boot, Spring Data JPA, MySQL) communiquant par API REST.",
+     "Front-end Angular, authentification et rôles avec Spring Security ; CI Jenkins, qualité SonarQube."
+    ],
+    "en": [
+     "Requirements analysis, specifications, UML modeling and microservices architecture design.",
+     "Authentication, company and employee microservices (Spring Boot, Spring Data JPA, MySQL) communicating through REST APIs.",
+     "Angular front-end, authentication and roles with Spring Security; Jenkins CI, SonarQube code quality."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2",
+    "Angular 13 / 14",
+    "MySQL",
+    "Docker",
+    "Jenkins",
+    "SonarQube"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Stage – Développeur Full Stack",
+    "en": "Full Stack Developer Intern"
+   },
+   "company": "DSI ESPRIT",
+   "url": "https://www.esprit.tn",
+   "logoText": "ES",
+   "logoImg": "",
+   "when": {
+    "fr": "Juil. – sept. 2021",
+    "en": "Jul – Sep 2021"
+   },
+   "current": false,
+   "context": {
+    "fr": "Application de gestion des mouvements de stock",
+    "en": "Stock movement management application"
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, rôles et contrôle d'accès, conception de la base et de l'architecture.",
+     "Back-end Spring Boot / Spring Data avec MongoDB, tests unitaires et d'intégration."
+    ],
+    "en": [
+     "Requirements analysis, roles and access control, database and architecture design.",
+     "Spring Boot / Spring Data back-end with MongoDB, unit and integration testing."
+    ]
+   },
+   "stack": [
+    "Java 11",
+    "Spring Boot",
+    "MongoDB",
+    "ReactJS",
+    "SonarQube"
+   ]
+  }
+ ],
+ "projects": [
+  {
+   "id": "analytics",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "Analytics",
+   "shots": [
+    "projects/analytics-1.webp",
+    "projects/analytics-2.webp"
+   ],
+   "kind": {
+    "fr": "Serverless · Analytics",
+    "en": "Serverless · Analytics"
+   },
+   "title": {
+    "fr": "Portfolio Analytics",
+    "en": "Portfolio Analytics"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "https://github.com/rachedchakchouk/rached-chakchouk-portfolio",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Dashboard privé des visites de ce portfolio : visiteurs, pays et villes, sources, appareils et actions, sans cookie.",
+    "en": "Private dashboard for this portfolio’s visits: visitors, countries and cities, sources, devices and actions, cookie-free."
+   },
+   "problem": {
+    "fr": "Savoir qui consulte mon portfolio (pays, source, actions) sans outil tiers ni cookie, dans le respect du RGPD.",
+    "en": "Know who views my portfolio (country, source, actions) without third-party tools or cookies, GDPR-friendly."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout : tracker front, API serverless, stockage et dashboard.",
+    "en": "End-to-end design and development: front-end tracker, serverless API, storage and dashboard."
+   },
+   "items": {
+    "fr": [
+     "Tracker léger sans cookie (sendBeacon) intégré au portfolio, désactivé si « Do Not Track ».",
+     "API serverless Netlify Functions : /api/track (collecte) et /api/stats (agrégation).",
+     "Stockage Netlify Blobs ; géolocalisation pays/ville côté serveur, adresse IP jamais enregistrée (hash journalier salé pour les visiteurs uniques).",
+     "Dashboard protégé par mot de passe (variable d’environnement, comparaison à temps constant, anti-force brute).",
+     "Graphiques SVG faits main avec infobulles, périodes 7 / 30 / 90 jours, thème clair/sombre, responsive.",
+     "Filtrage des robots, validation et limitation des données, tests unitaires de la logique d’agrégation."
+    ],
+    "en": [
+     "Lightweight cookie-free tracker (sendBeacon) in the portfolio, disabled with “Do Not Track”.",
+     "Netlify Functions serverless API: /api/track (collection) and /api/stats (aggregation).",
+     "Netlify Blobs storage; server-side country/city geolocation, IP never stored (daily salted hash for unique visitors).",
+     "Password-protected dashboard (environment variable, constant-time comparison, brute-force delay).",
+     "Hand-made SVG charts with tooltips, 7 / 30 / 90-day ranges, light/dark theme, responsive.",
+     "Bot filtering, input validation and size limits, unit tests for the aggregation logic."
+    ]
+   },
+   "stack": [
+    "JavaScript",
+    "Netlify Functions",
+    "Netlify Blobs",
+    "Node.js",
+    "HTML / CSS",
+    "SVG"
+   ],
+   "links": [
+    {
+     "label": "GitHub",
+     "url": "https://github.com/rachedchakchouk/rached-chakchouk-portfolio"
+    },
+    {
+     "label": "Dashboard (démo)",
+     "url": "/dashboard/"
+    }
+   ]
+  },
+  {
+   "id": "novia",
+   "feat": true,
+   "cats": [
+    "erp",
+    "fullstack"
+   ],
+   "mono": "Novia",
+   "shots": [],
+   "kind": {
+    "fr": "ERP SaaS · Facturation",
+    "en": "SaaS ERP · Invoicing"
+   },
+   "title": {
+    "fr": "Axeane Novia",
+    "en": "Axeane Novia"
+   },
+   "org": {
+    "name": "Axeane",
+    "url": "https://axeane.com",
+    "when": {
+     "fr": "Fév. 2026 – aujourd’hui",
+     "en": "Feb 2026 – present"
+    }
+   },
+   "desc": {
+    "fr": "ERP SaaS de facturation et de gestion commerciale, conforme à la fiscalité tunisienne.",
+    "en": "SaaS ERP for invoicing and sales management, compliant with Tunisian tax rules."
+   },
+   "problem": {
+    "fr": "Facturer en respectant les règles fiscales tunisiennes (TVA, timbre fiscal, retenue à la source) et produire des documents et déclarations fiables.",
+    "en": "Invoice in line with Tunisian tax rules (VAT, stamp duty, withholding tax) and produce reliable documents and filings."
+   },
+   "role": {
+    "fr": "Ingénieur Full Stack : développement front Angular et back Spring Boot, de l’analyse à la livraison sans régression.",
+    "en": "Full Stack Engineer: Angular front-end and Spring Boot back-end, from analysis to regression-free delivery."
+   },
+   "items": {
+    "fr": [
+     "Fonctionnalités de facturation : TVA, timbre fiscal, retenue à la source, ajustements financiers.",
+     "Fiabilisation des calculs (avoirs, net à payer, TVA au prorata) et migrations SQL de correction.",
+     "Module de retenue à la source : retenue par paiement, statut « déposée », génération des fichiers XML TEJ.",
+     "Templates PDF des documents commerciaux (Thymeleaf / Flying Saucer).",
+     "Envoi d’e-mails centralisé pour tous les documents et droits d’accès par rôles et groupes.",
+     "Conversions Devis → BL → Facture, multicontact entreprise, comptes bancaires, app mobile (Capacitor)."
+    ],
+    "en": [
+     "Invoicing features: VAT, stamp duty, withholding tax, financial adjustments.",
+     "Hardened calculations (credit notes, net payable, prorated VAT) and corrective SQL migrations.",
+     "Withholding tax module: per-payment withholding, \"filed\" status, TEJ XML file generation.",
+     "PDF templates for business documents (Thymeleaf / Flying Saucer).",
+     "Centralized e-mail sending for all documents and role/group-based access rights.",
+     "Quote → Delivery Note → Invoice conversions, company multi-contact, bank accounts, mobile app (Capacitor)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Spring Boot",
+    "Angular",
+    "TypeScript",
+    "PostgreSQL",
+    "Liquibase",
+    "Thymeleaf",
+    "Capacitor"
+   ],
+   "links": [
+    {
+     "label": "axeane.com",
+     "url": "https://axeane.com"
+    }
+   ]
+  },
+  {
+   "id": "tds",
+   "cats": [
+    "erp",
+    "fullstack"
+   ],
+   "mono": "TDS-ERP",
+   "kind": {
+    "fr": "ERP cloud · RH & Paie",
+    "en": "Cloud ERP · HR & Payroll"
+   },
+   "title": {
+    "fr": "TDS-ERP – module RH & Paie",
+    "en": "TDS-ERP – HR & Payroll module"
+   },
+   "org": {
+    "name": "C&A Trade Digital Services",
+    "url": "https://tradigiservices.com/tds-erp",
+    "when": {
+     "fr": "Août 2023 – nov. 2025",
+     "en": "Aug 2023 – Nov 2025"
+    }
+   },
+   "desc": {
+    "fr": "Module Ressources Humaines et Paie d’un ERP cloud pour le marché tunisien.",
+    "en": "Human Resources and Payroll module of a cloud ERP for the Tunisian market."
+   },
+   "problem": {
+    "fr": "Automatiser la gestion des employés et le calcul de la paie dans un ERP multitenant.",
+    "en": "Automate employee management and payroll calculation in a multitenant ERP."
+   },
+   "role": {
+    "fr": "Ingénieur Full Stack : conception et développement du module, front et back.",
+    "en": "Full Stack Engineer: designed and built the module, front and back."
+   },
+   "items": {
+    "fr": [
+     "Employés, contrats, congés, présence, évaluations et calcul automatique de la paie.",
+     "Intégration de données externes (API, CSV, Excel) et multilingue.",
+     "Tableaux de bord RH / paie et documents PDF avec JasperReports.",
+     "Architecture multitenant sécurisée avec Spring Security."
+    ],
+    "en": [
+     "Employees, contracts, leave, attendance, reviews and automated payroll calculation.",
+     "External data integration (APIs, CSV, Excel) and multilingual support.",
+     "HR / payroll dashboards and PDF documents with JasperReports.",
+     "Secure multitenant architecture with Spring Security."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "Angular 16",
+    "PostgreSQL",
+    "Spring Security",
+    "JasperReports",
+    "Docker"
+   ],
+   "links": [
+    {
+     "label": "TDS-ERP",
+     "url": "https://tradigiservices.com/tds-erp"
+    }
+   ]
+  },
+  {
+   "id": "pfe",
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "μServices",
+   "kind": {
+    "fr": "Microservices · Stage de fin d’études",
+    "en": "Microservices · Final-year project"
+   },
+   "title": {
+    "fr": "Réseau social RH interne",
+    "en": "Internal HR social network"
+   },
+   "org": {
+    "name": "Ditriot Consulting",
+    "url": "https://www.ditriot.com",
+    "when": {
+     "fr": "Fév. – août 2022",
+     "en": "Feb – Aug 2022"
+    }
+   },
+   "desc": {
+    "fr": "Plateforme collaborative interne pour la communication et les processus RH, en microservices.",
+    "en": "Internal collaborative platform for communication and HR processes, built on microservices."
+   },
+   "problem": {
+    "fr": "Améliorer la communication interne et la gestion du personnel au sein d’une entreprise.",
+    "en": "Improve internal communication and staff management within a company."
+   },
+   "role": {
+    "fr": "Développeur Full Stack : de l’analyse et l’architecture jusqu’au front et au back.",
+    "en": "Full Stack Developer: from analysis and architecture to front and back end."
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, spécifications, UML et architecture microservices.",
+     "Microservices d’authentification, d’entreprises et d’employés communiquant par API REST.",
+     "Front-end Angular, rôles et authentification avec Spring Security.",
+     "CI avec Jenkins et qualité de code avec SonarQube."
+    ],
+    "en": [
+     "Requirements, specifications, UML and microservices architecture.",
+     "Authentication, company and employee microservices communicating over REST APIs.",
+     "Angular front-end, roles and authentication with Spring Security.",
+     "CI with Jenkins and code quality with SonarQube."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2",
+    "Angular 13/14",
+    "MySQL",
+    "Docker",
+    "Jenkins",
+    "SonarQube"
+   ],
+   "links": []
+  },
+  {
+   "id": "stock",
+   "cats": [
+    "backend"
+   ],
+   "mono": "Stock",
+   "kind": {
+    "fr": "Backend · Stage",
+    "en": "Backend · Internship"
+   },
+   "title": {
+    "fr": "Gestion des mouvements de stock",
+    "en": "Stock movement management"
+   },
+   "org": {
+    "name": "DSI ESPRIT",
+    "url": "https://www.esprit.tn",
+    "when": {
+     "fr": "Juil. – sept. 2021",
+     "en": "Jul – Sep 2021"
+    }
+   },
+   "desc": {
+    "fr": "Suivi précis des entrées, sorties et niveaux de stock, avec traçabilité des opérations.",
+    "en": "Accurate tracking of stock inflows, outflows and levels, with operation traceability."
+   },
+   "problem": {
+    "fr": "Suivre les mouvements de stock de façon sûre et traçable.",
+    "en": "Track stock movements securely and traceably."
+   },
+   "role": {
+    "fr": "Développeur : analyse, conception de la base et back-end.",
+    "en": "Developer: analysis, database design and back-end."
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, acteurs, rôles et contrôle d’accès.",
+     "Back-end Spring Boot / Spring Data avec MongoDB.",
+     "Tests unitaires et d’intégration."
+    ],
+    "en": [
+     "Requirements, actors, roles and access control.",
+     "Spring Boot / Spring Data back-end with MongoDB.",
+     "Unit and integration testing."
+    ]
+   },
+   "stack": [
+    "Java 11",
+    "Spring Boot",
+    "MongoDB",
+    "ReactJS",
+    "SonarQube"
+   ],
+   "links": []
+  },
+  {
+   "id": "timesheet",
+   "feat": true,
+   "cats": [
+    "devops",
+    "backend"
+   ],
+   "mono": "CI/CD",
+   "kind": {
+    "fr": "DevOps · GitHub",
+    "en": "DevOps · GitHub"
+   },
+   "title": {
+    "fr": "Timesheet DevOps",
+    "en": "Timesheet DevOps"
+   },
+   "org": {
+    "name": "GitHub",
+    "url": "https://github.com/rachedchakchouk/Timesheet_DevOps",
+    "when": {
+     "fr": "Projet d’équipe (fork)",
+     "en": "Team project (fork)"
+    }
+   },
+   "desc": {
+    "fr": "Application Java de feuilles de temps avec build Maven, pipeline Jenkins et Docker.",
+    "en": "Java timesheet application with Maven build, Jenkins pipeline and Docker."
+   },
+   "problem": {
+    "fr": "Automatiser le build et le déploiement d’une application Java.",
+    "en": "Automate the build and deployment of a Java application."
+   },
+   "role": {
+    "fr": "Contributeur à un projet d’équipe.",
+    "en": "Contributor to a team project."
+   },
+   "items": {
+    "fr": [
+     "Build Maven.",
+     "Pipeline CI/CD Jenkins (Jenkinsfile).",
+     "Conteneurisation Docker (Dockerfile)."
+    ],
+    "en": [
+     "Maven build.",
+     "Jenkins CI/CD pipeline (Jenkinsfile).",
+     "Docker containerization (Dockerfile)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Maven",
+    "Jenkins",
+    "Docker"
+   ],
+   "links": [
+    {
+     "label": "GitHub",
+     "url": "https://github.com/rachedchakchouk/Timesheet_DevOps"
+    }
+   ]
+  }
+ ],
+ "education": [
+  {
+   "title": {
+    "fr": "Ingénierie informatique – Génie logiciel",
+    "en": "Computer Engineering – Software Engineering"
+   },
+   "school": {
+    "fr": "ESPRIT",
+    "en": "ESPRIT"
+   },
+   "url": "https://www.esprit.tn",
+   "years": "2019 – 2022",
+   "logoText": "ES"
+  },
+  {
+   "title": {
+    "fr": "Master professionnel en métrologie et instrumentation",
+    "en": "Professional Master's in Metrology and Instrumentation"
+   },
+   "school": {
+    "fr": "Faculté des Sciences de Sfax",
+    "en": "Faculty of Sciences of Sfax"
+   },
+   "url": "https://fss.rnu.tn",
+   "years": "2018 – 2020",
+   "logoText": "FSS"
+  },
+  {
+   "title": {
+    "fr": "Licence appliquée en électronique, électrotechnique et automatique",
+    "en": "Applied Bachelor's in Electronics, Electrical Engineering and Automation"
+   },
+   "school": {
+    "fr": "Faculté des Sciences de Sfax",
+    "en": "Faculty of Sciences of Sfax"
+   },
+   "url": "https://fss.rnu.tn",
+   "years": "2010 – 2013",
+   "logoText": "FSS"
+  }
+ ],
+ "languages": [
+  {
+   "name": {
+    "fr": "Arabe",
+    "en": "Arabic"
+   },
+   "level": {
+    "fr": "Langue maternelle",
+    "en": "Native"
+   }
+  },
+  {
+   "name": {
+    "fr": "Français",
+    "en": "French"
+   },
+   "level": {
+    "fr": "Courant",
+    "en": "Fluent"
+   }
+  },
+  {
+   "name": {
+    "fr": "Anglais",
+    "en": "English"
+   },
+   "level": {
+    "fr": "Courant",
+    "en": "Fluent"
+   }
+  }
+ ]
+}

@@ -438,6 +438,12 @@ body.noscroll { overflow: hidden; }
 .lightbox { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: rgba(0,0,0,.85); padding: 16px; cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; }
 @media (max-width: 640px) { .pm-card { padding: 22px; } .pm-grid { grid-template-columns: 1fr; } }
+
+.v-pages { display: block; padding: 0; }
+.v-frame { display: block; width: 100%; height: 100%; border: 0; background: #525659; }
+.v-mobile { display: grid; justify-items: center; gap: 14px; text-align: center; padding: 40px 20px; color: var(--fg); }
+.v-mobile .ic-pdf { width: 56px; height: 56px; }
+.v-mobile p { margin: 0; max-width: 32ch; color: var(--muted); }
 </style>
 </head>
 <body style="margin:0">
@@ -470,8 +476,8 @@ body.noscroll { overflow: hidden; }
       <div>
         <div class="eyebrow"><span data-l="fr">Ingénieur Full Stack ·</span><span data-l="en">Full Stack Engineer ·</span> <span class="rot" aria-label="Java, Spring Boot, Angular, PostgreSQL"><span class="on">Java</span><span>Spring Boot</span><span>Angular</span><span>PostgreSQL</span></span></div>
         <h1>Rached<br><span class="grad">Chakchouk</span></h1>
-        <p class="lead" data-l="fr"><strong>3 ans d'expérience</strong> dans le développement d'ERP avec <strong>Spring Boot, Angular et PostgreSQL</strong> : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.</p>
-        <p class="lead" data-l="en"><strong>3 years of experience</strong> building ERP systems with <strong>Spring Boot, Angular and PostgreSQL</strong>: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day.</p>
+        <div id="heroLead"><p class="lead" data-l="fr"><strong>3 ans d'expérience</strong> dans le développement d'ERP avec <strong>Spring Boot, Angular et PostgreSQL</strong> : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.</p>
+        <p class="lead" data-l="en"><strong>3 years of experience</strong> building ERP systems with <strong>Spring Boot, Angular and PostgreSQL</strong>: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day.</p></div>
       </div>
       <div class="cta">
         <a class="btn primary mag" href="#contact"><span data-l="fr">Me contacter</span><span data-l="en">Get in touch</span> →</a>
@@ -490,13 +496,13 @@ body.noscroll { overflow: hidden; }
 
     <div class="tile t-now">
       <div class="now-k"><span class="dot"></span><span data-l="fr">Actuellement</span><span data-l="en">Currently</span></div>
-      <div class="now-v"><span data-l="fr">Ingénieur Full Stack chez</span><span data-l="en">Full Stack Engineer at</span> <b>Axeane</b></div>
+      <div id="heroNow"><div class="now-v"><span data-l="fr">Ingénieur Full Stack chez</span><span data-l="en">Full Stack Engineer at</span> <b>Axeane</b></div>
       <div class="now-s" data-l="fr">Axeane Novia · ERP SaaS de facturation, conforme à la fiscalité tunisienne</div>
-      <div class="now-s" data-l="en">Axeane Novia · SaaS invoicing ERP, compliant with Tunisian tax rules</div>
+      <div class="now-s" data-l="en">Axeane Novia · SaaS invoicing ERP, compliant with Tunisian tax rules</div></div>
     </div>
-    <div class="tile t-stat"><b><span class="count" data-to="3">3</span><sup><span data-l="fr">ans</span><span data-l="en">yrs</span></sup></b><span data-l="fr">en développement Full Stack</span><span data-l="en">in full stack development</span></div>
-    <div class="tile t-stat"><b><span class="count" data-to="5">5</span><sup><span data-l="fr">ans</span><span data-l="en">yrs</span></sup></b><span data-l="fr">en gestion de projets techniques</span><span data-l="en">in technical project management</span></div>
-    <div class="tile t-stat"><b><span class="count" data-to="2">2</span></b><span data-l="fr">ERP : facturation, RH et paie</span><span data-l="en">ERPs: invoicing, HR &amp; payroll</span></div>
+    <div class="tile t-stat" id="stat0"><b><span class="count" data-to="3">3</span><sup><span data-l="fr">ans</span><span data-l="en">yrs</span></sup></b><span data-l="fr">en développement Full Stack</span><span data-l="en">in full stack development</span></div>
+    <div class="tile t-stat" id="stat1"><b><span class="count" data-to="5">5</span><sup><span data-l="fr">ans</span><span data-l="en">yrs</span></sup></b><span data-l="fr">en gestion de projets techniques</span><span data-l="en">in technical project management</span></div>
+    <div class="tile t-stat" id="stat2"><b><span class="count" data-to="2">2</span></b><span data-l="fr">ERP : facturation, RH et paie</span><span data-l="en">ERPs: invoicing, HR &amp; payroll</span></div>
 
     <div class="tile t-ticker" aria-label="Technologies"><div class="ticker"><span class="tk"><i class="ti i-java" aria-hidden="true"></i>Java</span><span class="tk"><i class="ti i-spring" aria-hidden="true"></i>Spring Boot</span><span class="tk"><i class="ti i-angular" aria-hidden="true"></i>Angular</span><span class="tk"><i class="ti i-ts" aria-hidden="true"></i>TypeScript</span><span class="tk"><i class="ti i-pg" aria-hidden="true"></i>PostgreSQL</span><span class="tk"><i class="ti i-hibernate" aria-hidden="true"></i>Hibernate</span><span class="tk"><i class="ti i-docker" aria-hidden="true"></i>Docker</span><span class="tk"><i class="ti i-git" aria-hidden="true"></i>Git</span><span class="tk"><i class="ti i-gitlab" aria-hidden="true"></i>GitLab</span><span class="tk"><i class="ti i-jenkins" aria-hidden="true"></i>Jenkins</span><span class="tk"><i class="ti i-sonar" aria-hidden="true"></i>SonarQube</span><span class="tk"><i class="ti i-liquibase" aria-hidden="true"></i>Liquibase</span><span class="tk"><i class="ti i-swagger" aria-hidden="true"></i>Swagger</span><span class="tk"><i class="ti i-maven" aria-hidden="true"></i>Maven</span><span class="tk"><i class="ti i-mysql" aria-hidden="true"></i>MySQL</span><span class="tk"><i class="ti i-mongo" aria-hidden="true"></i>MongoDB</span><span class="tk"><i class="ti i-capacitor" aria-hidden="true"></i>Capacitor</span><span class="tk"><i class="ti i-claude" aria-hidden="true"></i>Claude</span><span class="tk"><i class="ti i-copilot" aria-hidden="true"></i>GitHub Copilot</span><span class="tk dup" aria-hidden="true"><i class="ti i-java"></i>Java</span><span class="tk dup" aria-hidden="true"><i class="ti i-spring"></i>Spring Boot</span><span class="tk dup" aria-hidden="true"><i class="ti i-angular"></i>Angular</span><span class="tk dup" aria-hidden="true"><i class="ti i-ts"></i>TypeScript</span><span class="tk dup" aria-hidden="true"><i class="ti i-pg"></i>PostgreSQL</span><span class="tk dup" aria-hidden="true"><i class="ti i-hibernate"></i>Hibernate</span><span class="tk dup" aria-hidden="true"><i class="ti i-docker"></i>Docker</span><span class="tk dup" aria-hidden="true"><i class="ti i-git"></i>Git</span><span class="tk dup" aria-hidden="true"><i class="ti i-gitlab"></i>GitLab</span><span class="tk dup" aria-hidden="true"><i class="ti i-jenkins"></i>Jenkins</span><span class="tk dup" aria-hidden="true"><i class="ti i-sonar"></i>SonarQube</span><span class="tk dup" aria-hidden="true"><i class="ti i-liquibase"></i>Liquibase</span><span class="tk dup" aria-hidden="true"><i class="ti i-swagger"></i>Swagger</span><span class="tk dup" aria-hidden="true"><i class="ti i-maven"></i>Maven</span><span class="tk dup" aria-hidden="true"><i class="ti i-mysql"></i>MySQL</span><span class="tk dup" aria-hidden="true"><i class="ti i-mongo"></i>MongoDB</span><span class="tk dup" aria-hidden="true"><i class="ti i-capacitor"></i>Capacitor</span><span class="tk dup" aria-hidden="true"><i class="ti i-claude"></i>Claude</span><span class="tk dup" aria-hidden="true"><i class="ti i-copilot"></i>GitHub Copilot</span></div></div>
   </div>
@@ -505,138 +511,17 @@ body.noscroll { overflow: hidden; }
 
   <section id="skills">
     <div class="sec-head"><span class="kicker"><span data-l="fr">Stack</span><span data-l="en">Stack</span></span><h2><span data-l="fr">Compétences techniques</span><span data-l="en">Technical skills</span></h2></div>
-    <div class="skills">
-      <div class="skill-group"><h4>Back-end</h4><ul class="chips"><li class="key"><i class="ti i-java" aria-hidden="true"></i>Java 8 / 11 / 17</li><li class="key"><i class="ti i-spring" aria-hidden="true"></i>Spring Boot 2 / 3</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Security</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Data JPA</li><li><i class="ti i-hibernate" aria-hidden="true"></i>Hibernate</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring MVC</li><li>REST API</li><li><i class="ti i-swagger" aria-hidden="true"></i>Swagger</li><li>Microservices</li><li><i class="ti i-maven" aria-hidden="true"></i>Maven</li><li>Log4j</li></ul></div>
-      <div class="skill-group"><h4>Front-end</h4><ul class="chips"><li class="key"><i class="ti i-angular" aria-hidden="true"></i>Angular 13 → 16</li><li class="key"><i class="ti i-ts" aria-hidden="true"></i>TypeScript</li><li><i class="ti i-html" aria-hidden="true"></i>HTML</li><li><i class="ti i-bootstrap" aria-hidden="true"></i>Bootstrap</li><li><i class="ti i-react" aria-hidden="true"></i>ReactJS</li><li><i class="ti i-capacitor" aria-hidden="true"></i>Capacitor (mobile)</li></ul></div>
-      <div class="skill-group"><h4><span data-l="fr">Bases de données</span><span data-l="en">Databases</span></h4><ul class="chips"><li class="key"><i class="ti i-pg" aria-hidden="true"></i>PostgreSQL</li><li><i class="ti i-mysql" aria-hidden="true"></i>MySQL</li><li><i class="ti i-mssql" aria-hidden="true"></i>SQL Server</li><li><i class="ti i-mongo" aria-hidden="true"></i>MongoDB</li><li>SQL</li><li><i class="ti i-liquibase" aria-hidden="true"></i>Liquibase</li></ul></div>
-      <div class="skill-group"><h4>Reporting / PDF</h4><ul class="chips"><li class="key">JasperReports</li><li>Thymeleaf</li><li>Flying Saucer</li></ul></div>
-      <div class="skill-group"><h4><span data-l="fr">DevOps &amp; outils</span><span data-l="en">DevOps &amp; tools</span></h4><ul class="chips"><li><i class="ti i-git" aria-hidden="true"></i>Git</li><li><i class="ti i-gitlab" aria-hidden="true"></i>GitLab</li><li><i class="ti i-jenkins" aria-hidden="true"></i>Jenkins</li><li><i class="ti i-docker" aria-hidden="true"></i>Docker</li><li><i class="ti i-sonar" aria-hidden="true"></i>SonarQube</li><li><i class="ti i-intellij" aria-hidden="true"></i>IntelliJ IDEA</li><li><i class="ti i-eclipse" aria-hidden="true"></i>Eclipse / STS</li><li><i class="ti i-vs" aria-hidden="true"></i>Visual Studio</li></ul></div>
-      <div class="skill-group"><h4><span data-l="fr">IA</span><span data-l="en">AI</span></h4><ul class="chips"><li class="key"><i class="ti i-claude" aria-hidden="true"></i>Claude</li><li class="key"><i class="ti i-copilot" aria-hidden="true"></i>GitHub Copilot</li><li data-l="fr">Analyse et revue de code</li><li data-l="en">Code analysis &amp; review</li><li data-l="fr">Génération de code</li><li data-l="en">Code generation</li><li>Documentation</li></ul></div>
-      <div class="skill-group"><h4><span data-l="fr">Méthodes</span><span data-l="en">Methods</span></h4><ul class="chips"><li>Agile Scrum</li><li>UML</li><li data-l="fr">Spécification fonctionnelle</li><li data-l="en">Functional specification</li></ul></div>
-      <div class="skill-group"><h4><span data-l="fr">Domaines métier</span><span data-l="en">Business domains</span></h4><ul class="chips"><li>ERP</li><li data-l="fr">Facturation</li><li data-l="en">Invoicing</li><li data-l="fr">Fiscalité tunisienne (TVA, timbre, retenue, TEJ)</li><li data-l="en">Tunisian taxation (VAT, stamp duty, withholding, TEJ)</li><li data-l="fr">RH et paie</li><li data-l="en">HR &amp; payroll</li></ul></div>
-    </div>
+    <div class="skills" id="skillsGrid"></div>
   </section>
 
   <section id="experience">
     <div class="sec-head"><span class="kicker"><span data-l="fr">Parcours</span><span data-l="en">Career</span></span><h2><span data-l="fr">Expérience professionnelle</span><span data-l="en">Professional experience</span></h2></div>
-    <div class="timeline">
-
-      <article class="job current">
-        <div class="when"><span data-l="fr">Fév. 2026 – aujourd'hui</span><span data-l="en">Feb 2026 – present</span><br><span class="now"><span data-l="fr">En poste</span><span data-l="en">Current</span></span></div>
-        <div class="card">
-          <h3><span data-l="fr">Ingénieur Full Stack Java / Angular</span><span data-l="en">Full Stack Engineer – Java / Angular</span></h3>
-          <div class="org"><span class="co-logo" aria-hidden="true">AX</span><a class="co-link" href="https://axeane.com" target="_blank" rel="noopener noreferrer">AXEANE <span aria-hidden="true">↗</span></a></div>
-          <p class="ctx" data-l="fr">Application Axeane Novia – ERP SaaS de facturation et de gestion commerciale</p>
-          <p class="ctx" data-l="en">Axeane Novia – SaaS ERP for invoicing and sales management</p>
-          <ul data-l="fr">
-            <li>Développement full stack de fonctionnalités de facturation conformes à la fiscalité tunisienne : TVA, timbre fiscal, retenue à la source, ajustements financiers.</li>
-            <li>Fiabilisation des calculs financiers (avoirs, net à payer, TVA au prorata, retenue) et migration SQL pour corriger les données existantes.</li>
-            <li>Évolution du module de retenue à la source : retenue par paiement, statut « déposée » et génération des fichiers XML TEJ.</li>
-            <li>Templates PDF des documents commerciaux avec Thymeleaf / Flying Saucer : affichage conditionnel et paramètres d'impression.</li>
-            <li>Centralisation de l'envoi d'e-mails pour tous les documents et gestion fine des droits d'accès (rôles et groupes).</li>
-            <li>Évolutions fonctionnelles : multicontact entreprise, comptes bancaires, conversions Devis → BL → Facture, adaptation de l'application mobile (Capacitor).</li>
-          </ul>
-          <ul data-l="en">
-            <li>Full stack development of invoicing features compliant with Tunisian tax rules: VAT, stamp duty, withholding tax, financial adjustments.</li>
-            <li>Hardened financial calculations (credit notes, net payable, prorated VAT, withholding tax) and wrote SQL migrations to fix existing data.</li>
-            <li>Extended the withholding tax module: per-payment withholding, "filed" status and generation of TEJ XML files.</li>
-            <li>Built PDF templates for business documents with Thymeleaf / Flying Saucer: conditional display and print settings.</li>
-            <li>Centralized e-mail sending for all documents and implemented fine-grained access rights (roles and groups).</li>
-            <li>Functional enhancements: company multi-contact, bank accounts, Quote → Delivery Note → Invoice conversions, mobile app adaptation (Capacitor).</li>
-          </ul>
-          <ul class="stack"><li><i class="ti i-java" aria-hidden="true"></i>Java</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Boot</li><li><i class="ti i-angular" aria-hidden="true"></i>Angular</li><li><i class="ti i-ts" aria-hidden="true"></i>TypeScript</li><li><i class="ti i-pg" aria-hidden="true"></i>PostgreSQL</li><li><i class="ti i-liquibase" aria-hidden="true"></i>Liquibase</li><li>Thymeleaf</li><li>Flying Saucer</li><li>REST</li><li><i class="ti i-git" aria-hidden="true"></i>Git</li></ul>
-        </div>
-      </article>
-
-      <article class="job">
-        <div class="when"><span data-l="fr">Août 2023 – nov. 2025</span><span data-l="en">Aug 2023 – Nov 2025</span></div>
-        <div class="card">
-          <h3><span data-l="fr">Ingénieur Full Stack Java / Angular</span><span data-l="en">Full Stack Engineer – Java / Angular</span></h3>
-          <div class="org"><span class="co-logo" aria-hidden="true">C&amp;A</span><a class="co-link" href="https://tradigiservices.com" target="_blank" rel="noopener noreferrer">C&amp;A TRADE DIGITAL SERVICES <span aria-hidden="true">↗</span></a></div>
-          <p class="ctx" data-l="fr">TDS-ERP – ERP cloud pour le marché tunisien : conception et développement du module Ressources Humaines et Paie</p>
-          <p class="ctx" data-l="en">TDS-ERP – cloud ERP for the Tunisian market: design and development of the Human Resources and Payroll module</p>
-          <ul data-l="fr">
-            <li>Conception et développement du module RH et Paie : employés, contrats, congés, présence, évaluation des performances et calcul automatique de la paie.</li>
-            <li>Intégration de données externes (API, CSV, Excel) et mise en place du multilingue.</li>
-            <li>Tableaux de bord et rapports de suivi RH / paie, génération de documents PDF avec JasperReports.</li>
-            <li>Contribution à une architecture multitenant sécurisée (Spring Security), en veillant à la scalabilité et à la maintenabilité.</li>
-            <li>Amélioration de l'interface et de l'expérience utilisateur des écrans Angular.</li>
-          </ul>
-          <ul data-l="en">
-            <li>Designed and developed the HR and Payroll module: employees, contracts, leave, attendance, performance reviews and automated payroll calculation.</li>
-            <li>Integrated external data sources (APIs, CSV, Excel) and implemented multilingual support.</li>
-            <li>Built HR / payroll dashboards and tracking reports, with PDF generation using JasperReports.</li>
-            <li>Contributed to a secure multitenant architecture (Spring Security), with a focus on scalability and maintainability.</li>
-            <li>Improved the user interface and user experience of the Angular screens.</li>
-          </ul>
-          <ul class="stack"><li><i class="ti i-java" aria-hidden="true"></i>Java 17</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Boot 3</li><li><i class="ti i-angular" aria-hidden="true"></i>Angular 16</li><li><i class="ti i-pg" aria-hidden="true"></i>PostgreSQL</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Security</li><li><i class="ti i-swagger" aria-hidden="true"></i>Swagger</li><li><i class="ti i-docker" aria-hidden="true"></i>Docker</li><li><i class="ti i-gitlab" aria-hidden="true"></i>GitLab</li><li>Multitenancy</li><li>JasperReports</li></ul>
-        </div>
-      </article>
-
-      <article class="job">
-        <div class="when"><span data-l="fr">Sept. 2013 – juin 2018</span><span data-l="en">Sep 2013 – Jun 2018</span></div>
-        <div class="card">
-          <h3><span data-l="fr">Chef de projet technique</span><span data-l="en">Technical Project Manager</span></h3>
-          <div class="org"><span class="co-logo" aria-hidden="true">SH</span>SHILDOM TUNISIE</div>
-          <p class="ctx" data-l="fr">Sécurité électronique et réseaux informatiques</p>
-          <p class="ctx" data-l="en">Electronic security systems and computer networks</p>
-          <ul data-l="fr">
-            <li><strong>Chef de projet et pilote de travaux (2015 – 2018) :</strong> planification et pilotage de projets pour des clients publics et privés, interface clients – équipes – direction, respect des délais et du budget, reporting et indicateurs.</li>
-            <li><strong>Chef d'équipe technique (2014 – 2015) :</strong> encadrement de 5 à 10 techniciens, coordination des installations et de la maintenance, formation.</li>
-            <li><strong>Technicien supérieur (2013 – 2014) :</strong> vidéosurveillance, alarme, contrôle d'accès, maintenance réseaux (TCP/IP, LAN/WAN), audits de sécurité.</li>
-          </ul>
-          <ul data-l="en">
-            <li><strong>Project Manager and Works Supervisor (2015 – 2018):</strong> planned and managed projects for public and private clients, liaison between clients, teams and management, met deadlines and budgets, reporting and KPIs.</li>
-            <li><strong>Technical Team Leader (2014 – 2015):</strong> led 5 to 10 technicians, coordinated installations and maintenance, trained new members.</li>
-            <li><strong>Senior Technician (2013 – 2014):</strong> CCTV, alarm and access control systems, network maintenance (TCP/IP, LAN/WAN), security audits.</li>
-          </ul>
-        </div>
-      </article>
-    </div>
+    <div class="timeline" id="expList"></div>
   </section>
 
   <section id="internships">
     <div class="sec-head"><span class="kicker"><span data-l="fr">Formation pratique</span><span data-l="en">Hands-on training</span></span><h2><span data-l="fr">Stages ingénieur</span><span data-l="en">Engineering internships</span></h2></div>
-    <div class="timeline">
-      <article class="job">
-        <div class="when"><span data-l="fr">Fév. – août 2022</span><span data-l="en">Feb – Aug 2022</span></div>
-        <div class="card">
-          <h3><span data-l="fr">Stage de fin d'études – Développeur Full Stack</span><span data-l="en">Final-year project – Full Stack Developer Intern</span></h3>
-          <div class="org"><span class="co-logo wide"><img src="data:image/png;base64,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" alt="Logo Ditriot" width="116" height="40"></span><a class="co-link" href="https://www.ditriot.com" target="_blank" rel="noopener noreferrer">DITRIOT CONSULTING <span aria-hidden="true">↗</span></a></div>
-          <p class="ctx" data-l="fr">Plateforme de réseau social interne pour la gestion RH, en architecture microservices</p>
-          <p class="ctx" data-l="en">Internal social network platform for HR management, on a microservices architecture</p>
-          <ul data-l="fr">
-            <li>Analyse des besoins, spécifications, modélisation UML et définition de l'architecture microservices.</li>
-            <li>Microservices d'authentification, d'entreprises et d'employés (Spring Boot, Spring Data JPA, MySQL) communiquant par API REST.</li>
-            <li>Front-end Angular, authentification et rôles avec Spring Security ; CI Jenkins, qualité SonarQube.</li>
-          </ul>
-          <ul data-l="en">
-            <li>Requirements analysis, specifications, UML modeling and microservices architecture design.</li>
-            <li>Authentication, company and employee microservices (Spring Boot, Spring Data JPA, MySQL) communicating through REST APIs.</li>
-            <li>Angular front-end, authentication and roles with Spring Security; Jenkins CI, SonarQube code quality.</li>
-          </ul>
-          <ul class="stack"><li><i class="ti i-java" aria-hidden="true"></i>Java 8</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Boot 2</li><li><i class="ti i-angular" aria-hidden="true"></i>Angular 13 / 14</li><li><i class="ti i-mysql" aria-hidden="true"></i>MySQL</li><li><i class="ti i-docker" aria-hidden="true"></i>Docker</li><li><i class="ti i-jenkins" aria-hidden="true"></i>Jenkins</li><li><i class="ti i-sonar" aria-hidden="true"></i>SonarQube</li></ul>
-        </div>
-      </article>
-      <article class="job">
-        <div class="when"><span data-l="fr">Juil. – sept. 2021</span><span data-l="en">Jul – Sep 2021</span></div>
-        <div class="card">
-          <h3><span data-l="fr">Stage – Développeur Full Stack</span><span data-l="en">Full Stack Developer Intern</span></h3>
-          <div class="org"><span class="co-logo" aria-hidden="true">ES</span><a class="co-link" href="https://www.esprit.tn" target="_blank" rel="noopener noreferrer">DSI ESPRIT <span aria-hidden="true">↗</span></a></div>
-          <p class="ctx" data-l="fr">Application de gestion des mouvements de stock</p>
-          <p class="ctx" data-l="en">Stock movement management application</p>
-          <ul data-l="fr">
-            <li>Analyse des besoins, rôles et contrôle d'accès, conception de la base et de l'architecture.</li>
-            <li>Back-end Spring Boot / Spring Data avec MongoDB, tests unitaires et d'intégration.</li>
-          </ul>
-          <ul data-l="en">
-            <li>Requirements analysis, roles and access control, database and architecture design.</li>
-            <li>Spring Boot / Spring Data back-end with MongoDB, unit and integration testing.</li>
-          </ul>
-          <ul class="stack"><li><i class="ti i-java" aria-hidden="true"></i>Java 11</li><li><i class="ti i-spring" aria-hidden="true"></i>Spring Boot</li><li><i class="ti i-mongo" aria-hidden="true"></i>MongoDB</li><li><i class="ti i-react" aria-hidden="true"></i>ReactJS</li><li><i class="ti i-sonar" aria-hidden="true"></i>SonarQube</li></ul>
-        </div>
-      </article>
-    </div>
+    <div class="timeline" id="internList"></div>
   </section>
 
 
@@ -659,19 +544,11 @@ body.noscroll { overflow: hidden; }
     <div class="two">
       <div class="panel">
         <h2><span data-l="fr">Formation</span><span data-l="en">Education</span></h2>
-        <div class="edu">
-          <div><span class="edu-logo" aria-hidden="true">ES</span><div class="edu-txt"><h3><span data-l="fr">Ingénierie informatique – Génie logiciel</span><span data-l="en">Computer Engineering – Software Engineering</span></h3><p><a class="co-link sm" href="https://www.esprit.tn" target="_blank" rel="noopener noreferrer">ESPRIT <span aria-hidden="true">↗</span></a></p></div><span class="yr">2019 – 2022</span></div>
-          <div><span class="edu-logo" aria-hidden="true">FSS</span><div class="edu-txt"><h3><span data-l="fr">Master professionnel en métrologie et instrumentation</span><span data-l="en">Professional Master's in Metrology and Instrumentation</span></h3><p><a class="co-link sm" href="https://fss.rnu.tn" target="_blank" rel="noopener noreferrer"><span data-l="fr">Faculté des Sciences de Sfax</span><span data-l="en">Faculty of Sciences of Sfax</span> <span aria-hidden="true">↗</span></a></p></div><span class="yr">2018 – 2020</span></div>
-          <div><span class="edu-logo" aria-hidden="true">FSS</span><div class="edu-txt"><h3><span data-l="fr">Licence appliquée en électronique, électrotechnique et automatique</span><span data-l="en">Applied Bachelor's in Electronics, Electrical Engineering and Automation</span></h3><p><a class="co-link sm" href="https://fss.rnu.tn" target="_blank" rel="noopener noreferrer"><span data-l="fr">Faculté des Sciences de Sfax</span><span data-l="en">Faculty of Sciences of Sfax</span> <span aria-hidden="true">↗</span></a></p></div><span class="yr">2010 – 2013</span></div>
-        </div>
+        <div class="edu" id="eduList"></div>
       </div>
       <div class="panel">
         <h2><span data-l="fr">Langues</span><span data-l="en">Languages</span></h2>
-        <ul class="langs">
-          <li><span data-l="fr">Arabe</span><span data-l="en">Arabic</span><span><span data-l="fr">Langue maternelle</span><span data-l="en">Native</span></span></li>
-          <li><span data-l="fr">Français</span><span data-l="en">French</span><span><span data-l="fr">Courant</span><span data-l="en">Fluent</span></span></li>
-          <li><span data-l="fr">Anglais</span><span data-l="en">English</span><span><span data-l="fr">Courant</span><span data-l="en">Fluent</span></span></li>
-        </ul>
+        <ul class="langs" id="langList"></ul>
       </div>
     </div>
   </section>
@@ -733,9 +610,9 @@ body.noscroll { overflow: hidden; }
     <div class="v-tools">
       <button class="v-btn" type="button" data-cvlang="FR" aria-pressed="false">FR</button>
       <button class="v-btn" type="button" data-cvlang="EN" aria-pressed="false">EN</button>
-      <button class="v-btn" type="button" id="cvOut" aria-label="Zoom out">−</button>
-      <span class="v-zoom" id="cvZoom">100%</span>
-      <button class="v-btn" type="button" id="cvIn" aria-label="Zoom in">+</button>
+      <button class="v-btn" type="button" id="cvOut" aria-label="Zoom out" hidden>−</button>
+      <span class="v-zoom" id="cvZoom" hidden>100%</span>
+      <button class="v-btn" type="button" id="cvIn" aria-label="Zoom in" hidden>+</button>
       <a class="v-btn" id="cvPdf" href="Rached_Chakchouk_CV_FR.pdf" download><svg class="ic-pdf" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="#e5484d"/><path d="M14 2v5h5" fill="#ffb3b5"/><text x="11.5" y="18" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="6.4" font-weight="700" fill="#fff">PDF</text></svg><svg class="ic-dl" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v11"/><path d="m7 11 5 5 5-5"/><path d="M5 20h14"/></svg><span class="sr">PDF</span></a>
       <button class="v-btn" type="button" id="cvClose" aria-label="Fermer / Close">✕</button>
     </div>
@@ -751,6 +628,1021 @@ body.noscroll { overflow: hidden; }
   </div>
 </div>
 
+<script type="application/json" id="defaultContent">{
+ "version": 1,
+ "profile": {
+  "lead": {
+   "fr": "**3 ans d'expérience** dans le développement d'ERP avec **Spring Boot, Angular et PostgreSQL** : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
+   "en": "**3 years of experience** building ERP systems with **Spring Boot, Angular and PostgreSQL**: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
+  },
+  "now": {
+   "role": {
+    "fr": "Ingénieur Full Stack chez",
+    "en": "Full Stack Engineer at"
+   },
+   "company": "Axeane",
+   "desc": {
+    "fr": "Axeane Novia · ERP SaaS de facturation, conforme à la fiscalité tunisienne",
+    "en": "Axeane Novia · SaaS invoicing ERP, compliant with Tunisian tax rules"
+   }
+  },
+  "stats": [
+   {
+    "value": 3,
+    "unit": {
+     "fr": "ans",
+     "en": "yrs"
+    },
+    "label": {
+     "fr": "en développement Full Stack",
+     "en": "in full stack development"
+    }
+   },
+   {
+    "value": 5,
+    "unit": {
+     "fr": "ans",
+     "en": "yrs"
+    },
+    "label": {
+     "fr": "en gestion de projets techniques",
+     "en": "in technical project management"
+    }
+   },
+   {
+    "value": 2,
+    "unit": {
+     "fr": "",
+     "en": ""
+    },
+    "label": {
+     "fr": "ERP : facturation, RH et paie",
+     "en": "ERPs: invoicing, HR & payroll"
+    }
+   }
+  ]
+ },
+ "skills": [
+  {
+   "title": {
+    "fr": "Back-end",
+    "en": "Back-end"
+   },
+   "items": [
+    {
+     "name": "Java 8 / 11 / 17",
+     "key": true
+    },
+    {
+     "name": "Spring Boot 2 / 3",
+     "key": true
+    },
+    {
+     "name": "Spring Security",
+     "key": false
+    },
+    {
+     "name": "Spring Data JPA",
+     "key": false
+    },
+    {
+     "name": "Hibernate",
+     "key": false
+    },
+    {
+     "name": "Spring MVC",
+     "key": false
+    },
+    {
+     "name": "REST API",
+     "key": false
+    },
+    {
+     "name": "Swagger",
+     "key": false
+    },
+    {
+     "name": "Microservices",
+     "key": false
+    },
+    {
+     "name": "Maven",
+     "key": false
+    },
+    {
+     "name": "Log4j",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Front-end",
+    "en": "Front-end"
+   },
+   "items": [
+    {
+     "name": "Angular 13 → 16",
+     "key": true
+    },
+    {
+     "name": "TypeScript",
+     "key": true
+    },
+    {
+     "name": "HTML",
+     "key": false
+    },
+    {
+     "name": "Bootstrap",
+     "key": false
+    },
+    {
+     "name": "ReactJS",
+     "key": false
+    },
+    {
+     "name": "Capacitor (mobile)",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Bases de données",
+    "en": "Databases"
+   },
+   "items": [
+    {
+     "name": "PostgreSQL",
+     "key": true
+    },
+    {
+     "name": "MySQL",
+     "key": false
+    },
+    {
+     "name": "SQL Server",
+     "key": false
+    },
+    {
+     "name": "MongoDB",
+     "key": false
+    },
+    {
+     "name": "SQL",
+     "key": false
+    },
+    {
+     "name": "Liquibase",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Reporting / PDF",
+    "en": "Reporting / PDF"
+   },
+   "items": [
+    {
+     "name": "JasperReports",
+     "key": true
+    },
+    {
+     "name": "Thymeleaf",
+     "key": false
+    },
+    {
+     "name": "Flying Saucer",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "DevOps & outils",
+    "en": "DevOps & tools"
+   },
+   "items": [
+    {
+     "name": "Git",
+     "key": false
+    },
+    {
+     "name": "GitLab",
+     "key": false
+    },
+    {
+     "name": "Jenkins",
+     "key": false
+    },
+    {
+     "name": "Docker",
+     "key": false
+    },
+    {
+     "name": "SonarQube",
+     "key": false
+    },
+    {
+     "name": "IntelliJ IDEA",
+     "key": false
+    },
+    {
+     "name": "Eclipse / STS",
+     "key": false
+    },
+    {
+     "name": "Visual Studio",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "IA",
+    "en": "AI"
+   },
+   "items": [
+    {
+     "name": "Claude",
+     "key": true
+    },
+    {
+     "name": "GitHub Copilot",
+     "key": true
+    },
+    {
+     "name": "Analyse et revue de code",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Code analysis & review",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Génération de code",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Code generation",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Documentation",
+     "key": false
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Méthodes",
+    "en": "Methods"
+   },
+   "items": [
+    {
+     "name": "Agile Scrum",
+     "key": false
+    },
+    {
+     "name": "UML",
+     "key": false
+    },
+    {
+     "name": "Spécification fonctionnelle",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Functional specification",
+     "key": false,
+     "lang": "en"
+    }
+   ]
+  },
+  {
+   "title": {
+    "fr": "Domaines métier",
+    "en": "Business domains"
+   },
+   "items": [
+    {
+     "name": "ERP",
+     "key": false
+    },
+    {
+     "name": "Facturation",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Invoicing",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "Fiscalité tunisienne (TVA, timbre, retenue, TEJ)",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "Tunisian taxation (VAT, stamp duty, withholding, TEJ)",
+     "key": false,
+     "lang": "en"
+    },
+    {
+     "name": "RH et paie",
+     "key": false,
+     "lang": "fr"
+    },
+    {
+     "name": "HR & payroll",
+     "key": false,
+     "lang": "en"
+    }
+   ]
+  }
+ ],
+ "experiences": [
+  {
+   "role": {
+    "fr": "Ingénieur Full Stack Java / Angular",
+    "en": "Full Stack Engineer – Java / Angular"
+   },
+   "company": "AXEANE",
+   "url": "https://axeane.com",
+   "logoText": "AX",
+   "logoImg": "",
+   "when": {
+    "fr": "Fév. 2026 – aujourd'hui",
+    "en": "Feb 2026 – present"
+   },
+   "current": true,
+   "context": {
+    "fr": "Application Axeane Novia – ERP SaaS de facturation et de gestion commerciale",
+    "en": "Axeane Novia – SaaS ERP for invoicing and sales management"
+   },
+   "items": {
+    "fr": [
+     "Développement full stack de fonctionnalités de facturation conformes à la fiscalité tunisienne : TVA, timbre fiscal, retenue à la source, ajustements financiers.",
+     "Fiabilisation des calculs financiers (avoirs, net à payer, TVA au prorata, retenue) et migration SQL pour corriger les données existantes.",
+     "Évolution du module de retenue à la source : retenue par paiement, statut « déposée » et génération des fichiers XML TEJ.",
+     "Templates PDF des documents commerciaux avec Thymeleaf / Flying Saucer : affichage conditionnel et paramètres d'impression.",
+     "Centralisation de l'envoi d'e-mails pour tous les documents et gestion fine des droits d'accès (rôles et groupes).",
+     "Évolutions fonctionnelles : multicontact entreprise, comptes bancaires, conversions Devis → BL → Facture, adaptation de l'application mobile (Capacitor)."
+    ],
+    "en": [
+     "Full stack development of invoicing features compliant with Tunisian tax rules: VAT, stamp duty, withholding tax, financial adjustments.",
+     "Hardened financial calculations (credit notes, net payable, prorated VAT, withholding tax) and wrote SQL migrations to fix existing data.",
+     "Extended the withholding tax module: per-payment withholding, \"filed\" status and generation of TEJ XML files.",
+     "Built PDF templates for business documents with Thymeleaf / Flying Saucer: conditional display and print settings.",
+     "Centralized e-mail sending for all documents and implemented fine-grained access rights (roles and groups).",
+     "Functional enhancements: company multi-contact, bank accounts, Quote → Delivery Note → Invoice conversions, mobile app adaptation (Capacitor)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Spring Boot",
+    "Angular",
+    "TypeScript",
+    "PostgreSQL",
+    "Liquibase",
+    "Thymeleaf",
+    "Flying Saucer",
+    "REST",
+    "Git"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Ingénieur Full Stack Java / Angular",
+    "en": "Full Stack Engineer – Java / Angular"
+   },
+   "company": "C&A TRADE DIGITAL SERVICES",
+   "url": "https://tradigiservices.com",
+   "logoText": "C&A",
+   "logoImg": "",
+   "when": {
+    "fr": "Août 2023 – nov. 2025",
+    "en": "Aug 2023 – Nov 2025"
+   },
+   "current": false,
+   "context": {
+    "fr": "TDS-ERP – ERP cloud pour le marché tunisien : conception et développement du module Ressources Humaines et Paie",
+    "en": "TDS-ERP – cloud ERP for the Tunisian market: design and development of the Human Resources and Payroll module"
+   },
+   "items": {
+    "fr": [
+     "Conception et développement du module RH et Paie : employés, contrats, congés, présence, évaluation des performances et calcul automatique de la paie.",
+     "Intégration de données externes (API, CSV, Excel) et mise en place du multilingue.",
+     "Tableaux de bord et rapports de suivi RH / paie, génération de documents PDF avec JasperReports.",
+     "Contribution à une architecture multitenant sécurisée (Spring Security), en veillant à la scalabilité et à la maintenabilité.",
+     "Amélioration de l'interface et de l'expérience utilisateur des écrans Angular."
+    ],
+    "en": [
+     "Designed and developed the HR and Payroll module: employees, contracts, leave, attendance, performance reviews and automated payroll calculation.",
+     "Integrated external data sources (APIs, CSV, Excel) and implemented multilingual support.",
+     "Built HR / payroll dashboards and tracking reports, with PDF generation using JasperReports.",
+     "Contributed to a secure multitenant architecture (Spring Security), with a focus on scalability and maintainability.",
+     "Improved the user interface and user experience of the Angular screens."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "Angular 16",
+    "PostgreSQL",
+    "Spring Security",
+    "Swagger",
+    "Docker",
+    "GitLab",
+    "Multitenancy",
+    "JasperReports"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Chef de projet technique",
+    "en": "Technical Project Manager"
+   },
+   "company": "SHILDOM TUNISIE",
+   "url": "",
+   "logoText": "SH",
+   "logoImg": "",
+   "when": {
+    "fr": "Sept. 2013 – juin 2018",
+    "en": "Sep 2013 – Jun 2018"
+   },
+   "current": false,
+   "context": {
+    "fr": "Sécurité électronique et réseaux informatiques",
+    "en": "Electronic security systems and computer networks"
+   },
+   "items": {
+    "fr": [
+     "**Chef de projet et pilote de travaux (2015 – 2018) :** planification et pilotage de projets pour des clients publics et privés, interface clients – équipes – direction, respect des délais et du budget, reporting et indicateurs.",
+     "**Chef d'équipe technique (2014 – 2015) :** encadrement de 5 à 10 techniciens, coordination des installations et de la maintenance, formation.",
+     "**Technicien supérieur (2013 – 2014) :** vidéosurveillance, alarme, contrôle d'accès, maintenance réseaux (TCP/IP, LAN/WAN), audits de sécurité."
+    ],
+    "en": [
+     "**Project Manager and Works Supervisor (2015 – 2018):** planned and managed projects for public and private clients, liaison between clients, teams and management, met deadlines and budgets, reporting and KPIs.",
+     "**Technical Team Leader (2014 – 2015):** led 5 to 10 technicians, coordinated installations and maintenance, trained new members.",
+     "**Senior Technician (2013 – 2014):** CCTV, alarm and access control systems, network maintenance (TCP/IP, LAN/WAN), security audits."
+    ]
+   },
+   "stack": []
+  }
+ ],
+ "internships": [
+  {
+   "role": {
+    "fr": "Stage de fin d'études – Développeur Full Stack",
+    "en": "Final-year project – Full Stack Developer Intern"
+   },
+   "company": "DITRIOT CONSULTING",
+   "url": "https://www.ditriot.com",
+   "logoText": "",
+   "logoImg": "logos/ditriot.png",
+   "when": {
+    "fr": "Fév. – août 2022",
+    "en": "Feb – Aug 2022"
+   },
+   "current": false,
+   "context": {
+    "fr": "Plateforme de réseau social interne pour la gestion RH, en architecture microservices",
+    "en": "Internal social network platform for HR management, on a microservices architecture"
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, spécifications, modélisation UML et définition de l'architecture microservices.",
+     "Microservices d'authentification, d'entreprises et d'employés (Spring Boot, Spring Data JPA, MySQL) communiquant par API REST.",
+     "Front-end Angular, authentification et rôles avec Spring Security ; CI Jenkins, qualité SonarQube."
+    ],
+    "en": [
+     "Requirements analysis, specifications, UML modeling and microservices architecture design.",
+     "Authentication, company and employee microservices (Spring Boot, Spring Data JPA, MySQL) communicating through REST APIs.",
+     "Angular front-end, authentication and roles with Spring Security; Jenkins CI, SonarQube code quality."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2",
+    "Angular 13 / 14",
+    "MySQL",
+    "Docker",
+    "Jenkins",
+    "SonarQube"
+   ]
+  },
+  {
+   "role": {
+    "fr": "Stage – Développeur Full Stack",
+    "en": "Full Stack Developer Intern"
+   },
+   "company": "DSI ESPRIT",
+   "url": "https://www.esprit.tn",
+   "logoText": "ES",
+   "logoImg": "",
+   "when": {
+    "fr": "Juil. – sept. 2021",
+    "en": "Jul – Sep 2021"
+   },
+   "current": false,
+   "context": {
+    "fr": "Application de gestion des mouvements de stock",
+    "en": "Stock movement management application"
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, rôles et contrôle d'accès, conception de la base et de l'architecture.",
+     "Back-end Spring Boot / Spring Data avec MongoDB, tests unitaires et d'intégration."
+    ],
+    "en": [
+     "Requirements analysis, roles and access control, database and architecture design.",
+     "Spring Boot / Spring Data back-end with MongoDB, unit and integration testing."
+    ]
+   },
+   "stack": [
+    "Java 11",
+    "Spring Boot",
+    "MongoDB",
+    "ReactJS",
+    "SonarQube"
+   ]
+  }
+ ],
+ "projects": [
+  {
+   "id": "analytics",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "Analytics",
+   "shots": [
+    "projects/analytics-1.webp",
+    "projects/analytics-2.webp"
+   ],
+   "kind": {
+    "fr": "Serverless · Analytics",
+    "en": "Serverless · Analytics"
+   },
+   "title": {
+    "fr": "Portfolio Analytics",
+    "en": "Portfolio Analytics"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "https://github.com/rachedchakchouk/rached-chakchouk-portfolio",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Dashboard privé des visites de ce portfolio : visiteurs, pays et villes, sources, appareils et actions, sans cookie.",
+    "en": "Private dashboard for this portfolio’s visits: visitors, countries and cities, sources, devices and actions, cookie-free."
+   },
+   "problem": {
+    "fr": "Savoir qui consulte mon portfolio (pays, source, actions) sans outil tiers ni cookie, dans le respect du RGPD.",
+    "en": "Know who views my portfolio (country, source, actions) without third-party tools or cookies, GDPR-friendly."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout : tracker front, API serverless, stockage et dashboard.",
+    "en": "End-to-end design and development: front-end tracker, serverless API, storage and dashboard."
+   },
+   "items": {
+    "fr": [
+     "Tracker léger sans cookie (sendBeacon) intégré au portfolio, désactivé si « Do Not Track ».",
+     "API serverless Netlify Functions : /api/track (collecte) et /api/stats (agrégation).",
+     "Stockage Netlify Blobs ; géolocalisation pays/ville côté serveur, adresse IP jamais enregistrée (hash journalier salé pour les visiteurs uniques).",
+     "Dashboard protégé par mot de passe (variable d’environnement, comparaison à temps constant, anti-force brute).",
+     "Graphiques SVG faits main avec infobulles, périodes 7 / 30 / 90 jours, thème clair/sombre, responsive.",
+     "Filtrage des robots, validation et limitation des données, tests unitaires de la logique d’agrégation."
+    ],
+    "en": [
+     "Lightweight cookie-free tracker (sendBeacon) in the portfolio, disabled with “Do Not Track”.",
+     "Netlify Functions serverless API: /api/track (collection) and /api/stats (aggregation).",
+     "Netlify Blobs storage; server-side country/city geolocation, IP never stored (daily salted hash for unique visitors).",
+     "Password-protected dashboard (environment variable, constant-time comparison, brute-force delay).",
+     "Hand-made SVG charts with tooltips, 7 / 30 / 90-day ranges, light/dark theme, responsive.",
+     "Bot filtering, input validation and size limits, unit tests for the aggregation logic."
+    ]
+   },
+   "stack": [
+    "JavaScript",
+    "Netlify Functions",
+    "Netlify Blobs",
+    "Node.js",
+    "HTML / CSS",
+    "SVG"
+   ],
+   "links": [
+    {
+     "label": "GitHub",
+     "url": "https://github.com/rachedchakchouk/rached-chakchouk-portfolio"
+    },
+    {
+     "label": "Dashboard (démo)",
+     "url": "/dashboard/"
+    }
+   ]
+  },
+  {
+   "id": "novia",
+   "feat": true,
+   "cats": [
+    "erp",
+    "fullstack"
+   ],
+   "mono": "Novia",
+   "shots": [],
+   "kind": {
+    "fr": "ERP SaaS · Facturation",
+    "en": "SaaS ERP · Invoicing"
+   },
+   "title": {
+    "fr": "Axeane Novia",
+    "en": "Axeane Novia"
+   },
+   "org": {
+    "name": "Axeane",
+    "url": "https://axeane.com",
+    "when": {
+     "fr": "Fév. 2026 – aujourd’hui",
+     "en": "Feb 2026 – present"
+    }
+   },
+   "desc": {
+    "fr": "ERP SaaS de facturation et de gestion commerciale, conforme à la fiscalité tunisienne.",
+    "en": "SaaS ERP for invoicing and sales management, compliant with Tunisian tax rules."
+   },
+   "problem": {
+    "fr": "Facturer en respectant les règles fiscales tunisiennes (TVA, timbre fiscal, retenue à la source) et produire des documents et déclarations fiables.",
+    "en": "Invoice in line with Tunisian tax rules (VAT, stamp duty, withholding tax) and produce reliable documents and filings."
+   },
+   "role": {
+    "fr": "Ingénieur Full Stack : développement front Angular et back Spring Boot, de l’analyse à la livraison sans régression.",
+    "en": "Full Stack Engineer: Angular front-end and Spring Boot back-end, from analysis to regression-free delivery."
+   },
+   "items": {
+    "fr": [
+     "Fonctionnalités de facturation : TVA, timbre fiscal, retenue à la source, ajustements financiers.",
+     "Fiabilisation des calculs (avoirs, net à payer, TVA au prorata) et migrations SQL de correction.",
+     "Module de retenue à la source : retenue par paiement, statut « déposée », génération des fichiers XML TEJ.",
+     "Templates PDF des documents commerciaux (Thymeleaf / Flying Saucer).",
+     "Envoi d’e-mails centralisé pour tous les documents et droits d’accès par rôles et groupes.",
+     "Conversions Devis → BL → Facture, multicontact entreprise, comptes bancaires, app mobile (Capacitor)."
+    ],
+    "en": [
+     "Invoicing features: VAT, stamp duty, withholding tax, financial adjustments.",
+     "Hardened calculations (credit notes, net payable, prorated VAT) and corrective SQL migrations.",
+     "Withholding tax module: per-payment withholding, \"filed\" status, TEJ XML file generation.",
+     "PDF templates for business documents (Thymeleaf / Flying Saucer).",
+     "Centralized e-mail sending for all documents and role/group-based access rights.",
+     "Quote → Delivery Note → Invoice conversions, company multi-contact, bank accounts, mobile app (Capacitor)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Spring Boot",
+    "Angular",
+    "TypeScript",
+    "PostgreSQL",
+    "Liquibase",
+    "Thymeleaf",
+    "Capacitor"
+   ],
+   "links": [
+    {
+     "label": "axeane.com",
+     "url": "https://axeane.com"
+    }
+   ]
+  },
+  {
+   "id": "tds",
+   "cats": [
+    "erp",
+    "fullstack"
+   ],
+   "mono": "TDS-ERP",
+   "kind": {
+    "fr": "ERP cloud · RH & Paie",
+    "en": "Cloud ERP · HR & Payroll"
+   },
+   "title": {
+    "fr": "TDS-ERP – module RH & Paie",
+    "en": "TDS-ERP – HR & Payroll module"
+   },
+   "org": {
+    "name": "C&A Trade Digital Services",
+    "url": "https://tradigiservices.com/tds-erp",
+    "when": {
+     "fr": "Août 2023 – nov. 2025",
+     "en": "Aug 2023 – Nov 2025"
+    }
+   },
+   "desc": {
+    "fr": "Module Ressources Humaines et Paie d’un ERP cloud pour le marché tunisien.",
+    "en": "Human Resources and Payroll module of a cloud ERP for the Tunisian market."
+   },
+   "problem": {
+    "fr": "Automatiser la gestion des employés et le calcul de la paie dans un ERP multitenant.",
+    "en": "Automate employee management and payroll calculation in a multitenant ERP."
+   },
+   "role": {
+    "fr": "Ingénieur Full Stack : conception et développement du module, front et back.",
+    "en": "Full Stack Engineer: designed and built the module, front and back."
+   },
+   "items": {
+    "fr": [
+     "Employés, contrats, congés, présence, évaluations et calcul automatique de la paie.",
+     "Intégration de données externes (API, CSV, Excel) et multilingue.",
+     "Tableaux de bord RH / paie et documents PDF avec JasperReports.",
+     "Architecture multitenant sécurisée avec Spring Security."
+    ],
+    "en": [
+     "Employees, contracts, leave, attendance, reviews and automated payroll calculation.",
+     "External data integration (APIs, CSV, Excel) and multilingual support.",
+     "HR / payroll dashboards and PDF documents with JasperReports.",
+     "Secure multitenant architecture with Spring Security."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "Angular 16",
+    "PostgreSQL",
+    "Spring Security",
+    "JasperReports",
+    "Docker"
+   ],
+   "links": [
+    {
+     "label": "TDS-ERP",
+     "url": "https://tradigiservices.com/tds-erp"
+    }
+   ]
+  },
+  {
+   "id": "pfe",
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "μServices",
+   "kind": {
+    "fr": "Microservices · Stage de fin d’études",
+    "en": "Microservices · Final-year project"
+   },
+   "title": {
+    "fr": "Réseau social RH interne",
+    "en": "Internal HR social network"
+   },
+   "org": {
+    "name": "Ditriot Consulting",
+    "url": "https://www.ditriot.com",
+    "when": {
+     "fr": "Fév. – août 2022",
+     "en": "Feb – Aug 2022"
+    }
+   },
+   "desc": {
+    "fr": "Plateforme collaborative interne pour la communication et les processus RH, en microservices.",
+    "en": "Internal collaborative platform for communication and HR processes, built on microservices."
+   },
+   "problem": {
+    "fr": "Améliorer la communication interne et la gestion du personnel au sein d’une entreprise.",
+    "en": "Improve internal communication and staff management within a company."
+   },
+   "role": {
+    "fr": "Développeur Full Stack : de l’analyse et l’architecture jusqu’au front et au back.",
+    "en": "Full Stack Developer: from analysis and architecture to front and back end."
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, spécifications, UML et architecture microservices.",
+     "Microservices d’authentification, d’entreprises et d’employés communiquant par API REST.",
+     "Front-end Angular, rôles et authentification avec Spring Security.",
+     "CI avec Jenkins et qualité de code avec SonarQube."
+    ],
+    "en": [
+     "Requirements, specifications, UML and microservices architecture.",
+     "Authentication, company and employee microservices communicating over REST APIs.",
+     "Angular front-end, roles and authentication with Spring Security.",
+     "CI with Jenkins and code quality with SonarQube."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2",
+    "Angular 13/14",
+    "MySQL",
+    "Docker",
+    "Jenkins",
+    "SonarQube"
+   ],
+   "links": []
+  },
+  {
+   "id": "stock",
+   "cats": [
+    "backend"
+   ],
+   "mono": "Stock",
+   "kind": {
+    "fr": "Backend · Stage",
+    "en": "Backend · Internship"
+   },
+   "title": {
+    "fr": "Gestion des mouvements de stock",
+    "en": "Stock movement management"
+   },
+   "org": {
+    "name": "DSI ESPRIT",
+    "url": "https://www.esprit.tn",
+    "when": {
+     "fr": "Juil. – sept. 2021",
+     "en": "Jul – Sep 2021"
+    }
+   },
+   "desc": {
+    "fr": "Suivi précis des entrées, sorties et niveaux de stock, avec traçabilité des opérations.",
+    "en": "Accurate tracking of stock inflows, outflows and levels, with operation traceability."
+   },
+   "problem": {
+    "fr": "Suivre les mouvements de stock de façon sûre et traçable.",
+    "en": "Track stock movements securely and traceably."
+   },
+   "role": {
+    "fr": "Développeur : analyse, conception de la base et back-end.",
+    "en": "Developer: analysis, database design and back-end."
+   },
+   "items": {
+    "fr": [
+     "Analyse des besoins, acteurs, rôles et contrôle d’accès.",
+     "Back-end Spring Boot / Spring Data avec MongoDB.",
+     "Tests unitaires et d’intégration."
+    ],
+    "en": [
+     "Requirements, actors, roles and access control.",
+     "Spring Boot / Spring Data back-end with MongoDB.",
+     "Unit and integration testing."
+    ]
+   },
+   "stack": [
+    "Java 11",
+    "Spring Boot",
+    "MongoDB",
+    "ReactJS",
+    "SonarQube"
+   ],
+   "links": []
+  },
+  {
+   "id": "timesheet",
+   "feat": true,
+   "cats": [
+    "devops",
+    "backend"
+   ],
+   "mono": "CI/CD",
+   "kind": {
+    "fr": "DevOps · GitHub",
+    "en": "DevOps · GitHub"
+   },
+   "title": {
+    "fr": "Timesheet DevOps",
+    "en": "Timesheet DevOps"
+   },
+   "org": {
+    "name": "GitHub",
+    "url": "https://github.com/rachedchakchouk/Timesheet_DevOps",
+    "when": {
+     "fr": "Projet d’équipe (fork)",
+     "en": "Team project (fork)"
+    }
+   },
+   "desc": {
+    "fr": "Application Java de feuilles de temps avec build Maven, pipeline Jenkins et Docker.",
+    "en": "Java timesheet application with Maven build, Jenkins pipeline and Docker."
+   },
+   "problem": {
+    "fr": "Automatiser le build et le déploiement d’une application Java.",
+    "en": "Automate the build and deployment of a Java application."
+   },
+   "role": {
+    "fr": "Contributeur à un projet d’équipe.",
+    "en": "Contributor to a team project."
+   },
+   "items": {
+    "fr": [
+     "Build Maven.",
+     "Pipeline CI/CD Jenkins (Jenkinsfile).",
+     "Conteneurisation Docker (Dockerfile)."
+    ],
+    "en": [
+     "Maven build.",
+     "Jenkins CI/CD pipeline (Jenkinsfile).",
+     "Docker containerization (Dockerfile)."
+    ]
+   },
+   "stack": [
+    "Java",
+    "Maven",
+    "Jenkins",
+    "Docker"
+   ],
+   "links": [
+    {
+     "label": "GitHub",
+     "url": "https://github.com/rachedchakchouk/Timesheet_DevOps"
+    }
+   ]
+  }
+ ],
+ "education": [
+  {
+   "title": {
+    "fr": "Ingénierie informatique – Génie logiciel",
+    "en": "Computer Engineering – Software Engineering"
+   },
+   "school": {
+    "fr": "ESPRIT",
+    "en": "ESPRIT"
+   },
+   "url": "https://www.esprit.tn",
+   "years": "2019 – 2022",
+   "logoText": "ES"
+  },
+  {
+   "title": {
+    "fr": "Master professionnel en métrologie et instrumentation",
+    "en": "Professional Master's in Metrology and Instrumentation"
+   },
+   "school": {
+    "fr": "Faculté des Sciences de Sfax",
+    "en": "Faculty of Sciences of Sfax"
+   },
+   "url": "https://fss.rnu.tn",
+   "years": "2018 – 2020",
+   "logoText": "FSS"
+  },
+  {
+   "title": {
+    "fr": "Licence appliquée en électronique, électrotechnique et automatique",
+    "en": "Applied Bachelor's in Electronics, Electrical Engineering and Automation"
+   },
+   "school": {
+    "fr": "Faculté des Sciences de Sfax",
+    "en": "Faculty of Sciences of Sfax"
+   },
+   "url": "https://fss.rnu.tn",
+   "years": "2010 – 2013",
+   "logoText": "FSS"
+  }
+ ],
+ "languages": [
+  {
+   "name": {
+    "fr": "Arabe",
+    "en": "Arabic"
+   },
+   "level": {
+    "fr": "Langue maternelle",
+    "en": "Native"
+   }
+  },
+  {
+   "name": {
+    "fr": "Français",
+    "en": "French"
+   },
+   "level": {
+    "fr": "Courant",
+    "en": "Fluent"
+   }
+  },
+  {
+   "name": {
+    "fr": "Anglais",
+    "en": "English"
+   },
+   "level": {
+    "fr": "Courant",
+    "en": "Fluent"
+   }
+  }
+ ]
+}</script>
 <footer>
   <div class="wrap"><span>© <span id="yr">2026</span> Rached Chakchouk · <span data-l="fr">Tous droits réservés</span><span data-l="en">All rights reserved</span></span><span><span data-l="fr">Statistiques de visite anonymes, sans cookie</span><span data-l="en">Anonymous, cookie-free visit statistics</span></span><span>Ariana, <span data-l="fr">Tunisie</span><span data-l="en">Tunisia</span> · Java · Spring Boot · Angular</span></div>
 </footer>
@@ -758,6 +1650,65 @@ body.noscroll { overflow: hidden; }
 <script>
 (function () {
   var root = document.documentElement;
+  // ---- content rendering (data in #defaultContent, overridable from the dashboard via /api/content) ----
+  var CONTENT = JSON.parse(document.getElementById('defaultContent').textContent);
+  var PROD = location.hostname === 'rached-chakchouk.netlify.app';
+  function e_(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function md(t) { return e_(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
+  function B(o, f) { o = o || {}; f = f || e_; return '<span data-l="fr">' + f(o.fr) + '</span><span data-l="en">' + f(o.en != null && o.en !== '' ? o.en : o.fr) + '</span>'; }
+  var ICONS = [['Java', 'java'], ['Spring', 'spring'], ['Hibernate', 'hibernate'], ['Swagger', 'swagger'], ['Maven', 'maven'], ['Angular', 'angular'], ['TypeScript', 'ts'], ['HTML', 'html'], ['Bootstrap', 'bootstrap'], ['React', 'react'], ['Capacitor', 'capacitor'], ['PostgreSQL', 'pg'], ['MySQL', 'mysql'], ['SQL Server', 'mssql'], ['MongoDB', 'mongo'], ['Liquibase', 'liquibase'], ['GitLab', 'gitlab'], ['GitHub Copilot', 'copilot'], ['GitHub', 'github'], ['Git', 'git'], ['Jenkins', 'jenkins'], ['Docker', 'docker'], ['SonarQube', 'sonar'], ['IntelliJ', 'intellij'], ['Eclipse', 'eclipse'], ['Visual Studio', 'vs'], ['Claude', 'claude']];
+  function ico(name) { for (var i = 0; i < ICONS.length; i++) if (String(name).indexOf(ICONS[i][0]) === 0 && String(name).indexOf('JavaScript') !== 0) return '<i class="ti i-' + ICONS[i][1] + '" aria-hidden="true"></i>'; return ''; }
+  function chip(n, key) { return '<li' + (key ? ' class="key"' : '') + '>' + ico(n) + e_(n) + '</li>'; }
+  function logo(x) {
+    if (x.logoImg) return '<span class="co-logo wide"><img src="' + e_(x.logoImg) + '" alt="' + e_(x.company) + '" loading="lazy"></span>';
+    return '<span class="co-logo" aria-hidden="true">' + e_(x.logoText || String(x.company || '?').slice(0, 2).toUpperCase()) + '</span>';
+  }
+  function job(x) {
+    var org = x.url ? '<a class="co-link" href="' + e_(x.url) + '" target="_blank" rel="noopener noreferrer">' + e_(x.company) + ' <span aria-hidden="true">↗</span></a>' : e_(x.company);
+    var it = x.items || {};
+    return '<article class="job' + (x.current ? ' current' : '') + '"><div class="when">' + B(x.when) + (x.current ? '<br><span class="now">' + B({ fr: 'En poste', en: 'Current' }) + '</span>' : '') + '</div>' +
+      '<div class="card"><h3>' + B(x.role) + '</h3><div class="org">' + logo(x) + org + '</div>' +
+      (x.context && (x.context.fr || x.context.en) ? '<p class="ctx" data-l="fr">' + e_(x.context.fr) + '</p><p class="ctx" data-l="en">' + e_(x.context.en || x.context.fr) + '</p>' : '') +
+      '<ul data-l="fr">' + (it.fr || []).map(function (t) { return '<li>' + md(t) + '</li>'; }).join('') + '</ul>' +
+      '<ul data-l="en">' + ((it.en && it.en.length ? it.en : it.fr) || []).map(function (t) { return '<li>' + md(t) + '</li>'; }).join('') + '</ul>' +
+      ((x.stack || []).length ? '<ul class="stack">' + x.stack.map(function (n) { return chip(n); }).join('') + '</ul>' : '') + '</div></article>';
+  }
+  function renderContent() {
+    var c = CONTENT, pr = c.profile || {};
+    var el = document.getElementById('heroLead');
+    if (el && pr.lead) el.innerHTML = '<p class="lead" data-l="fr">' + md(pr.lead.fr) + '</p><p class="lead" data-l="en">' + md(pr.lead.en || pr.lead.fr) + '</p>';
+    el = document.getElementById('heroNow');
+    if (el && pr.now) el.innerHTML = '<div class="now-v">' + B(pr.now.role) + ' <b>' + e_(pr.now.company) + '</b></div><div class="now-s" data-l="fr">' + e_(pr.now.desc && pr.now.desc.fr) + '</div><div class="now-s" data-l="en">' + e_(pr.now.desc && (pr.now.desc.en || pr.now.desc.fr)) + '</div>';
+    (pr.stats || []).slice(0, 3).forEach(function (st, i) {
+      var t = document.getElementById('stat' + i); if (!t) return;
+      var u = st.unit && (st.unit.fr || st.unit.en) ? '<sup>' + B(st.unit) + '</sup>' : '';
+      t.innerHTML = '<b><span class="count" data-to="' + (+st.value || 0) + '">' + (+st.value || 0) + '</span>' + u + '</b>' + B(st.label);
+    });
+    document.getElementById('skillsGrid').innerHTML = (c.skills || []).map(function (g) {
+      return '<div class="skill-group"><h4>' + B(g.title) + '</h4><ul class="chips">' + (g.items || []).map(function (it) {
+        return it.lang ? '<li data-l="' + e_(it.lang) + '"' + (it.key ? ' class="key"' : '') + '>' + ico(it.name) + e_(it.name) + '</li>' : chip(it.name, it.key);
+      }).join('') + '</ul></div>';
+    }).join('');
+    document.getElementById('expList').innerHTML = (c.experiences || []).map(job).join('');
+    document.getElementById('internList').innerHTML = (c.internships || []).map(job).join('');
+    document.getElementById('eduList').innerHTML = (c.education || []).map(function (d) {
+      var sc = d.url ? '<a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B(d.school) + ' <span aria-hidden="true">↗</span></a>' : B(d.school);
+      return '<div><span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span><div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
+    }).join('');
+    document.getElementById('langList').innerHTML = (c.languages || []).map(function (l) {
+      return '<li>' + B(l.name) + '<span>' + B(l.level) + '</span></li>';
+    }).join('');
+    if (window.__renderProjects) window.__renderProjects();
+  }
+  renderContent();
+  if (PROD) {
+    var ph = document.querySelector('.t-photo img'); if (ph) ph.src = '/media/photo';
+    document.querySelectorAll('a.btn-pdf').forEach(function (a) { a.href = a.getAttribute('data-l') === 'en' ? '/media/cv-en.pdf' : '/media/cv-fr.pdf'; });
+    fetch('/api/content', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (d && d.version) { CONTENT = d; renderContent(); }
+    }).catch(function () {});
+  }
+
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
 
@@ -936,15 +1887,13 @@ body.noscroll { overflow: hidden; }
     var pages = document.getElementById('cvPages'), zoomEl = document.getElementById('cvZoom'), pdfA = document.getElementById('cvPdf');
     var zoom = 1, cvLang = 'FR', lastFocus = null;
     function renderCv() {
-      pages.innerHTML = '';
-      [1, 2].forEach(function (n) {
-        var im = new Image(); im.src = 'cv/cv_' + cvLang + '-' + n + '.webp'; im.width = 992; im.height = 1404;
-        im.alt = (cvLang === 'FR' ? 'CV, page ' : 'Resume, page ') + n; im.decoding = 'async'; im.loading = n === 1 ? 'eager' : 'lazy';
-        pages.appendChild(im);
-      });
-      pdfA.href = 'Rached_Chakchouk_CV_' + cvLang + '.pdf'; pdfA.setAttribute('download', cvLang === 'EN' ? 'Rached_Chakchouk_Resume.pdf' : 'Rached_Chakchouk_CV_FR.pdf'); pdfA.title = cvLang === 'EN' ? 'Download PDF' : 'Télécharger le PDF';
+      var url = PROD ? '/media/cv-' + cvLang.toLowerCase() + '.pdf' : 'Rached_Chakchouk_CV_' + cvLang + '.pdf';
+      var small = matchMedia('(max-width: 760px), (pointer: coarse)').matches;
+      pages.innerHTML = small
+        ? '<div class="v-mobile"><svg class="ic-pdf" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l5 5v13a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2z" fill="#e5484d"/><path d="M14 2v5h5" fill="#ffb3b5"/></svg><p>' + (cvLang === 'FR' ? 'Sur mobile, le CV s’ouvre dans le lecteur PDF de votre téléphone.' : 'On mobile, the resume opens in your phone’s PDF viewer.') + '</p><a class="btn btn-pdf" href="' + url + '" target="_blank" rel="noopener">' + (cvLang === 'FR' ? 'Ouvrir le CV (PDF)' : 'Open resume (PDF)') + '</a></div>'
+        : '<iframe class="v-frame" src="' + url + '#view=FitH" title="' + (cvLang === 'FR' ? 'CV de Rached Chakchouk' : 'Rached Chakchouk resume') + '"></iframe>';
+      pdfA.href = url; pdfA.setAttribute('download', cvLang === 'EN' ? 'Rached_Chakchouk_Resume.pdf' : 'Rached_Chakchouk_CV_FR.pdf'); pdfA.title = cvLang === 'EN' ? 'Download PDF' : 'Télécharger le PDF';
       vw.querySelectorAll('[data-cvlang]').forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-cvlang') === cvLang ? 'true' : 'false'); });
-      applyZoom();
     }
     function applyZoom() {
       zoom = Math.max(.5, Math.min(2, zoom));
@@ -953,7 +1902,7 @@ body.noscroll { overflow: hidden; }
     }
     function openCv() {
       lastFocus = document.activeElement;
-      cvLang = root.getAttribute('data-lang') === 'en' ? 'EN' : 'FR'; zoom = 1; renderCv();
+      cvLang = root.getAttribute('data-lang') === 'en' ? 'EN' : 'FR'; renderCv();
       vw.hidden = false; document.body.classList.add('noscroll');
       document.getElementById('cvClose').focus();
     }
@@ -976,94 +1925,31 @@ body.noscroll { overflow: hidden; }
   }
 
   // ---- projects (data-driven: edit PROJECTS to update the section) ----
-  var PROJECTS = [
-    { id: 'analytics', feat: true, cats: ['fullstack', 'backend', 'devops'], mono: 'Analytics',
-      shots: ['projects/analytics-1.webp', 'projects/analytics-2.webp'],
-      kind: { fr: 'Serverless · Analytics', en: 'Serverless · Analytics' },
-      title: { fr: 'Portfolio Analytics', en: 'Portfolio Analytics' },
-      org: { name: 'Projet personnel', url: 'https://github.com/rachedchakchouk/rached-chakchouk-portfolio', when: { fr: 'Oct. 2026', en: 'Oct 2026' } },
-      desc: { fr: 'Dashboard privé des visites de ce portfolio : visiteurs, pays et villes, sources, appareils et actions, sans cookie.', en: 'Private dashboard for this portfolio’s visits: visitors, countries and cities, sources, devices and actions, cookie-free.' },
-      problem: { fr: 'Savoir qui consulte mon portfolio (pays, source, actions) sans outil tiers ni cookie, dans le respect du RGPD.', en: 'Know who views my portfolio (country, source, actions) without third-party tools or cookies, GDPR-friendly.' },
-      role: { fr: 'Conception et développement de bout en bout : tracker front, API serverless, stockage et dashboard.', en: 'End-to-end design and development: front-end tracker, serverless API, storage and dashboard.' },
-      items: { fr: ['Tracker léger sans cookie (sendBeacon) intégré au portfolio, désactivé si « Do Not Track ».', 'API serverless Netlify Functions : /api/track (collecte) et /api/stats (agrégation).', 'Stockage Netlify Blobs ; géolocalisation pays/ville côté serveur, adresse IP jamais enregistrée (hash journalier salé pour les visiteurs uniques).', 'Dashboard protégé par mot de passe (variable d’environnement, comparaison à temps constant, anti-force brute).', 'Graphiques SVG faits main avec infobulles, périodes 7 / 30 / 90 jours, thème clair/sombre, responsive.', 'Filtrage des robots, validation et limitation des données, tests unitaires de la logique d’agrégation.'],
-               en: ['Lightweight cookie-free tracker (sendBeacon) in the portfolio, disabled with “Do Not Track”.', 'Netlify Functions serverless API: /api/track (collection) and /api/stats (aggregation).', 'Netlify Blobs storage; server-side country/city geolocation, IP never stored (daily salted hash for unique visitors).', 'Password-protected dashboard (environment variable, constant-time comparison, brute-force delay).', 'Hand-made SVG charts with tooltips, 7 / 30 / 90-day ranges, light/dark theme, responsive.', 'Bot filtering, input validation and size limits, unit tests for the aggregation logic.'] },
-      stack: ['JavaScript', 'Netlify Functions', 'Netlify Blobs', 'Node.js', 'HTML / CSS', 'SVG'],
-      links: [{ label: 'GitHub', url: 'https://github.com/rachedchakchouk/rached-chakchouk-portfolio' }, { label: 'Dashboard (démo)', url: '/dashboard/' }] },
-    { id: 'novia', feat: true, cats: ['erp', 'fullstack'], mono: 'Novia',
-      shots: [], // e.g. ['projects/novia-1.webp', 'projects/novia-2.webp']
-      kind: { fr: 'ERP SaaS · Facturation', en: 'SaaS ERP · Invoicing' },
-      title: { fr: 'Axeane Novia', en: 'Axeane Novia' },
-      org: { name: 'Axeane', url: 'https://axeane.com', when: { fr: 'Fév. 2026 – aujourd’hui', en: 'Feb 2026 – present' } },
-      desc: { fr: 'ERP SaaS de facturation et de gestion commerciale, conforme à la fiscalité tunisienne.', en: 'SaaS ERP for invoicing and sales management, compliant with Tunisian tax rules.' },
-      problem: { fr: 'Facturer en respectant les règles fiscales tunisiennes (TVA, timbre fiscal, retenue à la source) et produire des documents et déclarations fiables.', en: 'Invoice in line with Tunisian tax rules (VAT, stamp duty, withholding tax) and produce reliable documents and filings.' },
-      role: { fr: 'Ingénieur Full Stack : développement front Angular et back Spring Boot, de l’analyse à la livraison sans régression.', en: 'Full Stack Engineer: Angular front-end and Spring Boot back-end, from analysis to regression-free delivery.' },
-      items: { fr: ['Fonctionnalités de facturation : TVA, timbre fiscal, retenue à la source, ajustements financiers.', 'Fiabilisation des calculs (avoirs, net à payer, TVA au prorata) et migrations SQL de correction.', 'Module de retenue à la source : retenue par paiement, statut « déposée », génération des fichiers XML TEJ.', 'Templates PDF des documents commerciaux (Thymeleaf / Flying Saucer).', 'Envoi d’e-mails centralisé pour tous les documents et droits d’accès par rôles et groupes.', 'Conversions Devis → BL → Facture, multicontact entreprise, comptes bancaires, app mobile (Capacitor).'],
-               en: ['Invoicing features: VAT, stamp duty, withholding tax, financial adjustments.', 'Hardened calculations (credit notes, net payable, prorated VAT) and corrective SQL migrations.', 'Withholding tax module: per-payment withholding, "filed" status, TEJ XML file generation.', 'PDF templates for business documents (Thymeleaf / Flying Saucer).', 'Centralized e-mail sending for all documents and role/group-based access rights.', 'Quote → Delivery Note → Invoice conversions, company multi-contact, bank accounts, mobile app (Capacitor).'] },
-      stack: ['Java', 'Spring Boot', 'Angular', 'TypeScript', 'PostgreSQL', 'Liquibase', 'Thymeleaf', 'Capacitor'],
-      links: [{ label: 'axeane.com', url: 'https://axeane.com' }] },
-    { id: 'tds', cats: ['erp', 'fullstack'], mono: 'TDS-ERP',
-      kind: { fr: 'ERP cloud · RH & Paie', en: 'Cloud ERP · HR & Payroll' },
-      title: { fr: 'TDS-ERP – module RH & Paie', en: 'TDS-ERP – HR & Payroll module' },
-      org: { name: 'C&A Trade Digital Services', url: 'https://tradigiservices.com/tds-erp', when: { fr: 'Août 2023 – nov. 2025', en: 'Aug 2023 – Nov 2025' } },
-      desc: { fr: 'Module Ressources Humaines et Paie d’un ERP cloud pour le marché tunisien.', en: 'Human Resources and Payroll module of a cloud ERP for the Tunisian market.' },
-      problem: { fr: 'Automatiser la gestion des employés et le calcul de la paie dans un ERP multitenant.', en: 'Automate employee management and payroll calculation in a multitenant ERP.' },
-      role: { fr: 'Ingénieur Full Stack : conception et développement du module, front et back.', en: 'Full Stack Engineer: designed and built the module, front and back.' },
-      items: { fr: ['Employés, contrats, congés, présence, évaluations et calcul automatique de la paie.', 'Intégration de données externes (API, CSV, Excel) et multilingue.', 'Tableaux de bord RH / paie et documents PDF avec JasperReports.', 'Architecture multitenant sécurisée avec Spring Security.'],
-               en: ['Employees, contracts, leave, attendance, reviews and automated payroll calculation.', 'External data integration (APIs, CSV, Excel) and multilingual support.', 'HR / payroll dashboards and PDF documents with JasperReports.', 'Secure multitenant architecture with Spring Security.'] },
-      stack: ['Java 17', 'Spring Boot 3', 'Angular 16', 'PostgreSQL', 'Spring Security', 'JasperReports', 'Docker'],
-      links: [{ label: 'TDS-ERP', url: 'https://tradigiservices.com/tds-erp' }] },
-    { id: 'pfe', cats: ['fullstack', 'backend'], mono: 'μServices',
-      kind: { fr: 'Microservices · Stage de fin d’études', en: 'Microservices · Final-year project' },
-      title: { fr: 'Réseau social RH interne', en: 'Internal HR social network' },
-      org: { name: 'Ditriot Consulting', url: 'https://www.ditriot.com', when: { fr: 'Fév. – août 2022', en: 'Feb – Aug 2022' } },
-      desc: { fr: 'Plateforme collaborative interne pour la communication et les processus RH, en microservices.', en: 'Internal collaborative platform for communication and HR processes, built on microservices.' },
-      problem: { fr: 'Améliorer la communication interne et la gestion du personnel au sein d’une entreprise.', en: 'Improve internal communication and staff management within a company.' },
-      role: { fr: 'Développeur Full Stack : de l’analyse et l’architecture jusqu’au front et au back.', en: 'Full Stack Developer: from analysis and architecture to front and back end.' },
-      items: { fr: ['Analyse des besoins, spécifications, UML et architecture microservices.', 'Microservices d’authentification, d’entreprises et d’employés communiquant par API REST.', 'Front-end Angular, rôles et authentification avec Spring Security.', 'CI avec Jenkins et qualité de code avec SonarQube.'],
-               en: ['Requirements, specifications, UML and microservices architecture.', 'Authentication, company and employee microservices communicating over REST APIs.', 'Angular front-end, roles and authentication with Spring Security.', 'CI with Jenkins and code quality with SonarQube.'] },
-      stack: ['Java 8', 'Spring Boot 2', 'Angular 13/14', 'MySQL', 'Docker', 'Jenkins', 'SonarQube'], links: [] },
-    { id: 'stock', cats: ['backend'], mono: 'Stock',
-      kind: { fr: 'Backend · Stage', en: 'Backend · Internship' },
-      title: { fr: 'Gestion des mouvements de stock', en: 'Stock movement management' },
-      org: { name: 'DSI ESPRIT', url: 'https://www.esprit.tn', when: { fr: 'Juil. – sept. 2021', en: 'Jul – Sep 2021' } },
-      desc: { fr: 'Suivi précis des entrées, sorties et niveaux de stock, avec traçabilité des opérations.', en: 'Accurate tracking of stock inflows, outflows and levels, with operation traceability.' },
-      problem: { fr: 'Suivre les mouvements de stock de façon sûre et traçable.', en: 'Track stock movements securely and traceably.' },
-      role: { fr: 'Développeur : analyse, conception de la base et back-end.', en: 'Developer: analysis, database design and back-end.' },
-      items: { fr: ['Analyse des besoins, acteurs, rôles et contrôle d’accès.', 'Back-end Spring Boot / Spring Data avec MongoDB.', 'Tests unitaires et d’intégration.'], en: ['Requirements, actors, roles and access control.', 'Spring Boot / Spring Data back-end with MongoDB.', 'Unit and integration testing.'] },
-      stack: ['Java 11', 'Spring Boot', 'MongoDB', 'ReactJS', 'SonarQube'], links: [] },
-    { id: 'timesheet', feat: true, cats: ['devops', 'backend'], mono: 'CI/CD',
-      kind: { fr: 'DevOps · GitHub', en: 'DevOps · GitHub' },
-      title: { fr: 'Timesheet DevOps', en: 'Timesheet DevOps' },
-      org: { name: 'GitHub', url: 'https://github.com/rachedchakchouk/Timesheet_DevOps', when: { fr: 'Projet d’équipe (fork)', en: 'Team project (fork)' } },
-      desc: { fr: 'Application Java de feuilles de temps avec build Maven, pipeline Jenkins et Docker.', en: 'Java timesheet application with Maven build, Jenkins pipeline and Docker.' },
-      problem: { fr: 'Automatiser le build et le déploiement d’une application Java.', en: 'Automate the build and deployment of a Java application.' },
-      role: { fr: 'Contributeur à un projet d’équipe.', en: 'Contributor to a team project.' },
-      items: { fr: ['Build Maven.', 'Pipeline CI/CD Jenkins (Jenkinsfile).', 'Conteneurisation Docker (Dockerfile).'], en: ['Maven build.', 'Jenkins CI/CD pipeline (Jenkinsfile).', 'Docker containerization (Dockerfile).'] },
-      stack: ['Java', 'Maven', 'Jenkins', 'Docker'], links: [{ label: 'GitHub', url: 'https://github.com/rachedchakchouk/Timesheet_DevOps' }] }
-  ];
+  var PROJECTS = CONTENT.projects || [];
   var grid = document.getElementById('projectGrid');
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function bi(o) { return '<span data-l="fr">' + esc(o.fr) + '</span><span data-l="en">' + esc(o.en) + '</span>'; }
-  if (grid) {
-    grid.innerHTML = PROJECTS.map(function (p) {
+  var curFilter = 'all';
+  function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); }
+  window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.innerHTML = PROJECTS.map(function (p) {
       var cover = p.shots && p.shots.length ? '<img src="' + esc(p.shots[0]) + '" alt="" loading="lazy">' : '<span class="pc-mono">' + esc(p.mono) + '</span>';
       return '<button class="pcard' + (p.feat ? ' feat' : '') + '" type="button" data-id="' + p.id + '" data-cats="' + p.cats.join(' ') + '">' +
         '<div class="pc-cover">' + cover + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span></div>' +
         '<h3 class="pc-title">' + bi(p.title) + '</h3><p class="pc-desc">' + bi(p.desc) + '</p><span class="pc-more"><span data-l="fr">Voir le détail</span><span data-l="en">View details</span> →</span></div></button>';
-    }).join('');
+    }).join(''); applyFilter(); };
+  if (grid) {
+    window.__renderProjects();
     var chips = document.querySelectorAll('.fchip');
     chips.forEach(function (c) {
       c.addEventListener('click', function () {
-        var f = c.getAttribute('data-filter');
+        curFilter = c.getAttribute('data-filter');
         chips.forEach(function (x) { x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); });
-        grid.querySelectorAll('.pcard').forEach(function (card) {
-          card.hidden = !(f === 'all' || card.getAttribute('data-cats').split(' ').indexOf(f) > -1);
-        });
+        applyFilter();
       });
     });
     var pm = document.getElementById('projModal'), pmBody = document.getElementById('pmBody'), pmLast = null;
     function openProject(id) {
-      var p = PROJECTS.filter(function (x) { return x.id === id; })[0]; if (!p) return;
+      var p = PROJECTS.filter(function (x) { return x.id === id; })[0]; if (!p) return; p.items = p.items || { fr: [], en: [] }; p.stack = p.stack || []; p.links = p.links || []; p.org = p.org || { name: '', url: '', when: {} };
       var li = function (arr) { return arr.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join(''); };
       var gallery = p.shots && p.shots.length ? '<div class="pm-h"><span data-l="fr">Captures d’écran</span><span data-l="en">Screenshots</span></div><div class="pm-gallery">' +
         p.shots.map(function (s, k) { return '<button type="button" data-zoom="' + esc(s) + '"><img src="' + esc(s) + '" alt="' + esc(p.title.en) + ' – ' + (k + 1) + '" loading="lazy"></button>'; }).join('') + '</div>' : '';
