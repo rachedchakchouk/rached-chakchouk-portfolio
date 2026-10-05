@@ -42,6 +42,15 @@ body { margin: 0; background: var(--bg); color: var(--fg); font: 15px/1.5 var(--
 .login label { display: grid; gap: 6px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
 .login input { font: 400 15px var(--display); color: var(--fg); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
 .err { color: var(--bad); font-size: 14px; min-height: 20px; }
+.linkbtn { background: none; border: 0; padding: 0; color: var(--accent, var(--fg)); font: 500 13px var(--display); text-decoration: underline; cursor: pointer; justify-self: start; }
+.info { color: var(--muted); font-size: 13px; min-height: 0; }
+.info:empty { display: none; }
+.modal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 20px; background: rgba(0,0,0,.55); }
+.modal .login-card { box-shadow: 0 20px 60px rgba(0,0,0,.35); }
+.modal h2 { margin: 0; font-size: 20px; letter-spacing: -.01em; }
+.modal p { margin: 0; color: var(--muted); font-size: 14px; }
+.modal label { display: grid; gap: 6px; font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.modal input { font: 400 15px var(--display); color: var(--fg); background: var(--surface-2); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; }
 .row { display: flex; gap: 8px; flex-wrap: wrap; }
 
 /* app */
@@ -152,12 +161,36 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size
       <input id="pw" type="password" autocomplete="current-password" required>
     </label>
     <div class="err" id="loginErr" role="alert"></div>
+    <div class="info" id="loginInfo" role="status"></div>
     <div class="row">
       <button class="btn primary" type="submit">Se connecter</button>
       <button class="btn" type="button" id="demoBtn">Voir une démo</button>
     </div>
+    <button class="linkbtn" type="button" id="forgotBtn">Mot de passe oublié ?</button>
   </form>
 </section>
+
+
+<div class="modal" id="pwModal" hidden>
+  <form class="login-card" id="pwForm" novalidate role="dialog" aria-modal="true" aria-labelledby="pwTitle">
+    <h2 id="pwTitle">Changer le mot de passe</h2>
+    <p id="pwIntro">Au moins 10 caractères, avec 3 types parmi : minuscules, majuscules, chiffres, symboles.</p>
+    <label for="pwCur" id="pwCurL">Mot de passe actuel
+      <input id="pwCur" type="password" autocomplete="current-password">
+    </label>
+    <label for="pwNew">Nouveau mot de passe
+      <input id="pwNew" type="password" autocomplete="new-password" minlength="10">
+    </label>
+    <label for="pwNew2">Confirmer le nouveau mot de passe
+      <input id="pwNew2" type="password" autocomplete="new-password" minlength="10">
+    </label>
+    <div class="err" id="pwErr" role="alert"></div>
+    <div class="row">
+      <button class="btn primary" type="submit">Enregistrer</button>
+      <button class="btn" type="button" id="pwCancel">Annuler</button>
+    </div>
+  </form>
+</div>
 
 <div id="app" hidden>
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
@@ -173,6 +206,7 @@ td.num { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size
         </div>
         <button class="btn" type="button" id="refresh" aria-label="Actualiser">↻</button>
         <button class="btn" type="button" id="themeBtn" aria-label="Changer de thème">◐</button>
+        <button class="btn" type="button" id="pwBtn">Mot de passe</button>
         <button class="btn" type="button" id="logout">Déconnexion</button>
       </div>
     </div>
