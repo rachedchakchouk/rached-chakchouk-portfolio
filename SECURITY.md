@@ -11,10 +11,14 @@ admin API for editing content and files). It stores no personal data from visito
 ## Security measures
 
 - HTTPS enforced, with HSTS
-- Content Security Policy restricting scripts, styles, fonts and connections
+- Strict Content Security Policy: scripts only from the site itself (no inline scripts), restricted styles, fonts and connections
 - Clickjacking protection (`frame-ancestors 'self'`, `X-Frame-Options: SAMEORIGIN`)
-- Admin API protected by a secret password (environment variable, constant-time comparison,
-  brute-force delay); uploads limited in size and checked by real file signature;
+- Admin login: the password (environment variable) is sent once to `/api/admin/login`, which returns a
+  signed session token valid for 2 hours (HMAC-SHA256); the password is never stored in the browser.
+  5 failed attempts lock logins for 15 minutes.
+- Rate limiting on the analytics endpoint (per visitor and per day), same-origin check, bot filtering;
+  visit records are deleted after 13 months.
+- Admin API: uploads limited in size and checked by real file signature;
   edited content sanitized and always rendered escaped
 - `X-Content-Type-Options: nosniff`, strict `Referrer-Policy`, restrictive `Permissions-Policy`
 - External links opened with `rel="noopener noreferrer"`
@@ -22,6 +26,9 @@ admin API for editing content and files). It stores no personal data from visito
   no secret or API key is stored in the code
 
 ## Reporting a vulnerability
+
+See also [`/.well-known/security.txt`](https://rached-chakchouk.netlify.app/.well-known/security.txt).
+
 
 If you find a security issue, please report it privately via LinkedIn:
 https://linkedin.com/in/rached-chakchouk
