@@ -24,7 +24,7 @@
   function fmt(n) { return Number(n || 0).toLocaleString('fr-FR'); }
 
   function showApp() { document.getElementById('login').hidden = true; document.getElementById('app').hidden = false; document.getElementById('demoBar').hidden = !demo; lset('rc_ignore', '1'); load(); }
-  function showLogin(msg) { document.getElementById('app').hidden = true; document.getElementById('login').hidden = false; document.getElementById('loginErr').textContent = msg || ''; document.getElementById('pw').focus(); }
+  function showLogin(msg) { document.getElementById('app').hidden = true; document.getElementById('login').hidden = false; document.getElementById('loginErr').textContent = msg || ''; document.getElementById('loginInfo').textContent = ''; document.getElementById('pwModal').hidden = true; document.getElementById('pw').focus(); }
 
   document.getElementById('loginForm').addEventListener('submit', function (e) {
     e.preventDefault(); var v = document.getElementById('pw').value;
@@ -37,9 +37,73 @@
         if (x.r.status === 429) return showLogin('Trop de tentatives : réessayez dans ' + Math.ceil((x.j.retryAfter || 900) / 60) + ' min.');
         if (x.r.status === 503) return showLogin('Le dashboard n’est pas configuré (DASHBOARD_PASSWORD manquant dans Netlify).');
         if (!x.r.ok || !x.j.token) return showLogin('Mot de passe incorrect.' + (x.j.remaining != null ? ' Tentatives restantes : ' + x.j.remaining + '.' : ''));
-        pw = x.j.token; demo = false; sset('rc_tok', JSON.stringify(x.j)); armExpiry(x.j.exp); showApp();
+        pw = x.j.token; demo = false; sset('rc_tok', JSON.stringify(x.j)); armExpiry(x.j.exp);
+        if (x.j.mustChange) return openPw(true);
+        showApp();
       })
       .catch(function () { showLogin('Impossible de joindre le serveur. Réessayez.'); })
+      .then(function () { btn.disabled = false; });
+  });
+
+  // ---- mot de passe oublié : un mot de passe provisoire (15 min, usage unique) est envoyé par e-mail ----
+  document.getElementById('forgotBtn').addEventListener('click', function () {
+    var b = this, err = document.getElementById('loginErr'), info = document.getElementById('loginInfo');
+    b.disabled = true; err.textContent = ''; info.textContent = 'Envoi en cours…';
+    fetch('/api/admin/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', cache: 'no-store' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
+      .then(function (x) {
+        info.textContent = '';
+        if (x.r.ok) { info.textContent = 'Un mot de passe provisoire a été envoyé à ' + (x.j.to || 'votre adresse') + '. Il est valable ' + (x.j.validMinutes || 15) + ' min et ne sert qu’une fois.'; return; }
+        if (x.r.status === 429) { err.textContent = 'Trop de demandes : réessayez dans ' + Math.ceil((x.j.retryAfter || 3600) / 60) + ' min.'; return; }
+        if (x.j.error === 'mail_not_configured') { err.textContent = 'L’envoi d’e-mails n’est pas configuré (RESEND_API_KEY manquant dans Netlify).'; return; }
+        err.textContent = 'L’e-mail n’a pas pu être envoyé. Réessayez plus tard.';
+      })
+      .catch(function () { info.textContent = ''; err.textContent = 'Impossible de joindre le serveur. Réessayez.'; })
+      .then(function () { b.disabled = false; });
+  });
+
+  // ---- changement du mot de passe ----
+  var forced = false;
+  var PW_ERR = { too_short: 'Le nouveau mot de passe doit faire au moins 10 caractères.', too_long: 'Mot de passe trop long.',
+    too_simple: 'Utilisez au moins 3 types : minuscules, majuscules, chiffres, symboles.', same_as_before: 'Choisissez un mot de passe différent de l’actuel.',
+    wrong_current: 'Mot de passe actuel incorrect.', locked: 'Trop de tentatives : réessayez dans 15 min.' };
+  function openPw(isForced) {
+    forced = !!isForced;
+    document.getElementById('pwCurL').hidden = forced;
+    document.getElementById('pwCancel').hidden = forced;
+    document.getElementById('pwIntro').textContent = (forced ? 'Vous êtes connecté avec le mot de passe provisoire : choisissez votre nouveau mot de passe. ' : '') +
+      'Au moins 10 caractères, avec 3 types parmi : minuscules, majuscules, chiffres, symboles.';
+    ['pwCur', 'pwNew', 'pwNew2'].forEach(function (id) { document.getElementById(id).value = ''; });
+    document.getElementById('pwErr').textContent = '';
+    if (forced) { document.getElementById('login').hidden = true; document.getElementById('app').hidden = true; }
+    document.getElementById('pwModal').hidden = false;
+    document.getElementById(forced ? 'pwNew' : 'pwCur').focus();
+  }
+  function closePw() { document.getElementById('pwModal').hidden = true; ['pwCur', 'pwNew', 'pwNew2'].forEach(function (id) { document.getElementById(id).value = ''; }); }
+  document.getElementById('pwBtn').addEventListener('click', function () {
+    if (demo) { toast('Connectez-vous avec votre mot de passe pour le modifier.'); return; }
+    openPw(false);
+  });
+  document.getElementById('pwCancel').addEventListener('click', closePw);
+  document.getElementById('pwModal').addEventListener('keydown', function (e) { if (e.key === 'Escape' && !forced) closePw(); });
+  document.getElementById('pwForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var cur = document.getElementById('pwCur').value, n1 = document.getElementById('pwNew').value, n2 = document.getElementById('pwNew2').value, er = document.getElementById('pwErr');
+    if (!forced && !cur) { er.textContent = 'Saisissez votre mot de passe actuel.'; return; }
+    if (n1 !== n2) { er.textContent = 'Les deux nouveaux mots de passe ne correspondent pas.'; return; }
+    if (n1.length < 10) { er.textContent = PW_ERR.too_short; return; }
+    var btn = this.querySelector('button[type=submit]'); btn.disabled = true; er.textContent = '';
+    fetch('/api/admin/password', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + pw }, body: JSON.stringify({ current: forced ? undefined : cur, next: n1 }), cache: 'no-store' })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
+      .then(function (x) {
+        if (x.r.status === 401) { sset('rc_tok', null); pw = null; return showLogin('Session expirée : reconnectez-vous.'); }
+        if (!x.r.ok || !x.j.token) { er.textContent = PW_ERR[x.j.error] || 'Le mot de passe n’a pas pu être changé.'; return; }
+        pw = x.j.token; sset('rc_tok', JSON.stringify(x.j)); armExpiry(x.j.exp);
+        closePw(); var wasForced = forced; forced = false;
+        if (wasForced) showApp();
+        toast('Mot de passe changé. Les autres sessions ont été déconnectées.');
+      })
+      .catch(function () { er.textContent = 'Impossible de joindre le serveur. Réessayez.'; })
       .then(function () { btn.disabled = false; });
   });
   document.getElementById('demoBtn').addEventListener('click', function () { demo = true; showApp(); });
@@ -391,5 +455,5 @@
   });
 
   try { sessionStorage.removeItem('rc_pw'); } catch (e) {}
-  if (pw) showApp(); else showLogin();
+  if (pw && tok && tok.mustChange) openPw(true); else if (pw) showApp(); else showLogin();
 })();
