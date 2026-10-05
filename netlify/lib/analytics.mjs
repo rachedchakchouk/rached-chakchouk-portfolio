@@ -140,21 +140,23 @@ async function hmac(key, data) {
   return b64u(await crypto.subtle.sign('HMAC', k, new TextEncoder().encode(data)));
 }
 export const TOKEN_TTL = 2 * 60 * 60 * 1000; // 2 h
-export async function makeToken(secret, now = Date.now()) {
-  const exp = now + TOKEN_TTL, payload = 'v1.' + exp;
-  return { token: payload + '.' + await hmac('rc-admin|' + secret, payload), exp };
+export async function makeToken(secret, kind = 'm', now = Date.now()) {
+  const exp = now + TOKEN_TTL, payload = 'v2.' + exp + '.' + (kind === 't' ? 't' : 'm');
+  return { token: payload + '.' + await hmac('rc-admin|' + secret, payload), exp, mustChange: kind === 't' };
 }
+// returns 'm' (normal session), 't' (session opened with a temporary password) or false
 export async function verifyToken(token, secret, now = Date.now()) {
   const parts = String(token || '').split('.');
-  if (parts.length !== 3 || parts[0] !== 'v1') return false;
+  if (parts.length !== 4 || parts[0] !== 'v2' || !/^[mt]$/.test(parts[2])) return false;
   const exp = Number(parts[1]);
   if (!exp || exp < now || exp > now + TOKEN_TTL + 60000) return false;
-  return safeEqual(parts[2], await hmac('rc-admin|' + secret, parts[0] + '.' + parts[1]));
+  return safeEqual(parts[3], await hmac('rc-admin|' + secret, parts.slice(0, 3).join('.'))) ? parts[2] : false;
 }
 export async function authorized(req, secret) {
   const auth = req.headers.get('authorization') || '';
   const given = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (given && secret && await verifyToken(given, secret)) return true;
+  const kind = given && secret ? await verifyToken(given, secret) : false;
+  if (kind) return kind;
   await new Promise(r => setTimeout(r, 400));
   return false;
 }
