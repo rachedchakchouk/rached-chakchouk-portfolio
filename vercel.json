@@ -10,7 +10,32 @@
       "permanent": false
     },
     {
-      "source": "/dashboard/:path*",
+      "source": "/dashboard/",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/:path+",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/dashborad",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/dashborad/",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/admin",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/admin/",
       "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     }
