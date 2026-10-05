@@ -2,7 +2,10 @@
   var root = document.documentElement;
   // ---- content rendering (data in #defaultContent, overridable from the dashboard via /api/content) ----
   var CONTENT = JSON.parse(document.getElementById('defaultContent').textContent);
-  var PROD = location.hostname === 'rached-chakchouk.netlify.app';
+  var MAIN_HOST = 'rached-chakchouk.netlify.app';
+  // backup mirror on Vercel: same content and files (proxied from the main site), no visit tracking
+  var MIRROR = /\.vercel\.app$/.test(location.hostname);
+  var PROD = location.hostname === MAIN_HOST || MIRROR;
   function e_(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function md(t) { return e_(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
   function B(o, f) { o = o || {}; f = f || e_; return '<span data-l="fr">' + f(o.fr) + '</span><span data-l="en">' + f(o.en != null && o.en !== '' ? o.en : o.fr) + '</span>'; }
@@ -202,7 +205,7 @@
 
   // contact form: sends automatically to the configured endpoint (Formspree-compatible JSON POST)
   // Netlify Forms: the form is detected at deploy time (data-netlify) and submissions arrive in Netlify → Forms + e-mail notification.
-  var CONTACT_ENDPOINT = location.hostname === 'rached-chakchouk.netlify.app' ? '/' : '';
+  var CONTACT_ENDPOINT = location.hostname === MAIN_HOST ? '/' : MIRROR ? '/api/contact' : '';
   var form = document.getElementById('contactForm');
   if (form) {
     var T = {
@@ -344,7 +347,7 @@
   var yr = document.getElementById('yr'); if (yr) { var y = new Date().getFullYear(); if (y > 2026) yr.textContent = '2026–' + y; }
 
   // ---- cookieless visit tracking (only on the production site) ----
-  var TRACK = location.hostname === 'rached-chakchouk.netlify.app' && navigator.doNotTrack !== '1';
+  var TRACK = location.hostname === MAIN_HOST && navigator.doNotTrack !== '1';
   try { if (localStorage.getItem('rc_ignore') === '1') TRACK = false; } catch (e) {}
   function track(payload) {
     if (!TRACK) return;
