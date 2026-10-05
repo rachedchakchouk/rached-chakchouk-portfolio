@@ -1,0 +1,6 @@
+Contact: https://linkedin.com/in/rached-chakchouk
+Contact: https://rached-chakchouk.netlify.app/#contact
+Expires: 2027-10-05T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://rached-chakchouk.netlify.app/.well-known/security.txt
+Policy: https://github.com/rachedchakchouk/rached-chakchouk-portfolio/blob/main/SECURITY.md
