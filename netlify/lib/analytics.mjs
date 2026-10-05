@@ -133,12 +133,44 @@ export function checkUpload(name, bytes) {
   return { type };
 }
 
+// ---- admin sessions (short-lived signed tokens; the password itself is only sent once, to /api/admin/login) ----
+const b64u = (buf) => Buffer.from(buf).toString('base64url');
+async function hmac(key, data) {
+  const k = await crypto.subtle.importKey('raw', new TextEncoder().encode(key), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return b64u(await crypto.subtle.sign('HMAC', k, new TextEncoder().encode(data)));
+}
+export const TOKEN_TTL = 2 * 60 * 60 * 1000; // 2 h
+export async function makeToken(secret, now = Date.now()) {
+  const exp = now + TOKEN_TTL, payload = 'v1.' + exp;
+  return { token: payload + '.' + await hmac('rc-admin|' + secret, payload), exp };
+}
+export async function verifyToken(token, secret, now = Date.now()) {
+  const parts = String(token || '').split('.');
+  if (parts.length !== 3 || parts[0] !== 'v1') return false;
+  const exp = Number(parts[1]);
+  if (!exp || exp < now || exp > now + TOKEN_TTL + 60000) return false;
+  return safeEqual(parts[2], await hmac('rc-admin|' + secret, parts[0] + '.' + parts[1]));
+}
 export async function authorized(req, secret) {
   const auth = req.headers.get('authorization') || '';
   const given = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (given && secret && safeEqual(given, secret)) return true;
-  await new Promise(r => setTimeout(r, 600));
+  if (given && secret && await verifyToken(given, secret)) return true;
+  await new Promise(r => setTimeout(r, 400));
   return false;
+}
+
+// ---- simple counters in Netlify Blobs (rate limiting) ----
+export async function bump(store, key, ttlMs) {
+  const now = Date.now();
+  const cur = await store.get(key, { type: 'json' }).catch(() => null);
+  const rec = cur && cur.until > now ? cur : { n: 0, until: now + ttlMs };
+  rec.n++;
+  await store.setJSON(key, rec);
+  return rec;
+}
+export async function peek(store, key) {
+  const cur = await store.get(key, { type: 'json' }).catch(() => null);
+  return cur && cur.until > Date.now() ? cur : null;
 }
 
 // ---- editable site content ----
