@@ -16,6 +16,11 @@ admin API for editing content and files). It stores no personal data from visito
 - Admin login: the password (environment variable) is sent once to `/api/admin/login`, which returns a
   signed session token valid for 2 hours (HMAC-SHA256); the password is never stored in the browser.
   5 failed attempts lock logins for 15 minutes.
+- Password change from the dashboard (current password required, 10+ characters, 3 character types);
+  the new password is stored only as a salted scrypt hash, and every change signs out all other sessions.
+- Forgotten password: a one-time temporary password (valid 15 minutes) is e-mailed to the fixed admin
+  address (never taken from the request); it only allows choosing a new password. Limited to 3 requests
+  per visitor per hour and 6 per day.
 - Rate limiting on the analytics endpoint (per visitor and per day), same-origin check, bot filtering;
   visit records are deleted after 13 months.
 - Admin API: uploads limited in size and checked by real file signature;
