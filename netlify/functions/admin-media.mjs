@@ -1,5 +1,6 @@
 import { getStore } from '@netlify/blobs';
 import { MEDIA, slotFor, checkUpload, authorized } from '../lib/analytics.mjs';
+import { adminKey } from '../lib/auth.mjs';
 
 // /api/admin/media  — GET: status · PUT ?name=: upload (raw body) · DELETE ?name=: back to the original file.
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
@@ -7,9 +8,9 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 });
 
 export default async (req) => {
-  const secret = Netlify.env.get('DASHBOARD_PASSWORD');
+  const secret = await adminKey();
   if (!secret) return json({ error: 'not_configured' }, 503);
-  if (!(await authorized(req, secret))) return json({ error: 'unauthorized' }, 401);
+  if ((await authorized(req, secret)) !== 'm') return json({ error: 'unauthorized' }, 401);
 
   const store = getStore('media');
   const name = new URL(req.url).searchParams.get('name');

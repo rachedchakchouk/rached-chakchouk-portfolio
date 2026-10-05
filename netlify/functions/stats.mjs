@@ -1,15 +1,16 @@
 import { getStore } from '@netlify/blobs';
 import { day, aggregate, authorized } from '../lib/analytics.mjs';
+import { adminKey } from '../lib/auth.mjs';
 
-// GET /api/stats?days=30  — requires "Authorization: Bearer <DASHBOARD_PASSWORD>".
+// GET /api/stats?days=30  — requires "Authorization: Bearer <session token>".
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
   status, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-robots-tag': 'noindex' }
 });
 
 export default async (req) => {
-  const secret = Netlify.env.get('DASHBOARD_PASSWORD');
+  const secret = await adminKey();
   if (!secret) return json({ error: 'not_configured' }, 503);
-  if (!(await authorized(req, secret))) return json({ error: 'unauthorized' }, 401);
+  if ((await authorized(req, secret)) !== 'm') return json({ error: 'unauthorized' }, 401);
 
   const days = Math.min(Math.max(parseInt(new URL(req.url).searchParams.get('days') || '30', 10) || 30, 1), 90);
   const store = getStore('analytics');
