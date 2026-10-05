@@ -561,7 +561,8 @@ body.noscroll { overflow: hidden; }
         <p data-l="en">Hiring for a Java / Angular / Spring Boot role? Send me an e-mail or connect on LinkedIn.</p>
       </div>
 
-    <form class="cform" id="contactForm" novalidate>
+    <form class="cform" id="contactForm" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="_gotcha" novalidate>
+      <input type="hidden" name="form-name" value="contact">
       <div class="frow">
         <label for="cf-name"><span data-l="fr">Nom</span><span data-l="en">Name</span>
           <input id="cf-name" name="name" type="text" autocomplete="name" required maxlength="100">
@@ -1851,7 +1852,8 @@ body.noscroll { overflow: hidden; }
   }
 
   // contact form: sends automatically to the configured endpoint (Formspree-compatible JSON POST)
-  var CONTACT_ENDPOINT = ''; // e.g. 'https://formspree.io/f/XXXXXXXX'
+  // Netlify Forms: the form is detected at deploy time (data-netlify) and submissions arrive in Netlify → Forms + e-mail notification.
+  var CONTACT_ENDPOINT = location.hostname === 'rached-chakchouk.netlify.app' ? '/' : '';
   var form = document.getElementById('contactForm');
   if (form) {
     var T = {
@@ -1873,8 +1875,8 @@ body.noscroll { overflow: hidden; }
       if (f._gotcha.value) return;
       if (!CONTACT_ENDPOINT) { st.textContent = t('off'); return; }
       var btn = form.querySelector('.send'); btn.disabled = true; st.textContent = t('sending');
-      fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim() }) })
+      var payload = new URLSearchParams({ 'form-name': 'contact', name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim(), _gotcha: '' });
+      fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: payload.toString() })
         .then(function (r) { if (!r.ok) throw new Error(r.status); st.textContent = t('ok'); form.reset(); })
         .catch(function () { st.textContent = t('ko'); })
         .then(function () { btn.disabled = false; });
