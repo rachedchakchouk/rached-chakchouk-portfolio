@@ -25,7 +25,8 @@ export default async (req, context) => {
       etag,
       'x-content-type-options': 'nosniff',
       'x-frame-options': 'SAMEORIGIN',
-      'content-security-policy': "frame-ancestors 'self'",
+      'content-security-policy': slot.kind === 'pdf' ? "frame-ancestors 'self'" : "default-src 'none'; frame-ancestors 'self'; sandbox",
+      'cross-origin-resource-policy': 'same-origin',
       ...(slot.kind === 'pdf' ? { 'x-robots-tag': 'noindex' } : {})
     }
   });

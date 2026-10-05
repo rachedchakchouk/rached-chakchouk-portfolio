@@ -1,9 +1,11 @@
 import { getStore } from '@netlify/blobs';
-import { BOT_RE, EVENTS, day, parseUA, sourceOf, clean, visitorHash } from '../lib/analytics.mjs';
+import { BOT_RE, EVENTS, day, parseUA, sourceOf, clean, visitorHash, bump } from '../lib/analytics.mjs';
 
 // POST /api/track  — cookieless, IP is never stored (only a daily-salted hash for unique counts).
 export default async (req, context) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+  const origin = req.headers.get('origin');
+  if (origin && new URL(origin).host !== new URL(req.url).host) return new Response(null, { status: 403 });
   const ua = req.headers.get('user-agent') || '';
   if (BOT_RE.test(ua)) return new Response(null, { status: 204 });
 
@@ -34,6 +36,13 @@ export default async (req, context) => {
   } else {
     return new Response('Unknown event', { status: 400 });
   }
+
+  // abuse protection: max 40 events / visitor / 10 min, max 5000 events / day overall
+  const sec = getStore('security');
+  const perVisitor = await bump(sec, `rl/${v}`, 10 * 60 * 1000);
+  if (perVisitor.n > 40) return new Response(null, { status: 429 });
+  const perDay = await bump(sec, `cap/${d}`, 26 * 60 * 60 * 1000);
+  if (perDay.n > 5000) return new Response(null, { status: 429 });
 
   const store = getStore('analytics');
   const key = `e/${d}/${now}-${Math.random().toString(36).slice(2, 8)}`;

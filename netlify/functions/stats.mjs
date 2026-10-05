@@ -1,5 +1,5 @@
 import { getStore } from '@netlify/blobs';
-import { day, aggregate, safeEqual } from '../lib/analytics.mjs';
+import { day, aggregate, authorized } from '../lib/analytics.mjs';
 
 // GET /api/stats?days=30  — requires "Authorization: Bearer <DASHBOARD_PASSWORD>".
 const json = (data, status = 200) => new Response(JSON.stringify(data), {
@@ -9,12 +9,7 @@ const json = (data, status = 200) => new Response(JSON.stringify(data), {
 export default async (req) => {
   const secret = Netlify.env.get('DASHBOARD_PASSWORD');
   if (!secret) return json({ error: 'not_configured' }, 503);
-  const auth = req.headers.get('authorization') || '';
-  const given = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (!given || !safeEqual(given, secret)) {
-    await new Promise(r => setTimeout(r, 600)); // slow down brute force
-    return json({ error: 'unauthorized' }, 401);
-  }
+  if (!(await authorized(req, secret))) return json({ error: 'unauthorized' }, 401);
 
   const days = Math.min(Math.max(parseInt(new URL(req.url).searchParams.get('days') || '30', 10) || 30, 1), 90);
   const store = getStore('analytics');
@@ -28,6 +23,11 @@ export default async (req) => {
   for (let i = 0; i < keys.length; i += 50) {
     const batch = await Promise.all(keys.slice(i, i + 50).map(k => store.get(k, { type: 'json' }).catch(() => null)));
     for (const e of batch) if (e) events.push(e);
+  }
+  // data retention: visit records older than 13 months are deleted
+  for (let i = 395; i < 410; i++) {
+    const { blobs: old } = await store.list({ prefix: `e/${day(now - i * 86400000)}/` }).catch(() => ({ blobs: [] }));
+    await Promise.all(old.map(b => store.delete(b.key).catch(() => {})));
   }
   return json(aggregate(events, days, now));
 };
