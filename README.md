@@ -83,3 +83,11 @@ Security headers (CSP, HSTS, clickjacking protection, strict referrer and permis
 
 - LinkedIn: [linkedin.com/in/rached-chakchouk](https://linkedin.com/in/rached-chakchouk)
 - GitHub: [github.com/rachedchakchouk](https://github.com/rachedchakchouk)
+
+## Backup mirror (Vercel)
+
+The same repository is also deployed on Vercel as a backup copy (used if Netlify deploys are paused).
+- `vercel.json` + `scripts/vercel-build.mjs`: publishes only the public static files (no dashboard, no server code), same security headers, `noindex`.
+- `api/` (Vercel functions): content, CV and photo are read from the main Netlify site, with the static files as fallback;
+  the contact form is forwarded to the main site's Netlify form, so messages still arrive by e-mail.
+- `/dashboard/` on the mirror redirects to the main site's dashboard; visits are only counted on the main site.
