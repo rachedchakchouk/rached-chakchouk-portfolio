@@ -1,5 +1,5 @@
-// Vercel mirror build: copies only the public static files into ./public
-// (server code, repo docs and the private dashboard are not published on the mirror).
+// Vercel build (main address): copies only the public static files into ./public
+// (server code, repo docs and the private dashboard stay on the Netlify back-end).
 import { cpSync, mkdirSync, rmSync, existsSync, writeFileSync } from 'node:fs';
 
 const OUT = 'public';
@@ -11,6 +11,6 @@ const KEEP = [
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT + '/assets', { recursive: true });
 for (const p of KEEP) if (existsSync(p)) cpSync(p, OUT + '/' + p, { recursive: true });
-// the mirror is a backup copy: keep search engines on the main site
-writeFileSync(OUT + '/robots.txt', 'User-agent: *\nDisallow: /\n');
-console.log('Vercel mirror built in ./' + OUT);
+// Vercel is the main address: open to search engines (the repo robots.txt is the Netlify backup's, which blocks them)
+writeFileSync(OUT + '/robots.txt', 'User-agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /api/\n');
+console.log('Vercel site built in ./' + OUT);

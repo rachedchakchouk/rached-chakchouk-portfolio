@@ -2,10 +2,12 @@
   var root = document.documentElement;
   // ---- content rendering (data in #defaultContent, overridable from the dashboard via /api/content) ----
   var CONTENT = JSON.parse(document.getElementById('defaultContent').textContent);
-  var MAIN_HOST = 'rached-chakchouk.netlify.app';
-  // backup mirror on Vercel: same content and files (proxied from the main site), no visit tracking
+  // main address on Vercel; Netlify is the backup address and hosts the dashboard, analytics and form back-end
+  var MAIN_HOST = 'rached-chakchouk.vercel.app';
+  var BACKUP_HOST = 'rached-chakchouk.netlify.app';
+  // Vercel deployment (main address or a preview): content, CV and photo are proxied from the Netlify back-end
   var MIRROR = /\.vercel\.app$/.test(location.hostname);
-  var PROD = location.hostname === MAIN_HOST || MIRROR;
+  var PROD = location.hostname === BACKUP_HOST || MIRROR;
   function e_(t) { return String(t == null ? '' : t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function md(t) { return e_(t).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>'); }
   function B(o, f) { o = o || {}; f = f || e_; return '<span data-l="fr">' + f(o.fr) + '</span><span data-l="en">' + f(o.en != null && o.en !== '' ? o.en : o.fr) + '</span>'; }
@@ -215,7 +217,7 @@
 
   // contact form: sends automatically to the configured endpoint (Formspree-compatible JSON POST)
   // Netlify Forms: the form is detected at deploy time (data-netlify) and submissions arrive in Netlify → Forms + e-mail notification.
-  var CONTACT_ENDPOINT = location.hostname === MAIN_HOST ? '/' : MIRROR ? '/api/contact' : '';
+  var CONTACT_ENDPOINT = location.hostname === BACKUP_HOST ? '/' : MIRROR ? '/api/contact' : '';
   var form = document.getElementById('contactForm');
   if (form) {
     var T = {
@@ -356,15 +358,18 @@
 
   var yr = document.getElementById('yr'); if (yr) { var y = new Date().getFullYear(); if (y > 2026) yr.textContent = '2026–' + y; }
 
-  // ---- cookieless visit tracking (only on the production site) ----
-  var TRACK = location.hostname === MAIN_HOST && navigator.doNotTrack !== '1';
-  try { if (localStorage.getItem('rc_ignore') === '1') TRACK = false; } catch (e) {}
+  // ---- cookieless visit tracking (main address and backup address; stats are stored on the Netlify back-end) ----
+  var TRACK = (location.hostname === MAIN_HOST || location.hostname === BACKUP_HOST) && navigator.doNotTrack !== '1';
+  var TRACK_URL = location.hostname === BACKUP_HOST ? '/api/track' : 'https://' + BACKUP_HOST + '/api/track';
+  // owner's devices: the dashboard login sets rc_ignore on the Netlify address; open the Vercel address once with ?notrack to do the same there
+  try { if (/[?&]notrack\b/.test(location.search)) localStorage.setItem('rc_ignore', '1'); if (localStorage.getItem('rc_ignore') === '1') TRACK = false; } catch (e) {}
   function track(payload) {
     if (!TRACK) return;
     var body = JSON.stringify(payload);
     try {
-      if (navigator.sendBeacon) navigator.sendBeacon('/api/track', new Blob([body], { type: 'application/json' }));
-      else fetch('/api/track', { method: 'POST', body: body, keepalive: true, headers: { 'Content-Type': 'application/json' } });
+      // text/plain keeps the cross-origin beacon (Vercel -> Netlify) a "simple" request: no CORS preflight needed
+      if (navigator.sendBeacon) navigator.sendBeacon(TRACK_URL, new Blob([body], { type: 'text/plain' }));
+      else fetch(TRACK_URL, { method: 'POST', body: body, keepalive: true, mode: 'no-cors', headers: { 'Content-Type': 'text/plain' } });
     } catch (e) {}
   }
   track({ type: 'pageview', path: location.pathname, ref: document.referrer, lang: root.getAttribute('data-lang') || 'fr' });
