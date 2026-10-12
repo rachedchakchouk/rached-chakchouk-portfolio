@@ -48,6 +48,15 @@
       var sc = d.url ? '<a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B(d.school) + ' <span aria-hidden="true">↗</span></a>' : B(d.school);
       return '<div><span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span><div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
     }).join('');
+    var certs = c.certifications || [], cp = document.getElementById('certsPanel');
+    if (cp) {
+      cp.hidden = !certs.length;
+      document.getElementById('certList').innerHTML = certs.map(function (d) {
+        var iss = e_(d.issuer) + (d.note && (d.note.fr || d.note.en) ? ' · ' + B(d.note) : '');
+        var link = d.url ? '<br><a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B({ fr: 'Voir le certificat', en: 'View certificate' }) + ' <span aria-hidden="true">↗</span></a>' : '';
+        return '<div><span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span><div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + iss + link + '</p></div><span class="yr">' + B(d.date) + '</span></div>';
+      }).join('');
+    }
     document.getElementById('langList').innerHTML = (c.languages || []).map(function (l) {
       return '<li>' + B(l.name) + '<span>' + B(l.level) + '</span></li>';
     }).join('');
@@ -58,7 +67,8 @@
     var ph = document.querySelector('.t-photo img'); if (ph) ph.src = '/media/photo';
     document.querySelectorAll('a.btn-pdf').forEach(function (a) { a.href = a.getAttribute('data-l') === 'en' ? '/media/cv-en.pdf' : '/media/cv-fr.pdf'; });
     fetch('/api/content', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-      if (d && d.version) { CONTENT = d; renderContent(); }
+      // content published before the certifications section existed keeps the built-in certifications
+      if (d && d.version) { if (!Array.isArray(d.certifications)) d.certifications = CONTENT.certifications || []; CONTENT = d; renderContent(); }
     }).catch(function () {});
   }
 

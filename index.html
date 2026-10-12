@@ -211,6 +211,8 @@ h3 { font-size: 18px; margin: 0; font-weight: 600; line-height: 1.35; letter-spa
 .langs li:first-child { padding-top: 0; }
 .langs li:last-child { border-bottom: 0; }
 .langs span:last-child { color: var(--muted); font-size: 15px; }
+.certs-panel { margin-top: 14px; }
+.edu .cert-id { font: 400 12px var(--mono); color: var(--muted); }
 @media (max-width: 860px) { .two { grid-template-columns: 1fr; } }
 
 /* contact */
@@ -551,6 +553,10 @@ body.noscroll { overflow: hidden; }
         <h2><span data-l="fr">Langues</span><span data-l="en">Languages</span></h2>
         <ul class="langs" id="langList"></ul>
       </div>
+    </div>
+    <div class="panel certs-panel" id="certsPanel" hidden>
+      <h2><span data-l="fr">Certifications</span><span data-l="en">Certifications</span></h2>
+      <div class="edu" id="certList"></div>
     </div>
   </section>
 
@@ -1642,6 +1648,25 @@ body.noscroll { overflow: hidden; }
     "fr": "Courant",
     "en": "Fluent"
    }
+  }
+ ],
+ "certifications": [
+  {
+   "title": {
+    "fr": "Agile & Scrum : Réussir les certifications PSM I & PSPO I",
+    "en": "Agile & Scrum: Pass the PSM I & PSPO I certifications"
+   },
+   "issuer": "Udemy",
+   "date": {
+    "fr": "Novembre 2025",
+    "en": "November 2025"
+   },
+   "note": {
+    "fr": "Certificat de fin de formation · 2 h 30",
+    "en": "Certificate of completion · 2.5 h"
+   },
+   "url": "https://ude.my/UC-e99d2b8b-8a7c-463e-8306-43a854304c02",
+   "logoText": "AS"
   }
  ]
 }</script>

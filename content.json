@@ -1011,5 +1011,24 @@
     "en": "Fluent"
    }
   }
+ ],
+ "certifications": [
+  {
+   "title": {
+    "fr": "Agile & Scrum : Réussir les certifications PSM I & PSPO I",
+    "en": "Agile & Scrum: Pass the PSM I & PSPO I certifications"
+   },
+   "issuer": "Udemy",
+   "date": {
+    "fr": "Novembre 2025",
+    "en": "November 2025"
+   },
+   "note": {
+    "fr": "Certificat de fin de formation · 2 h 30",
+    "en": "Certificate of completion · 2.5 h"
+   },
+   "url": "https://ude.my/UC-e99d2b8b-8a7c-463e-8306-43a854304c02",
+   "logoText": "AS"
+  }
  ]
 }
