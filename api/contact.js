@@ -16,7 +16,7 @@ export async function POST(req) {
   if (name.length < 2 || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email) || message.length < 10) return new Response(null, { status: 400 });
   const t = withTimeout(8000);
   try {
-    const body = new URLSearchParams({ 'form-name': 'contact', name, email, message: message + '\n\n(envoyé depuis le site miroir Vercel)', _gotcha: '' });
+    const body = new URLSearchParams({ 'form-name': 'contact', name, email, message: message + '\n\n(envoyé depuis rached-chakchouk.vercel.app)', _gotcha: '' });
     const r = await fetch(MAIN + '/', { method: 'POST', signal: t.signal, redirect: 'manual',
       headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: body.toString() });
     return new Response(null, { status: r.status < 400 ? 204 : 502 });

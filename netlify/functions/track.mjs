@@ -1,11 +1,16 @@
 import { getStore } from '@netlify/blobs';
 import { BOT_RE, EVENTS, day, parseUA, sourceOf, clean, visitorHash, bump } from '../lib/analytics.mjs';
 
+const MAIN_HOST = 'rached-chakchouk.vercel.app'; // main address (Vercel); this Netlify site is the backup address
+
 // POST /api/track  — cookieless, IP is never stored (only a daily-salted hash for unique counts).
 export default async (req, context) => {
   if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+  // accepted origins: this site (backup address) and the main address on Vercel
   const origin = req.headers.get('origin');
-  if (origin && new URL(origin).host !== new URL(req.url).host) return new Response(null, { status: 403 });
+  let originHost = '';
+  try { originHost = origin ? new URL(origin).host : ''; } catch { return new Response(null, { status: 403 }); }
+  if (originHost && originHost !== new URL(req.url).host && originHost !== MAIN_HOST) return new Response(null, { status: 403 });
   const ua = req.headers.get('user-agent') || '';
   if (BOT_RE.test(ua)) return new Response(null, { status: 204 });
 
@@ -15,7 +20,7 @@ export default async (req, context) => {
   try { body = JSON.parse(raw); } catch { return new Response('Bad request', { status: 400 }); }
 
   const now = Date.now(), d = day(now);
-  const host = new URL(req.url).hostname.replace(/^www\./, '');
+  const host = (originHost ? originHost.split(':')[0] : new URL(req.url).hostname).replace(/^www\./, '');
   const salt = Netlify.env.get('ANALYTICS_SALT') || 'rc-portfolio';
   const v = await visitorHash(context.ip || '', ua, salt, d);
   const geo = context.geo || {};

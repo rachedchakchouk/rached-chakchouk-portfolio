@@ -3,7 +3,8 @@
 ## Scope
 
 This repository hosts a static personal portfolio (HTML, CSS, vanilla JavaScript)
-deployed on Netlify at https://rached-chakchouk.netlify.app.
+published at https://rached-chakchouk.vercel.app (main address, Vercel) and
+https://rached-chakchouk.netlify.app (backup address, Netlify).
 It uses a few Netlify Functions (anonymous visit analytics and a password-protected
 admin API for editing content and files). It stores no personal data from visitors
 (no cookies, IP addresses are never stored).
@@ -32,7 +33,7 @@ admin API for editing content and files). It stores no personal data from visito
 
 ## Reporting a vulnerability
 
-See also [`/.well-known/security.txt`](https://rached-chakchouk.netlify.app/.well-known/security.txt).
+See also [`/.well-known/security.txt`](https://rached-chakchouk.vercel.app/.well-known/security.txt).
 
 
 If you find a security issue, please report it privately via LinkedIn:

@@ -2,7 +2,7 @@
 
 **Full Stack Software Engineer · Java / Spring Boot / Angular**
 
-🔗 **Live:** https://rached-chakchouk.netlify.app
+🔗 **Live:** https://rached-chakchouk.vercel.app (backup: https://rached-chakchouk.netlify.app)
 
 ![Portfolio preview](preview.webp)
 
@@ -84,10 +84,13 @@ Security headers (CSP, HSTS, clickjacking protection, strict referrer and permis
 - LinkedIn: [linkedin.com/in/rached-chakchouk](https://linkedin.com/in/rached-chakchouk)
 - GitHub: [github.com/rachedchakchouk](https://github.com/rachedchakchouk)
 
-## Backup mirror (Vercel)
+## Hosting: Vercel (main address) + Netlify (backup address and back-end)
 
-The same repository is also deployed on Vercel as a backup copy (used if Netlify deploys are paused).
-- `vercel.json` + `scripts/vercel-build.mjs`: publishes only the public static files (no dashboard, no server code), same security headers, `noindex`.
-- `api/` (Vercel functions): content, CV and photo are read from the main Netlify site, with the static files as fallback;
-  the contact form is forwarded to the main site's Netlify form, so messages still arrive by e-mail.
-- `/dashboard/` on the mirror redirects to the main site's dashboard; visits are only counted on the main site.
+- **Main address:** https://rached-chakchouk.vercel.app — indexed by search engines, canonical URL of the site.
+- **Backup address:** https://rached-chakchouk.netlify.app — same site, `noindex` (robots.txt + `X-Robots-Tag`), and home of the back-end:
+  dashboard, content API, CV/photo storage (Netlify Blobs), visit analytics and the Netlify contact form.
+- `vercel.json` + `scripts/vercel-build.mjs`: Vercel publishes only the public static files (no dashboard, no server code), same security headers.
+- `api/` (Vercel functions): content, CV and photo are read from the Netlify back-end, with the static files as fallback;
+  the contact form is forwarded to the Netlify form, so messages still arrive by e-mail.
+- Visits on both addresses are counted: on Vercel the tracker sends its beacon to the Netlify `/api/track` (allowed origin, CSP `connect-src`).
+- `/dashboard/` on Vercel redirects to the Netlify dashboard.

@@ -1,4 +1,3 @@
+# Netlify backup address: search engines index the main address, https://rached-chakchouk.vercel.app
 User-agent: *
-Allow: /
-Disallow: /dashboard/
-Disallow: /api/
+Disallow: /
