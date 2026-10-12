@@ -277,6 +277,8 @@
       label: function (x) { return B2(x.title); }, blank: function () { return { title: { fr: 'Nouvelle catégorie', en: 'New category' }, items: [] }; } },
     education: { title: 'Formation', fields: [['title', 'bi', 'Diplôme'], ['school', 'bi', 'Établissement'], ['url', 'url', 'Site'], ['years', 'text', 'Années'], ['logoText', 'text', 'Logo (initiales)']],
       label: function (x) { return B2(x.title); }, blank: function () { return { title: { fr: 'Nouveau diplôme', en: 'New degree' }, school: { fr: '', en: '' }, url: '', years: '', logoText: '' }; } },
+    certifications: { title: 'Certifications', fields: [['title', 'bi', 'Intitulé'], ['issuer', 'text', 'Organisme'], ['date', 'bi', 'Date (ex. Novembre 2025)'], ['note', 'bi', 'Précision (ex. Certificat de fin de formation)'], ['url', 'url', 'Lien du certificat'], ['logoText', 'text', 'Logo (initiales)']],
+      label: function (x) { return B2(x.title); }, blank: function () { return { title: { fr: 'Nouvelle certification', en: 'New certification' }, issuer: '', date: { fr: '', en: '' }, note: { fr: '', en: '' }, url: '', logoText: '' }; } },
     languages: { title: 'Langues', fields: [['name', 'bi', 'Langue'], ['level', 'bi', 'Niveau']],
       label: function (x) { return B2(x.name); }, blank: function () { return { name: { fr: 'Langue', en: 'Language' }, level: { fr: '', en: '' } }; } }
   };
@@ -296,6 +298,10 @@
     api('GET', '/api/admin/content').then(function (j) {
       if (j.content) return { c: j.content, src: 'Contenu publié depuis le dashboard' + (j.updated ? ' le ' + new Date(j.updated).toLocaleString('fr-FR') : '') + '.' };
       return fetch('/content.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (c) { return { c: c, src: 'Contenu d’origine du site (aucune modification publiée).' }; });
+    }).then(function (x) {
+      // published content older than the certifications section: start from the site's built-in certifications
+      if (Array.isArray(x.c.certifications)) return x;
+      return fetch('/content.json', { cache: 'no-store' }).then(function (r) { return r.json(); }).then(function (d) { x.c.certifications = d.certifications || []; return x; }, function () { x.c.certifications = []; return x; });
     }).then(function (x) { work = clone(x.c); saved = clone(x.c); setDirty(false); document.getElementById('edNote').textContent = x.src + ' Les changements apparaissent sur le site dès que vous cliquez « Publier ».'; renderEditor(); })
       .catch(function (e) { document.getElementById('edNote').textContent = ''; fail(e); });
   }
