@@ -55,6 +55,9 @@ header p{margin:0 0 16px;color:var(--quiet);max-width:62ch}
 .qs button{font-weight:400;font-size:.85rem;padding:6px 12px;border-radius:8px}
 .qs button[aria-selected="true"]{background:var(--cur);border-color:var(--cur-bar);color:var(--ink)}
 .tl{font:11.5px var(--sans);fill:var(--quiet)}
+:root[data-theme="dark"] .qs button[aria-selected="true"]{color:var(--ink)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .qs button[aria-selected="true"]{color:var(--ink)}}
+.tabs{scrollbar-color:var(--line) transparent}
 :root[data-theme="dark"] .tabs button[aria-selected="true"]{color:#10162A}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .tabs button[aria-selected="true"]{color:#10162A}}
 button:focus-visible{outline:3px solid var(--cur-bar);outline-offset:2px}
