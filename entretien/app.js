@@ -1,24 +1,1240 @@
-(async()=>{
-const D=await fetch('data.json').then(r=>r.json());
-const T={fr:{t:"102 questions d'entretien technique, expliquées simplement",s:"Java, Spring Boot, JPA, SQL, Angular, RxJS, REST, Git et Docker. Chaque réponse est accompagnée d'un schéma animé qui montre, étape par étape, la ligne de code exécutée et ce qui se passe.",all:"Tout",q:"Rechercher…",pdf:"Télécharger le PDF",none:"Aucune question."},
-en:{t:"102 technical interview questions, explained simply",s:"Java, Spring Boot, JPA, SQL, Angular, RxJS, REST, Git and Docker. Each answer comes with an animated diagram showing, step by step, the line of code being executed and what happens.",all:"All",q:"Search…",pdf:"Download the PDF",none:"No question."}};
-let lang=(new URLSearchParams(location.search).get('lang')||'fr'), sec='', q='';
-const secs=[...new Set(D.map(x=>x.sec))];
-const $=id=>document.getElementById(id);
-function esc(s){return s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
-function bar(){
-  const L=T[lang];
-  $('bar').innerHTML=`<button data-l="fr" aria-pressed="${lang==='fr'}">FR</button><button data-l="en" aria-pressed="${lang==='en'}">EN</button>`+
-   `<button data-s="" aria-pressed="${sec===''}">${L.all}</button>`+secs.map(s=>`<button data-s="${esc(s)}" aria-pressed="${sec===s}">${esc(s)}</button>`).join('')+
-   `<input type="search" id="q" placeholder="${L.q}" value="${esc(q)}"><a class="dl" href="Questions_entretien_Java_Spring_Angular.pdf" download>${L.pdf}</a>`;
-  $('bar').querySelectorAll('button').forEach(b=>b.onclick=()=>{ if(b.dataset.l){lang=b.dataset.l;document.documentElement.lang=lang;} else sec=b.dataset.s; draw(); });
-  $('q').oninput=e=>{q=e.target.value;grid();};
+const SC = [
+{
+  id:"hashmap", sec:"Java", q:2, tab:"hashCode et equals", file:"Factures.java", lang:"Java", vb:[360,300],
+  code:[
+    'Map<Client, Facture> factures = new HashMap<>();',
+    'factures.put(new Client(17), f17);',
+    'factures.put(new Client(42), f42);',
+    'Facture f = factures.get(new Client(42));',
+    '// f == f42',
+    '',
+    'class Client {',
+    '  @Override public int hashCode() { return Objects.hash(id); }',
+    '  @Override public boolean equals(Object o) {',
+    '    return o instanceof Client c && c.id == id; }',
+    '}'
+  ],
+  nodes:[
+    {id:"key",x:20,y:20,w:150,h:40,t:"clé",s:"",at:1},
+    {id:"hash",x:190,y:20,w:150,h:40,t:"hashCode()",s:"",at:1},
+    {id:"b0",x:20,y:90,w:90,h:30,t:"case 0"},
+    {id:"b1",x:20,y:130,w:90,h:30,t:"case 1"},
+    {id:"b2",x:20,y:170,w:90,h:30,t:"case 2"},
+    {id:"b3",x:20,y:210,w:90,h:30,t:"case 3"},
+    {id:"e17",x:130,y:170,w:100,h:30,t:"17 → f17",at:1},
+    {id:"e42",x:240,y:170,w:100,h:30,t:"42 → f42",at:2},
+    {id:"res",x:20,y:256,w:320,h:32,t:"f = f42",at:6}
+  ],
+  edges:[
+    {id:"k2h",d:"M170 40H188",at:1},
+    {id:"h2b",d:"M265 60V76H120V178H112",at:1},
+    {id:"b2e",d:"M110 192H128",at:1},
+    {id:"e2e",d:"M230 185H238",at:2},
+    {id:"e2r",d:"M290 200V254",at:6}
+  ],
+  steps:[
+    {line:[1],txt:"Une HashMap, c’est comme une armoire avec des tiroirs (les « cases »). Ici, 4 tiroirs vides."},
+    {line:[2,8],on:["key","hash","k2h","h2b","b2","b2e","e17"],lab:{key:"Client(17)","hash.s":"→ case 2"},txt:"On range le client 17. hashCode() donne le numéro du tiroir : le 2. On y met sa facture."},
+    {line:[3,8],on:["key","hash","k2h","h2b","b2","e2e","e42"],lab:{key:"Client(42)","hash.s":"→ case 2 aussi"},txt:"On range le client 42. Lui aussi va dans le tiroir 2. Pas grave : un tiroir peut contenir plusieurs éléments."},
+    {line:[4,8],on:["key","hash","k2h","h2b","b2"],lab:{key:"Client(42)","hash.s":"→ case 2"},txt:"On cherche le client 42. hashCode() dit « tiroir 2 ». Java ouvre directement ce tiroir, sans regarder les autres."},
+    {line:[9,10],on:["b2","b2e"],bad:["e17"],txt:"Dans le tiroir, equals() compare : est-ce le client 42 ? Le 17 ? Non."},
+    {line:[9,10],on:["b2","e2e","e42"],txt:"Le suivant, le 42 ? Oui, on l’a trouvé."},
+    {line:[4,5],on:["e42","e2r","res"],txt:"Résultat : f42. À retenir : deux objets égaux avec equals() doivent avoir le même hashCode(). Sinon, Java ouvre le mauvais tiroir."}
+  ]
+},
+{
+  id:"tx", sec:"Spring Boot", q:6, tab:"@Transactional", file:"FactureService.java", lang:"Spring Boot", vb:[360,330],
+  code:[
+    '@RestController',
+    'class FactureController {',
+    '  private final FactureService service;',
+    '  @PostMapping("/factures/{id}/valider")',
+    '  void valider(@PathVariable Long id) { service.valider(id); }',
+    '}',
+    '',
+    '@Service',
+    'class FactureService {',
+    '  @Transactional',
+    '  public void valider(Long id) {',
+    '    Facture f = repo.findById(id).orElseThrow();',
+    '    f.setStatut(Statut.VALIDEE);',
+    '    this.archiver(f);',
+    '  }',
+    '  @Transactional(propagation = Propagation.REQUIRES_NEW)',
+    '  public void archiver(Facture f) { /* ... */ }',
+    '}'
+  ],
+  nodes:[
+    {id:"ctrl",x:20,y:20,w:150,h:44,t:"FactureController",s:"valider(id)"},
+    {id:"proxy",x:190,y:20,w:150,h:44,t:"Proxy Spring",s:"gère la transaction"},
+    {id:"repo",x:20,y:110,w:150,h:44,t:"Repository",s:"findById"},
+    {id:"svc",x:190,y:110,w:150,h:44,t:"FactureService",s:"valider()",at:2},
+    {id:"db",x:20,y:210,w:150,h:44,t:"PostgreSQL",s:""},
+    {id:"arch",x:190,y:210,w:150,h:44,t:"archiver()",s:"REQUIRES_NEW ?",at:5},
+    {id:"tx",x:20,y:282,w:320,h:34,t:"Transaction : aucune"}
+  ],
+  edges:[
+    {id:"c2p",d:"M170 42H188"},
+    {id:"p2s",d:"M265 64V108",at:2},
+    {id:"s2r",d:"M190 132H172",at:3},
+    {id:"r2d",d:"M95 154V208",at:3},
+    {id:"s2a",d:"M265 154V208",at:5}
+  ],
+  steps:[
+    {line:[5],on:["ctrl","c2p","proxy"],txt:"Le contrôleur pense appeler le service. En vrai, il appelle un intermédiaire créé par Spring : le proxy."},
+    {line:[10,11],on:["proxy","tx"],lab:{tx:"Transaction : ouverte (BEGIN)"},txt:"Le proxy voit @Transactional. Il ouvre une transaction : tout ce qui suit sera validé ou annulé en un seul bloc."},
+    {line:[11],on:["p2s","svc"],txt:"Le proxy passe ensuite la main au vrai service."},
+    {line:[12],on:["svc","s2r","repo","r2d","db"],txt:"Le service lit la facture dans la base de données."},
+    {line:[13],on:["svc"],lab:{"svc.s":"statut = VALIDEE (en mémoire)"},txt:"On change le statut. Rien n’est encore écrit en base : Hibernate note juste le changement."},
+    {line:[14,16,17],on:["svc"],bad:["s2a","arch"],lab:{"arch.s":"REQUIRES_NEW ignoré"},txt:"Piège : this.archiver() appelle la méthode directement, sans passer par le proxy. Son @Transactional est donc ignoré."},
+    {line:[15],on:["proxy","db","tx"],lab:{tx:"Transaction : COMMIT, UPDATE envoyé"},txt:"Tout s’est bien passé : le proxy valide (commit) et la modification est écrite en base. En cas d’erreur, tout aurait été annulé (rollback)."}
+  ]
+},
+{
+  id:"jwt", sec:"Spring Boot", q:9, tab:"JWT", file:"auth.service.ts · JwtFilter.java", lang:"Angular + Spring", vb:[360,320],
+  code:[
+    '// Angular : auth.service.ts',
+    'login(identifiants: Identifiants) {',
+    '  return this.http.post<{ token: string }>(\'/api/login\', identifiants)',
+    '    .pipe(tap(r => localStorage.setItem(\'jwt\', r.token)));',
+    '}',
+    '// Angular : jwt.interceptor.ts',
+    'intercept(req: HttpRequest<any>, next: HttpHandler) {',
+    '  const token = localStorage.getItem(\'jwt\');',
+    '  return next.handle(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }));',
+    '}',
+    '// Spring : JwtFilter.java',
+    'String token = header.substring(7);',
+    'if (jwtService.isValid(token)) {',
+    '  SecurityContextHolder.getContext().setAuthentication(auth);',
+    '}',
+    'chain.doFilter(request, response);'
+  ],
+  nodes:[
+    {id:"ng",x:20,y:20,w:140,h:44,t:"Angular",s:"login()"},
+    {id:"login",x:200,y:20,w:140,h:44,t:"/api/login",s:"vérifie les identifiants"},
+    {id:"ls",x:20,y:120,w:140,h:44,t:"localStorage",s:"jwt : vide"},
+    {id:"flt",x:200,y:120,w:140,h:44,t:"JwtFilter",s:"signature, expiration"},
+    {id:"itc",x:20,y:220,w:140,h:44,t:"Interceptor",s:"ajoute le header"},
+    {id:"ctl",x:200,y:220,w:140,h:44,t:"Controller",s:"GET /factures"},
+    {id:"res",x:20,y:280,w:320,h:30,t:"réponse",at:6}
+  ],
+  edges:[
+    {id:"go",d:"M160 36H198"},
+    {id:"back",d:"M200 52H162",at:1},
+    {id:"store",d:"M90 64V118",at:2},
+    {id:"read",d:"M90 164V218",at:3},
+    {id:"send",d:"M160 242H180V142H198",at:4},
+    {id:"pass",d:"M270 164V218",at:6},
+    {id:"out",d:"M270 264V278",at:6}
+  ],
+  steps:[
+    {line:[2,3],on:["ng","go","login"],txt:"L’utilisateur se connecte : Angular envoie son identifiant et son mot de passe au serveur."},
+    {line:[3],on:["login","back","ng"],lab:{"login.s":"renvoie un token signé"},txt:"Le serveur vérifie. Si c’est bon, il renvoie un token : une sorte de badge d’accès signé."},
+    {line:[4],on:["store","ls"],lab:{"ls.s":"jwt = eyJhbGci…"},txt:"Angular garde ce badge de côté, dans localStorage."},
+    {line:[7,8,9],on:["ls","read","itc"],txt:"À chaque nouvelle demande, l’interceptor colle automatiquement le badge sur la requête."},
+    {line:[9],on:["itc","send","flt"],txt:"La requête arrive au serveur. Le JwtFilter, comme un vigile, l’arrête à l’entrée."},
+    {line:[12,13,14],on:["flt"],lab:{"flt.s":"token valide"},txt:"Le vigile vérifie le badge : est-il vrai ? Est-il encore valable ? Si oui, il laisse entrer."},
+    {line:[16],on:["pass","ctl","out","res"],lab:{res:"200 OK + liste des factures"},txt:"Le contrôleur répond avec les factures. Badge faux ou expiré : erreur 401, accès refusé."}
+  ]
+},
+{
+  id:"n1", sec:"JPA / Hibernate", q:3, tab:"N+1", file:"FactureRepository.java", lang:"JPA / Hibernate", vb:[360,300],
+  code:[
+    '// Version 1 : problème N+1',
+    'List<Facture> factures = repo.findAll();',
+    'for (Facture f : factures) {',
+    '  total += f.getLignes().size();',
+    '}',
+    '',
+    '// Version 2 : JOIN FETCH',
+    '@Query("SELECT f FROM Facture f JOIN FETCH f.lignes")',
+    'List<Facture> findAllAvecLignes();'
+  ],
+  nodes:[
+    {id:"app",x:20,y:20,w:140,h:44,t:"Application",s:"3 factures"},
+    {id:"db",x:200,y:20,w:140,h:44,t:"PostgreSQL",s:""},
+    {id:"cnt",x:20,y:80,w:320,h:30,t:"Requêtes : 0"},
+    {id:"q1",x:20,y:124,w:320,h:30,t:"SELECT * FROM facture",cls:"mono",until:4},
+    {id:"q2",x:20,y:162,w:320,h:30,t:"SELECT * FROM ligne WHERE facture_id = 1",cls:"mono",at:1,until:4},
+    {id:"q3",x:20,y:200,w:320,h:30,t:"SELECT * FROM ligne WHERE facture_id = 2",cls:"mono",at:2,until:4},
+    {id:"q4",x:20,y:238,w:320,h:30,t:"SELECT * FROM ligne WHERE facture_id = 3",cls:"mono",at:3,until:4},
+    {id:"qj",x:20,y:124,w:320,h:44,t:"SELECT f FROM Facture f JOIN FETCH f.lignes",s:"factures et lignes ensemble",cls:"mono",at:5}
+  ],
+  edges:[{id:"a2d",d:"M160 42H198"}],
+  steps:[
+    {line:[2],on:["app","a2d","db","q1"],lab:{cnt:"Requêtes : 1"},txt:"On demande toutes les factures : 1 requête. Mais leurs lignes ne sont pas encore chargées."},
+    {line:[3,4],on:["a2d","db","q2"],lab:{cnt:"Requêtes : 2"},txt:"Dans la boucle, on demande les lignes de la facture 1 : Hibernate fait une nouvelle requête."},
+    {line:[3,4],on:["a2d","db","q3"],lab:{cnt:"Requêtes : 3"},txt:"Facture 2 : encore une requête."},
+    {line:[3,4],on:["a2d","db","q4"],lab:{cnt:"Requêtes : 4"},txt:"Facture 3 : encore une. 3 factures = 4 requêtes. 1 000 factures = 1 001 requêtes."},
+    {line:[3,4],bad:["q2","q3","q4","cnt"],lab:{cnt:"Requêtes : 1 + N = 4"},txt:"C’est le problème N+1 : 1 requête au départ, puis 1 de plus pour chaque facture. C’est très lent."},
+    {line:[8,9],on:["app","a2d","db","qj","cnt"],lab:{cnt:"Requêtes : 1"},txt:"La solution : JOIN FETCH. On charge factures et lignes en même temps, en 1 seule requête, quel que soit leur nombre."}
+  ]
+},
+{
+  id:"cycle", sec:"Angular", q:1, tab:"Cycle de vie", file:"facture.component.ts", lang:"Angular", vb:[360,290],
+  code:[
+    '@Component({ selector: \'app-facture\', templateUrl: \'./facture.html\' })',
+    'export class FactureComponent implements OnChanges, OnInit, OnDestroy {',
+    '  @Input() factureId!: number;',
+    '  private destroy$ = new Subject<void>();',
+    '',
+    '  constructor(private service: FactureService) {}',
+    '  ngOnChanges() { this.charger(this.factureId); }',
+    '  ngOnInit() {',
+    '    this.service.statut$.pipe(takeUntil(this.destroy$))',
+    '      .subscribe(s => this.statut = s);',
+    '  }',
+    '  ngOnDestroy() { this.destroy$.next(); this.destroy$.complete(); }',
+    '}'
+  ],
+  nodes:[
+    {id:"parent",x:20,y:20,w:140,h:44,t:"Parent",s:"[factureId]=7",at:1},
+    {id:"cons",x:200,y:20,w:130,h:36,t:"constructor"},
+    {id:"chg",x:200,y:66,w:130,h:36,t:"ngOnChanges"},
+    {id:"init",x:200,y:112,w:130,h:36,t:"ngOnInit"},
+    {id:"dest",x:200,y:158,w:130,h:36,t:"ngOnDestroy"},
+    {id:"sub",x:20,y:108,w:140,h:44,t:"statut$",s:"abonné",at:2},
+    {id:"view",x:200,y:226,w:130,h:44,t:"Écran",s:"",at:1}
+  ],
+  edges:[
+    {id:"p2c",d:"M160 42H180V84H198",at:1},
+    {id:"c2v",d:"M330 84H346V248H332",at:1},
+    {id:"i2s",d:"M200 130H162",at:2}
+  ],
+  steps:[
+    {line:[6],on:["cons"],txt:"Angular crée le composant. Le constructeur sert seulement à recevoir les services, rien d’autre."},
+    {line:[7],on:["parent","p2c","chg","c2v","view"],lab:{"view.s":"facture 7"},txt:"Le parent donne factureId = 7. ngOnChanges se déclenche et charge la facture 7."},
+    {line:[8,9,10],on:["init","i2s","sub"],txt:"ngOnInit se lance une seule fois. On s’abonne aux mises à jour du statut."},
+    {line:[7],on:["parent","p2c","chg","c2v","view"],lab:{"parent.s":"[factureId]=8","view.s":"facture 8"},txt:"Le parent passe à la facture 8. ngOnChanges se relance et charge la 8. ngOnInit, lui, ne se relance pas."},
+    {line:[12],on:["dest"],bad:["sub","i2s"],lab:{"sub.s":"désabonné"},txt:"On quitte l’écran : ngOnDestroy arrête l’abonnement. Sinon, il continuerait à tourner pour rien (fuite mémoire)."}
+  ]
+},
+{
+  id:"switch", sec:"RxJS", q:2, tab:"switchMap", file:"recherche.component.ts", lang:"RxJS", vb:[360,300],
+  code:[
+    'this.resultats$ = this.recherche.valueChanges.pipe(',
+    '  debounceTime(300),',
+    '  distinctUntilChanged(),',
+    '  switchMap(terme => this.api.rechercher(terme))',
+    ');'
+  ],
+  nodes:[
+    {id:"input",x:20,y:20,w:320,h:40,t:"Recherche : « f »"},
+    {id:"deb",x:20,y:88,w:96,h:40,t:"debounce",s:"300 ms"},
+    {id:"dist",x:132,y:88,w:96,h:40,t:"distinct",s:"nouvelle ?"},
+    {id:"sw",x:244,y:88,w:96,h:40,t:"switchMap",s:""},
+    {id:"reqA",x:20,y:160,w:150,h:44,t:"requête « fa »",s:"en cours",at:2},
+    {id:"reqB",x:190,y:160,w:150,h:44,t:"requête « fac »",s:"en cours",at:4},
+    {id:"res",x:20,y:240,w:320,h:44,t:"Résultats affichés",s:"aucun"}
+  ],
+  edges:[
+    {id:"i2d",d:"M68 60V86"},
+    {id:"d2d",d:"M116 108H130"},
+    {id:"d2s",d:"M228 108H242"},
+    {id:"s2a",d:"M280 128V144H95V158",at:2},
+    {id:"s2b",d:"M304 128V158",at:4},
+    {id:"b2r",d:"M265 204V238",at:5}
+  ],
+  steps:[
+    {line:[1],on:["input"],txt:"L’utilisateur tape « f » dans la barre de recherche."},
+    {line:[1,2],on:["input","i2d","deb"],lab:{input:"Recherche : « fa »"},txt:"Il tape vite « fa ». debounceTime attend une petite pause (300 ms) avant d’agir. « f » n’est donc jamais envoyé."},
+    {line:[3,4],on:["deb","d2d","dist","d2s","sw","s2a","reqA"],txt:"Pause terminée : la recherche « fa » est lancée."},
+    {line:[1,2],on:["input","i2d","deb","reqA"],lab:{input:"Recherche : « fac »"},txt:"Pendant que « fa » cherche encore, l’utilisateur tape « fac »."},
+    {line:[4],on:["sw","s2b","reqB"],bad:["reqA","s2a"],lab:{"reqA.s":"annulée"},txt:"switchMap annule l’ancienne recherche « fa » et lance « fac ». On garde seulement la plus récente."},
+    {line:[4],on:["reqB","b2r","res"],bad:["reqA"],lab:{"reqB.s":"terminée","res.s":"pour « fac » uniquement"},txt:"Seuls les résultats de « fac » s’affichent : c’est exactement ce que l’utilisateur veut voir."}
+  ]
+},
+{sec:"Java",q:1,id:"eq",tab:"== ou equals",file:"Comparaison.java",lang:"Java",vb:[360,300],
+ code:['String a = new String("abc");','String b = new String("abc");','a == b;        // false','a.equals(b);   // true','String c = a;','a == c;        // true'],
+ nodes:[{id:"va",x:20,y:30,w:80,h:36,t:"a"},{id:"vb",x:20,y:110,w:80,h:36,t:"b",at:1},{id:"vc",x:20,y:190,w:80,h:36,t:"c",at:4},
+  {id:"oa",x:200,y:30,w:140,h:40,t:"« abc »",s:"objet n°1"},{id:"ob",x:200,y:108,w:140,h:40,t:"« abc »",s:"objet n°2",at:1},
+  {id:"res",x:20,y:250,w:320,h:34,t:"résultat",at:2}],
+ edges:[{id:"a2o",d:"M100 48H198"},{id:"b2o",d:"M100 128H198",at:1},{id:"c2o",d:"M100 208H150V62H198",at:4}],
+ steps:[
+  {line:[1],on:["va","a2o","oa"],txt:"a pointe vers un premier objet « abc » en mémoire."},
+  {line:[2],on:["vb","b2o","ob"],txt:"new crée un deuxième objet, même s’il contient le même texte."},
+  {line:[3],bad:["va","vb","oa","ob","res"],lab:{res:"a == b  →  false"},txt:"== compare les adresses : ce sont deux objets différents, donc false."},
+  {line:[4],on:["oa","ob","res"],lab:{res:"a.equals(b)  →  true"},txt:"equals compare le contenu : « abc » = « abc », donc true."},
+  {line:[5,6],on:["va","vc","c2o","oa","res"],lab:{res:"a == c  →  true"},txt:"c pointe vers le même objet que a : cette fois, == renvoie true."}]},
+{sec:"Java",q:3,id:"list",tab:"ArrayList ou LinkedList",file:"Listes.java",lang:"Java",vb:[360,300],
+ texts:[{x:20,y:28,t:"ArrayList : un tableau"},{x:20,y:140,t:"LinkedList : une chaîne"}],
+ code:['List<String> tab = new ArrayList<>(List.of("A", "B", "C", "D"));','tab.get(2);          // accès direct','tab.add(1, "X");     // décale B, C, D','List<String> chaine = new LinkedList<>(List.of("A", "B", "C", "D"));','chaine.get(2);       // parcourt A, B, C','chaine.addFirst("X"); // un seul lien à changer'],
+ nodes:[{id:"a0",x:20,y:40,w:54,h:34,t:"A"},{id:"a1",x:84,y:40,w:54,h:34,t:"B"},{id:"a2",x:148,y:40,w:54,h:34,t:"C"},{id:"a3",x:212,y:40,w:54,h:34,t:"D"},{id:"a4",x:276,y:40,w:54,h:34,t:"D",at:2},
+  {id:"l0",x:20,y:150,w:60,h:34,t:"A",at:3},{id:"l1",x:104,y:150,w:60,h:34,t:"B",at:3},{id:"l2",x:188,y:150,w:60,h:34,t:"C",at:3},{id:"l3",x:272,y:150,w:60,h:34,t:"D",at:3},
+  {id:"lx",x:20,y:222,w:60,h:30,t:"X",at:5},{id:"res",x:96,y:222,w:244,h:30,t:"",at:1}],
+ edges:[{id:"e01",d:"M80 167H102",at:3},{id:"e12",d:"M164 167H186",at:3},{id:"e23",d:"M248 167H270",at:3},{id:"ex",d:"M50 222V186",at:5}],
+ steps:[
+  {line:[1],on:["a0","a1","a2","a3"],txt:"ArrayList range les éléments côte à côte, dans un tableau."},
+  {line:[2],on:["a2","res"],lab:{res:"get(2) : accès direct, O(1)"},txt:"Pour lire la case 2, Java calcule directement sa position : très rapide."},
+  {line:[3],on:["a1","a2","a3","a4"],bad:["res"],lab:{a1:"X",a2:"B",a3:"C",a4:"D",res:"add(1) : décale 3 éléments, O(n)"},txt:"Insérer au milieu oblige à décaler tous les éléments suivants : lent sur une grande liste."},
+  {line:[4],on:["l0","l1","l2","l3","e01","e12","e23"],lab:{res:"LinkedList créée"},txt:"LinkedList : chaque élément connaît le suivant, comme les maillons d’une chaîne."},
+  {line:[5],on:["l0","l1","l2","e01","e12"],bad:["res"],lab:{res:"get(2) : parcourt 3 maillons, O(n)"},txt:"Pour lire l’élément 2, il faut suivre la chaîne depuis le début."},
+  {line:[6],on:["lx","ex","l0","res"],lab:{res:"addFirst : un seul lien, O(1)"},txt:"Ajouter en tête : on crée un maillon et on change un lien. Rien à décaler."}]},
+{sec:"Java",q:4,id:"maps",tab:"Les 3 Map",file:"Maps.java",lang:"Java",vb:[360,260],
+ texts:[{x:20,y:49,t:"insertion"},{x:20,y:119,t:"HashMap"},{x:20,y:179,t:"LinkedHashMap"},{x:20,y:239,t:"TreeMap"}],
+ code:['map.put("C", 3); map.put("A", 1); map.put("B", 2);','new HashMap<>(map);        // ordre : non garanti','new LinkedHashMap<>(map);  // ordre : C, A, B','new TreeMap<>(map);        // ordre : A, B, C'],
+ nodes:[{id:"i0",x:150,y:30,w:50,h:30,t:"C"},{id:"i1",x:210,y:30,w:50,h:30,t:"A"},{id:"i2",x:270,y:30,w:50,h:30,t:"B"},
+  {id:"h0",x:150,y:100,w:50,h:30,t:"B",at:1},{id:"h1",x:210,y:100,w:50,h:30,t:"C",at:1},{id:"h2",x:270,y:100,w:50,h:30,t:"A",at:1},
+  {id:"k0",x:150,y:160,w:50,h:30,t:"C",at:2},{id:"k1",x:210,y:160,w:50,h:30,t:"A",at:2},{id:"k2",x:270,y:160,w:50,h:30,t:"B",at:2},
+  {id:"t0",x:150,y:220,w:50,h:30,t:"A",at:3},{id:"t1",x:210,y:220,w:50,h:30,t:"B",at:3},{id:"t2",x:270,y:220,w:50,h:30,t:"C",at:3}],
+ edges:[],
+ steps:[
+  {line:[1],on:["i0","i1","i2"],txt:"On ajoute C, puis A, puis B."},
+  {line:[2],on:["h0","h1","h2"],txt:"HashMap range selon le hashCode : l’ordre de parcours n’est pas garanti. C’est la plus rapide, O(1)."},
+  {line:[3],on:["k0","k1","k2"],txt:"LinkedHashMap garde l’ordre d’ajout : C, A, B."},
+  {line:[4],on:["t0","t1","t2"],txt:"TreeMap trie les clés : A, B, C. Un peu plus lente, O(log n)."}]},
+{sec:"Java",q:5,id:"stream",tab:"Streams",file:"Totaux.java",lang:"Java",vb:[360,270],
+ code:['Map<Long, BigDecimal> totalParClient = factures.stream()','    .filter(f -> f.getStatut() == Statut.PAYEE)','    .collect(Collectors.groupingBy(','        Facture::getClientId,','        Collectors.reducing(BigDecimal.ZERO, Facture::getTotalTtc, BigDecimal::add)));'],
+ nodes:[{id:"f1",x:20,y:20,w:160,h:36,t:"F1 : client 1",s:"payée, 100"},{id:"f2",x:20,y:62,w:160,h:36,t:"F2 : client 2",s:"impayée, 50"},
+  {id:"f3",x:20,y:104,w:160,h:36,t:"F3 : client 1",s:"payée, 200"},{id:"f4",x:20,y:146,w:160,h:36,t:"F4 : client 2",s:"payée, 80"},
+  {id:"filt",x:200,y:70,w:140,h:40,t:"filter(payée)"},{id:"r1",x:200,y:170,w:140,h:36,t:"client 1 : 0",at:2},{id:"r2",x:200,y:220,w:140,h:36,t:"client 2 : 0",at:2}],
+ edges:[{id:"e1",d:"M180 90H198"},{id:"e2",d:"M270 110V168",at:2}],
+ steps:[
+  {line:[1],on:["f1","f2","f3","f4"],txt:"On prépare le flux des 4 factures. Rien ne s’exécute encore."},
+  {line:[2],on:["filt"],txt:"filter est déclaré, mais toujours rien : les opérations intermédiaires attendent."},
+  {line:[3,4,5],on:["f1","e1","filt","e2","r1"],lab:{r1:"client 1 : 100"},txt:"collect lance tout : F1 est payée, elle passe et s’ajoute au total du client 1."},
+  {line:[2],on:["e1","filt"],bad:["f2"],txt:"F2 est impayée : le filtre la bloque."},
+  {line:[3,4,5],on:["f3","e1","filt","e2","r1"],lab:{r1:"client 1 : 300"},txt:"F3 est payée : le client 1 passe à 300."},
+  {line:[3,4,5],on:["f4","e1","filt","r2"],lab:{r2:"client 2 : 80"},txt:"F4 est payée : client 2 = 80. Résultat final : une Map client → total."}]},
+{sec:"Java",q:6,id:"opt",tab:"Optional",file:"ClientService.java",lang:"Java",vb:[360,290],
+ code:['Optional<Client> opt = repo.findById(99);','String nom = opt','    .map(Client::getNom)','    .orElse("Inconnu");','Client c = repo.findById(99).orElseThrow();'],
+ nodes:[{id:"opt",x:20,y:20,w:320,h:44,t:"Optional",s:"?"},{id:"mp",x:20,y:90,w:150,h:40,t:"map(getNom)"},{id:"oe",x:190,y:90,w:150,h:40,t:"orElse(« Inconnu »)"},
+  {id:"res",x:20,y:160,w:320,h:40,t:"nom = ?"},{id:"thr",x:20,y:230,w:320,h:44,t:"NoSuchElementException",s:"levée par orElseThrow",at:4}],
+ edges:[{id:"o2m",d:"M95 64V88"},{id:"m2o",d:"M170 110H188"},{id:"o2r",d:"M265 130V158"}],
+ steps:[
+  {line:[1],on:["opt"],lab:{"opt.s":"vide : client 99 introuvable"},txt:"findById renvoie une boîte : pleine si le client existe, vide sinon. Jamais null."},
+  {line:[3],on:["o2m","mp"],txt:"La boîte est vide : map ne fait rien et transmet la boîte vide."},
+  {line:[4],on:["m2o","oe","o2r","res"],lab:{res:"nom = « Inconnu »"},txt:"orElse donne une valeur par défaut quand la boîte est vide. Pas de NullPointerException."},
+  {line:[2,3,4],on:["opt","o2m","mp","res"],lab:{"opt.s":"pleine : Client(Ali)",res:"nom = « Ali »"},txt:"Si le client existait, map aurait sorti son nom : « Ali »."},
+  {line:[5],bad:["thr"],txt:"orElseThrow lève une exception si la boîte est vide : utile quand l’absence est une vraie erreur."}]},
+{sec:"Java",q:7,id:"exc",tab:"Exceptions",file:"Exceptions.java",lang:"Java",vb:[360,290],
+ code:['void lire() throws IOException {          // checked','  Files.readString(chemin);','}','void valider(Facture f) {                 // unchecked','  if (f.getTotal() < 0)','    throw new IllegalArgumentException("total négatif");','}'],
+ nodes:[{id:"thw",x:110,y:20,w:140,h:36,t:"Throwable"},{id:"ex",x:20,y:90,w:150,h:36,t:"Exception"},{id:"io",x:20,y:170,w:150,h:44,t:"IOException",s:"checked"},
+  {id:"rt",x:190,y:170,w:150,h:44,t:"RuntimeException",s:"unchecked"},{id:"iae",x:190,y:236,w:150,h:44,t:"IllegalArgument",s:"Exception"}],
+ edges:[{id:"t2e",d:"M180 56V72H95V88"},{id:"e2io",d:"M95 126V168"},{id:"e2rt",d:"M170 108H265V168"},{id:"rt2i",d:"M265 214V234"}],
+ steps:[
+  {line:[1,2],on:["ex","e2io","io"],txt:"IOException est checked : le compilateur t’oblige à la déclarer (throws) ou à la capturer (try/catch)."},
+  {line:[4,5,6],on:["e2rt","rt","rt2i","iae"],txt:"IllegalArgumentException hérite de RuntimeException : unchecked, aucune obligation. Elle signale une erreur de programmation ou de données."},
+  {line:[6],on:["rt"],txt:"À retenir pour Spring : @Transactional annule automatiquement (rollback) seulement sur les unchecked."}]},
+{sec:"Java",q:8,id:"bigd",tab:"BigDecimal",file:"Montants.java",lang:"Java",vb:[360,220],
+ code:['double d = 0.1 + 0.2;','// d = 0.30000000000000004','BigDecimal b = new BigDecimal("0.1").add(new BigDecimal("0.2"));','// b = 0.3','BigDecimal tva = ht.multiply(new BigDecimal("0.19"))','    .setScale(3, RoundingMode.HALF_UP);'],
+ nodes:[{id:"dbl",x:20,y:20,w:320,h:44,t:"double",s:""},{id:"bd",x:20,y:90,w:320,h:44,t:"BigDecimal",s:"",at:1},{id:"tva",x:20,y:160,w:320,h:44,t:"TVA 19 % sur 100,005 HT",s:"",at:2}],
+ edges:[],
+ steps:[
+  {line:[1,2],bad:["dbl"],lab:{"dbl.s":"0.1 + 0.2 = 0.30000000000000004"},txt:"double stocke les nombres en binaire : 0,1 n’est pas exact. Sur des montants, ces petites erreurs s’accumulent."},
+  {line:[3,4],on:["bd"],lab:{"bd.s":"0.1 + 0.2 = 0.3"},txt:"BigDecimal calcule exactement. Astuce : le créer à partir d’un texte (\"0.1\"), pas d’un double."},
+  {line:[5],on:["tva"],lab:{"tva.s":"100,005 × 0,19 = 19,00095"},txt:"On calcule la TVA à 19 %."},
+  {line:[6],on:["tva"],lab:{"tva.s":"arrondi à 3 décimales : 19,001"},txt:"setScale(3, HALF_UP) arrondit au millime, comme le dinar tunisien."}]},
+{sec:"Java",q:9,id:"final",tab:"final, finally, finalize",file:"Envoi.java",lang:"Java",vb:[360,260],
+ code:['final int TAUX = 19;','// TAUX = 20;   → erreur de compilation','try {','  connexion.envoyer();','} catch (IOException e) {','  log.error("échec", e);','} finally {','  connexion.fermer();','}'],
+ nodes:[{id:"var",x:20,y:20,w:320,h:44,t:"TAUX = 19",s:"final : verrouillée"},{id:"tr",x:20,y:100,w:150,h:40,t:"try"},{id:"ca",x:190,y:100,w:150,h:40,t:"catch"},
+  {id:"fi",x:20,y:196,w:320,h:44,t:"finally",s:"toujours exécuté"}],
+ edges:[{id:"t2c",d:"M170 120H188"},{id:"t2f",d:"M95 140V194"},{id:"c2f",d:"M265 140V194"}],
+ steps:[
+  {line:[1],on:["var"],txt:"final : la variable ne peut recevoir une valeur qu’une seule fois."},
+  {line:[2],bad:["var"],lab:{"var.s":"nouvelle valeur interdite"},txt:"Essayer de la changer donne une erreur dès la compilation."},
+  {line:[3,4,7,8],on:["tr","t2f","fi"],txt:"Cas 1 : pas d’erreur. Le bloc finally s’exécute ensuite."},
+  {line:[5,6,7,8],on:["tr","t2c","ca","c2f","fi"],txt:"Cas 2 : une exception. catch la traite, puis finally s’exécute quand même : la connexion est toujours fermée."},
+  {line:[],on:["fi"],txt:"finalize() : vieille méthode appelée par le garbage collector, dépréciée. Aujourd’hui, on utilise try-with-resources."}]},
+{sec:"Java",q:10,id:"abs",tab:"Abstraite ou interface",file:"Documents.java",lang:"Java",vb:[360,250],
+ texts:[{x:102,y:140,t:"extends"},{x:286,y:180,t:"implements"}],
+ code:['interface Imprimable { byte[] versPdf(); }','interface Envoyable { void envoyerParMail(); }','abstract class Document {','  protected String numero;','  BigDecimal totalTtc() { return ht.add(tva); }','}','class Facture extends Document implements Imprimable, Envoyable { ... }'],
+ nodes:[{id:"doc",x:20,y:30,w:150,h:44,t:"Document",s:"abstraite : code commun"},{id:"imp",x:190,y:30,w:150,h:36,t:"Imprimable"},{id:"env",x:190,y:90,w:150,h:36,t:"Envoyable"},
+  {id:"fac",x:20,y:190,w:320,h:44,t:"Facture",s:"1 parent, plusieurs interfaces",at:2}],
+ edges:[{id:"d2f",d:"M95 74V188",at:2},{id:"i2f",d:"M340 48H350V160H280V188",at:2},{id:"e2f",d:"M265 126V188",at:2}],
+ steps:[
+  {line:[3,4,5,6],on:["doc"],txt:"La classe abstraite partage des données (numero) et du code (totalTtc). On ne peut pas créer un Document directement."},
+  {line:[1,2],on:["imp","env"],txt:"Les interfaces décrivent des capacités : savoir s’imprimer, savoir s’envoyer."},
+  {line:[7],on:["fac","d2f","i2f","e2f","doc","imp","env"],txt:"Facture hérite d’une seule classe, mais peut implémenter plusieurs interfaces."}]},
+{sec:"Java",q:11,id:"conc",tab:"Concurrence",file:"Compteur.java",lang:"Java",vb:[360,250],
+ code:['private int compteur = 0;','void incrementer() { compteur++; }          // pas sûr','private final AtomicInteger sur = new AtomicInteger();','void incrementerSur() { sur.incrementAndGet(); }','ExecutorService pool = Executors.newFixedThreadPool(4);'],
+ nodes:[{id:"t1",x:20,y:20,w:150,h:44,t:"Thread 1",s:""},{id:"t2",x:190,y:20,w:150,h:44,t:"Thread 2",s:""},{id:"mem",x:20,y:110,w:320,h:44,t:"compteur",s:"0"},
+  {id:"at",x:20,y:190,w:320,h:44,t:"AtomicInteger",s:"0",at:3}],
+ edges:[{id:"t1m",d:"M95 64V108"},{id:"t2m",d:"M265 64V108"}],
+ steps:[
+  {line:[2],on:["t1","t1m","mem"],lab:{"t1.s":"lit 0"},txt:"Thread 1 lit compteur : 0."},
+  {line:[2],on:["t2","t2m","mem"],lab:{"t2.s":"lit 0"},txt:"Au même moment, Thread 2 lit aussi 0."},
+  {line:[2],on:["t1","t2"],bad:["mem"],lab:{"t1.s":"écrit 1","t2.s":"écrit 1","mem.s":"1 au lieu de 2"},txt:"Les deux écrivent 1 : un ajout est perdu. C’est une « race condition »."},
+  {line:[3,4],on:["at"],lab:{"at.s":"2 : opération indivisible"},txt:"AtomicInteger (ou synchronized) rend l’opération indivisible : le résultat est bien 2."},
+  {line:[5],on:["t1","t2"],lab:{"t1.s":"tâche A","t2.s":"tâche B"},txt:"ExecutorService réutilise un groupe de threads au lieu d’en créer un nouveau à chaque tâche."}]},
+{sec:"Java",q:12,id:"j21",tab:"Java 17 et 21",file:"Nouveautes.java",lang:"Java 17 / 21",vb:[360,290],
+ code:['record LigneDto(String article, int quantite) {}','String libelle = switch (statut) {','  case PAYEE -> "Payée";','  case IMPAYEE -> "À relancer";','};','try (var exec = Executors.newVirtualThreadPerTaskExecutor()) {','  factures.forEach(f -> exec.submit(() -> envoyerMail(f)));','}'],
+ nodes:[{id:"rec",x:20,y:20,w:320,h:44,t:"record LigneDto",s:"getters, equals, toString générés"},{id:"sw",x:20,y:90,w:320,h:44,t:"switch expression",s:"renvoie directement une valeur",at:1},
+  {id:"vt",x:20,y:160,w:320,h:44,t:"Virtual threads",s:"1 thread léger par tâche",at:2},{id:"os",x:20,y:230,w:320,h:40,t:"quelques threads système suffisent",at:2}],
+ edges:[],
+ steps:[
+  {line:[1],on:["rec"],txt:"Java 17 : record écrit en une ligne une classe de données qui ne change pas."},
+  {line:[2,3,4,5],on:["sw"],lab:{"sw.s":"statut PAYEE → « Payée »"},txt:"switch devient une expression : il renvoie directement une valeur, sans break."},
+  {line:[6,7,8],on:["vt","os"],txt:"Java 21 : des milliers de threads virtuels très légers. Idéal pour beaucoup d’attentes (mails, appels HTTP)."}]},
+{sec:"Java",q:13,id:"sb",tab:"StringBuilder",file:"Libelles.java",lang:"Java",vb:[360,250],
+ texts:[{x:20,y:22,t:"Avec String : un objet par tour"},{x:20,y:124,t:"Avec StringBuilder : un seul objet"}],
+ code:['String s = "";','for (Ligne l : lignes) s += l.libelle();   // nouvel objet à chaque tour','StringBuilder sb = new StringBuilder();','for (Ligne l : lignes) sb.append(l.libelle());','String resultat = sb.toString();'],
+ nodes:[{id:"s1",x:20,y:30,w:95,h:36,t:"« A »"},{id:"s2",x:132,y:30,w:95,h:36,t:"« AB »",at:1},{id:"s3",x:245,y:30,w:95,h:36,t:"« ABC »",at:2},
+  {id:"sb",x:20,y:132,w:320,h:44,t:"StringBuilder",s:"",at:3},{id:"res",x:20,y:200,w:320,h:36,t:"resultat = « ABC »",at:4}],
+ edges:[],
+ steps:[
+  {line:[1,2],on:["s1"],txt:"Tour 1 : la chaîne vaut « A »."},
+  {line:[2],on:["s2"],bad:["s1"],txt:"Tour 2 : un nouvel objet « AB » est créé, l’ancien est jeté."},
+  {line:[2],on:["s3"],bad:["s1","s2"],txt:"Tour 3 : encore un nouvel objet. Avec 10 000 lignes : 10 000 objets jetés."},
+  {line:[3,4],on:["sb"],lab:{"sb.s":"A → AB → ABC (même objet)"},txt:"StringBuilder modifie toujours le même objet."},
+  {line:[5],on:["sb","res"],txt:"toString() crée la chaîne finale une seule fois."}]},
+{sec:"Java",q:14,id:"immu",tab:"String immuable",file:"Devise.java",lang:"Java",vb:[360,250],
+ code:['String a = "TND";','String b = "TND";        // même objet du String pool','String c = a.toLowerCase();','// a vaut toujours "TND"'],
+ nodes:[{id:"a",x:20,y:30,w:80,h:36,t:"a"},{id:"b",x:20,y:100,w:80,h:36,t:"b",at:1},{id:"pool",x:200,y:60,w:140,h:44,t:"« TND »",s:"String pool"},
+  {id:"c",x:20,y:190,w:80,h:36,t:"c",at:2},{id:"low",x:200,y:190,w:140,h:36,t:"« tnd »",s:"nouvel objet",at:2}],
+ edges:[{id:"a2p",d:"M100 48H150V74H198"},{id:"b2p",d:"M100 118H150V90H198",at:1},{id:"c2l",d:"M100 208H198",at:2}],
+ steps:[
+  {line:[1],on:["a","a2p","pool"],txt:"« TND » est rangé dans le String pool, une zone de chaînes partagées."},
+  {line:[2],on:["b","b2p","pool"],txt:"b réutilise le même objet. C’est possible uniquement parce qu’une String ne peut pas changer."},
+  {line:[3,4],on:["c","c2l","low"],txt:"toLowerCase ne modifie pas « TND » : il crée un nouvel objet. a et b ne sont jamais touchés."}]},
+{sec:"Java",q:15,id:"over",tab:"Surcharge ou redéfinition",file:"Document.java",lang:"Java",vb:[360,290],
+ code:['class Document {','  BigDecimal total() { ... }','  void imprimer() { ... }','  void imprimer(String langue) { ... }   // surcharge','}','class Avoir extends Document {','  @Override BigDecimal total() { return super.total().negate(); }','}','Document d = new Avoir();','d.total();   // version d’Avoir'],
+ nodes:[{id:"doc",x:20,y:20,w:150,h:56,t:"Document",s:"total(), imprimer()"},{id:"ov",x:190,y:20,w:150,h:56,t:"Surcharge",s:"imprimer(String)"},
+  {id:"av",x:20,y:150,w:150,h:44,t:"Avoir",s:"@Override total()",at:1},{id:"call",x:20,y:230,w:320,h:44,t:"d.total()",s:"",at:2}],
+ edges:[{id:"d2o",d:"M170 48H188"},{id:"d2a",d:"M95 76V148",at:1}],
+ steps:[
+  {line:[3,4],on:["doc","d2o","ov"],txt:"Surcharge : deux méthodes imprimer avec des paramètres différents. Java choisit à la compilation selon les arguments."},
+  {line:[6,7],on:["av","d2a"],txt:"Redéfinition : Avoir remplace total() de Document, avec la même signature."},
+  {line:[9,10],on:["call","av"],lab:{"call.s":"→ version d’Avoir (montant négatif)"},txt:"Le choix se fait à l’exécution, selon l’objet réel : c’est le polymorphisme."}]},
+{sec:"Java",q:16,id:"poo",tab:"4 piliers POO",file:"Document.java",lang:"Java",vb:[360,170],
+ code:['abstract class Document {                    // abstraction','  private BigDecimal ht;                     // encapsulation','  public BigDecimal getHt() { return ht; }','  abstract BigDecimal total();','}','class Facture extends Document {             // héritage','  BigDecimal total() { return getHt().add(tva); }','}','Document d = new Facture(); d.total();       // polymorphisme'],
+ nodes:[{id:"abs",x:20,y:20,w:150,h:56,t:"Abstraction",s:"méthode abstraite"},{id:"enc",x:190,y:20,w:150,h:56,t:"Encapsulation",s:"private + getter"},
+  {id:"her",x:20,y:100,w:150,h:56,t:"Héritage",s:"extends Document"},{id:"pol",x:190,y:100,w:150,h:56,t:"Polymorphisme",s:"selon l’objet réel"}],
+ edges:[],
+ steps:[
+  {line:[1,4],on:["abs"],txt:"Abstraction : Document dit ce qu’il faut faire (total), sans dire comment."},
+  {line:[2,3],on:["enc"],txt:"Encapsulation : ht est caché (private). On y accède par getHt()."},
+  {line:[6,7],on:["her"],txt:"Héritage : Facture reprend tout ce que Document possède."},
+  {line:[9],on:["pol"],txt:"Polymorphisme : d est déclaré Document, mais c’est la version de Facture qui s’exécute."}]},
+{sec:"Java",q:17,id:"static",tab:"static",file:"Facture.java",lang:"Java",vb:[360,190],
+ code:['class Facture {','  static int compteur = 0;      // partagé','  final String numero;','  Facture() { compteur++; numero = "F-" + compteur; }','}','new Facture(); new Facture();'],
+ nodes:[{id:"cls",x:20,y:20,w:320,h:44,t:"Classe Facture",s:"compteur = 0"},{id:"o1",x:20,y:130,w:150,h:44,t:"objet 1",s:"",at:1},{id:"o2",x:190,y:130,w:150,h:44,t:"objet 2",s:"",at:2}],
+ edges:[{id:"o1c",d:"M95 128V66",at:1},{id:"o2c",d:"M265 128V66",at:2}],
+ steps:[
+  {line:[2],on:["cls"],txt:"compteur est static : il existe une seule fois, dans la classe."},
+  {line:[4,6],on:["o1","o1c","cls"],lab:{"o1.s":"numero = F-1","cls.s":"compteur = 1"},txt:"Premier objet : le compteur passe à 1, l’objet reçoit F-1."},
+  {line:[4,6],on:["o2","o2c","cls"],lab:{"o2.s":"numero = F-2","cls.s":"compteur = 2"},txt:"Chaque objet a son propre numero, mais tous partagent le même compteur."}]},
+{sec:"Java",q:18,id:"comp",tab:"Comparable / Comparator",file:"Tri.java",lang:"Java",vb:[360,180],
+ texts:[{x:20,y:28,t:"Liste des factures"}],
+ code:['class Facture implements Comparable<Facture> {','  public int compareTo(Facture o) { return numero.compareTo(o.numero); }','}','Collections.sort(factures);            // ordre naturel : numéro','factures.sort(Comparator.comparing(Facture::getTotal).reversed());'],
+ nodes:[{id:"p0",x:20,y:40,w:320,h:36,t:"F-3 : 50 TND"},{id:"p1",x:20,y:86,w:320,h:36,t:"F-1 : 120 TND"},{id:"p2",x:20,y:132,w:320,h:36,t:"F-2 : 300 TND"}],
+ edges:[],
+ steps:[
+  {line:[],txt:"Au départ, la liste n’est pas triée."},
+  {line:[1,2,4],on:["p0","p1","p2"],lab:{p0:"F-1 : 120 TND",p1:"F-2 : 300 TND",p2:"F-3 : 50 TND"},txt:"Comparable : l’ordre « naturel » est écrit dans la classe. Ici, par numéro."},
+  {line:[5],on:["p0","p1","p2"],lab:{p0:"F-2 : 300 TND",p1:"F-1 : 120 TND",p2:"F-3 : 50 TND"},txt:"Comparator : un autre ordre, défini à l’extérieur. Ici, du total le plus grand au plus petit."}]},
+{sec:"Java",q:19,id:"heap",tab:"Pile et tas",file:"Memoire.java",lang:"Java",vb:[360,250],
+ texts:[{x:20,y:26,t:"Pile (stack)"},{x:200,y:26,t:"Tas (heap)"}],
+ code:['void creer() {','  int quantite = 3;','  Facture f = new Facture();','}','// fin de creer() : la pile se vide','// la Facture n’est plus utilisée → garbage collector'],
+ nodes:[{id:"fr",x:20,y:36,w:150,h:130,t:"creer()",top:true,until:3},{id:"q",x:30,y:80,w:130,h:32,t:"quantite = 3",at:1,until:3},{id:"fref",x:30,y:122,w:130,h:32,t:"f = référence",at:2,until:3},
+  {id:"obj",x:200,y:112,w:140,h:44,t:"Facture",s:"objet",at:2},{id:"gc",x:200,y:190,w:140,h:40,t:"garbage collector",at:4}],
+ edges:[{id:"r2o",d:"M160 138H198",at:2,until:3}],
+ steps:[
+  {line:[1],on:["fr"],txt:"Appel de creer() : un cadre est ajouté sur la pile."},
+  {line:[2],on:["q"],txt:"quantite est une variable simple : elle est rangée directement dans la pile."},
+  {line:[3],on:["fref","r2o","obj"],txt:"new crée l’objet dans le tas. La pile garde seulement une référence vers lui."},
+  {line:[4,5],bad:["fr","q","fref","r2o"],txt:"Fin de la méthode : le cadre disparaît de la pile."},
+  {line:[6],on:["gc"],bad:["obj"],lab:{"obj.s":"plus utilisé"},txt:"Plus personne ne pointe vers la Facture : le garbage collector libère la mémoire."}]},
+{sec:"Java",q:20,id:"solid",tab:"SOLID",file:"Architecture.java",lang:"Java",vb:[360,275],
+ code:['class FactureService { void valider(); }        // S','class PdfService { byte[] generer(Facture f); }   // S','interface CalculTaxe { BigDecimal calculer(Facture f); }','class TaxeTva implements CalculTaxe { ... }    // O : on ajoute','class Avoir extends Document { ... }           // L','interface Imprimable {}  interface Envoyable {}   // I','FactureService(CalculTaxe taxe) { ... }        // D'],
+ nodes:[{id:"S",x:20,y:20,w:320,h:42,t:"S : une seule responsabilité",s:"FactureService valide, PdfService génère"},
+  {id:"O",x:20,y:70,w:320,h:42,t:"O : ouvert à l’extension",s:"nouvelle taxe = nouvelle classe"},
+  {id:"L",x:20,y:120,w:320,h:42,t:"L : remplaçable par l’enfant",s:"un Avoir peut remplacer un Document"},
+  {id:"I",x:20,y:170,w:320,h:42,t:"I : petites interfaces",s:"chacune son rôle"},
+  {id:"D",x:20,y:220,w:320,h:42,t:"D : dépendre d’interfaces",s:"CalculTaxe, pas TaxeTva"}],
+ edges:[],
+ steps:[
+  {line:[1,2],on:["S"],txt:"S : chaque classe fait une seule chose. Valider et générer un PDF sont séparés."},
+  {line:[3,4],on:["O"],txt:"O : pour une nouvelle taxe, on ajoute une classe. On ne modifie pas le code qui marche."},
+  {line:[5],on:["L"],txt:"L : partout où on attend un Document, un Avoir doit fonctionner aussi."},
+  {line:[6],on:["I"],txt:"I : plusieurs petites interfaces plutôt qu’une grosse qui oblige à tout implémenter."},
+  {line:[7],on:["D"],txt:"D : le service reçoit une interface. Spring injecte l’implémentation : facile à changer et à tester."}]}
+
+];
+
+const SP="Spring Boot", JP="JPA / Hibernate", AN="Angular", RXS="RxJS", SQ="SQL / PostgreSQL", DV="REST, Git, Docker";
+function autoPath(A,B,o){
+  const acx=A.x+A.w/2, bcx=B.x+B.w/2;
+  if (A.y===B.y){ const y=A.y+22+o; return A.x<B.x ? "M"+(A.x+A.w)+" "+y+"H"+(B.x-2) : "M"+A.x+" "+y+"H"+(B.x+B.w+2); }
+  const down=B.y>A.y, y1=down?A.y+A.h:A.y, y2=down?B.y-2:B.y+B.h+2;
+  let x=null;
+  if (bcx>=A.x+10 && bcx<=A.x+A.w-10) x=bcx; else if (acx>=B.x+10 && acx<=B.x+B.w-10) x=acx;
+  if (x!==null) return "M"+(x+o)+" "+y1+"V"+y2;
+  const mid=down?A.y+A.h+13:A.y-13;
+  return "M"+(acx+o)+" "+y1+"V"+mid+"H"+(bcx+o)+"V"+y2;
 }
-function grid(){
-  const L=T[lang], k=q.toLowerCase();
-  const list=D.filter(x=>(!sec||x.sec===sec)&&(!k||(x[lang].tab+' '+x[lang].steps.join(' ')).toLowerCase().includes(k)));
-  $('grid').innerHTML=list.length?list.map(x=>`<article class="card"><img loading="lazy" src="gif/q${String(x.n).padStart(3,'0')}.gif" alt="${esc(x[lang].tab)}"><div class="b"><span class="chip">${esc(x.sec)} · ${x.n}/102</span><h2>${esc(x[lang].tab)}</h2><ol>${x[lang].steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div></article>`).join(''):`<p class="empty">${L.none}</p>`;
+function auto(d){
+  const nodes=[], pos={}; let row=-1, lastL=false;
+  d.n.forEach(a=>{
+    const [id,t,s,p,at,until]=a, P=p||"f"; let x,w;
+    if (P==="f"){row++;x=20;w=320;lastL=false;}
+    else if (P==="L"){row++;x=20;w=150;lastL=true;}
+    else {if(!lastL)row++;x=190;w=150;lastL=false;}
+    const n={id,t,s:s||"",x,y:20+row*70,w,h:44};
+    if (at) n.at=at; if (until!=null) n.until=until;
+    nodes.push(n); pos[id]=n;
+  });
+  const edges=(d.e||[]).map(([a,b,at,o])=>{const e={id:a+">"+b,d:autoPath(pos[a],pos[b],o||0)}; if(at)e.at=at; return e;});
+  SC.push({sec:d.sec,q:d.q,id:d.sec+"-"+d.q,tab:d.tab,file:d.f,lang:d.lang||d.sec,vb:[360,20+(row+1)*70],code:d.c,nodes,edges,
+    steps:d.s.map(s=>({line:s.l||[],on:s.on,bad:s.bad,lab:s.lab,txt:s.t}))});
 }
-function draw(){const L=T[lang];$('t').textContent=L.t;$('s').textContent=L.s;bar();grid();}
-draw();
-})();
+auto({sec:SP,q:1,tab:"Injection",f:"FactureService.java",
+ c:['@Service','class FactureService {','  private final FactureRepository repo;','  FactureService(FactureRepository repo) { this.repo = repo; }','}','// Sans Spring : new FactureService(new FactureRepository(...))'],
+ n:[["ctx","Conteneur Spring","démarrage de l’application"],["repo","FactureRepository","bean créé","L",1],["svc","FactureService","bean créé","R",2],["inj","repo injecté dans le service","","f",3]],
+ e:[["ctx","repo",1],["ctx","svc",2],["repo","inj",3],["svc","inj",3]],
+ s:[{l:[1],on:["ctx"],t:"Au démarrage, Spring cherche les classes annotées (@Service, @Repository…)."},
+  {l:[3],on:["ctx","ctx>repo","repo"],t:"Il crée d’abord le repository, car le service en a besoin."},
+  {l:[1,2],on:["ctx","ctx>svc","svc"],t:"Puis il crée le service."},
+  {l:[4],on:["repo>inj","svc>inj","inj"],t:"Il passe le repository au constructeur du service : c’est l’injection. La classe ne fait jamais new elle-même."},
+  {l:[6],on:["inj"],t:"Avantage : dans un test, on passe un faux repository au constructeur, sans base de données."}]});
+auto({sec:SP,q:2,tab:"Les annotations",f:"Couches.java",
+ c:['@Component  class PdfGenerateur { }','@Service    class FactureService { }','@Repository interface FactureRepository extends JpaRepository<Facture, Long> { }','@RestController class FactureController { }'],
+ n:[["comp","@Component","bean générique"],["ctl","@RestController","couche web","L",1],["svc","@Service","logique métier","R",2],["rep","@Repository","accès aux données + erreurs SQL traduites","f",3]],
+ e:[["comp","ctl",1],["comp","svc",2],["comp","rep",3]],
+ s:[{l:[1],on:["comp"],t:"@Component dit à Spring : « crée et gère cet objet ». Les autres annotations en sont des variantes."},
+  {l:[4],on:["comp>ctl","ctl"],t:"@RestController : reçoit les requêtes HTTP et renvoie du JSON."},
+  {l:[2],on:["comp>svc","svc"],t:"@Service : la logique métier (calculer, valider). Même effet que @Component, mais le rôle est clair."},
+  {l:[3],on:["comp>rep","rep"],t:"@Repository : l’accès à la base. Bonus : les erreurs SQL deviennent des exceptions Spring."}]});
+auto({sec:SP,q:3,tab:"Scopes",f:"Scopes.java",
+ c:['@Service                 // singleton par défaut','class TauxService { }','@Component @Scope("prototype")','class GenerateurPdf { }','// singleton : ne jamais stocker l’utilisateur courant dans un champ'],
+ n:[["c1","Contrôleur A","","L"],["c2","Contrôleur B","","R"],["sing","TauxService","1 seule instance partagée"],["p1","GenerateurPdf n°1","","L",1],["p2","GenerateurPdf n°2","","R",1]],
+ e:[["c1","sing"],["c2","sing"]],
+ s:[{l:[1,2],on:["c1","c2","c1>sing","c2>sing","sing"],t:"Singleton : Spring crée un seul TauxService et le donne à tout le monde."},
+  {l:[3,4],on:["p1","p2"],t:"Prototype : chaque demande reçoit un objet tout neuf."},
+  {l:[5],bad:["sing"],lab:{"sing.s":"partagé par tous les utilisateurs"},t:"Piège : un singleton est partagé. Ne jamais y garder une donnée propre à une requête ou à un utilisateur."}]});
+auto({sec:SP,q:4,tab:"Auto-configuration",f:"NoviaApplication.java",
+ c:['<!-- pom.xml -->','<artifactId>spring-boot-starter-data-jpa</artifactId>','<artifactId>postgresql</artifactId>','# application.properties','spring.datasource.url=jdbc:postgresql://localhost:5432/novia','@SpringBootApplication','public class NoviaApplication { }'],
+ n:[["start","@SpringBootApplication","démarrage"],["cp","Bibliothèques présentes ?",""],["cond","DataSource déjà définie ?",""],["ds","DataSource créée","avec application.properties","f",3]],
+ e:[["start","cp"],["cp","cond"],["cond","ds",3]],
+ s:[{l:[6,7],on:["start"],t:"@SpringBootApplication active l’auto-configuration."},
+  {l:[2,3],on:["start>cp","cp"],lab:{"cp.s":"JPA et PostgreSQL trouvés"},t:"Spring Boot regarde les bibliothèques ajoutées : JPA et le driver PostgreSQL sont là."},
+  {l:[],on:["cp>cond","cond"],lab:{"cond.s":"non, aucune"},t:"Il vérifie que tu n’as pas déjà configuré ta propre connexion."},
+  {l:[5],on:["cond>ds","ds"],t:"Alors il crée la connexion avec l’URL du fichier de config. Zéro code à écrire."}]});
+auto({sec:SP,q:5,tab:"Propagation",f:"FactureService.java",
+ c:['@Transactional','public void valider(Long id) {','  factureRepo.save(f);','  journalService.ecrire(f);   // REQUIRED : même transaction','  auditService.tracer(f);     // REQUIRES_NEW : transaction séparée','  throw new RuntimeException("erreur");','}'],
+ n:[["tx1","Transaction principale",""],["fac","save(facture)","","L",1],["jou","journal","REQUIRED","R",2],["aud","audit","REQUIRES_NEW","f",3],["res","Résultat","","f",4]],
+ e:[["tx1","fac",1],["tx1","jou",2]],
+ s:[{l:[1,2],on:["tx1"],lab:{"tx1.s":"ouverte"},t:"Le proxy ouvre une transaction avant la méthode."},
+  {l:[3],on:["tx1>fac","fac"],t:"La facture est enregistrée dans cette transaction."},
+  {l:[4],on:["tx1>jou","jou"],t:"REQUIRED (le choix par défaut) : le journal rejoint la même transaction."},
+  {l:[5],on:["aud"],lab:{"aud.s":"REQUIRES_NEW : validé tout de suite"},t:"REQUIRES_NEW : l’audit ouvre sa propre transaction, validée à part."},
+  {l:[6],bad:["tx1","fac","jou"],on:["aud","res"],lab:{"tx1.s":"rollback","res":"facture et journal annulés, audit gardé"},t:"Une erreur arrive : tout ce qui est dans la transaction principale est annulé. L’audit, séparé, reste."}]});
+auto({sec:SP,q:7,tab:"Erreurs globales",f:"GestionErreurs.java",
+ c:['@RestControllerAdvice','class GestionErreurs {','  @ExceptionHandler(FactureIntrouvableException.class)','  ResponseEntity<Erreur> introuvable(FactureIntrouvableException e) {','    return ResponseEntity.status(404).body(new Erreur(e.getMessage()));','  }','}','// dans le service :','throw new FactureIntrouvableException(42);'],
+ n:[["svc","FactureService",""],["ctl","Controller",""],["adv","@RestControllerAdvice",""],["cli","Client Angular",""]],
+ e:[["svc","ctl"],["ctl","adv"],["adv","cli"]],
+ s:[{l:[8,9],bad:["svc"],lab:{"svc.s":"lève FactureIntrouvable"},t:"Le service ne trouve pas la facture 42 : il lève une exception."},
+  {l:[9],bad:["svc>ctl","ctl"],lab:{"ctl.s":"ne la capture pas"},t:"L’exception remonte à travers le contrôleur. Pas besoin de try/catch partout."},
+  {l:[1,2,3,4],on:["ctl>adv","adv"],lab:{"adv.s":"attrape l’exception"},t:"Le @RestControllerAdvice l’attrape, comme un filet de sécurité commun à toute l’API."},
+  {l:[5],on:["adv>cli","cli"],lab:{"cli.s":"404 + message clair"},t:"Il renvoie un code 404 et un message JSON propre, toujours au même format."}]});
+auto({sec:SP,q:8,tab:"Validation",f:"FactureController.java",
+ c:['record FactureDto(','  @NotNull Long clientId,','  @Positive BigDecimal totalHt) {}','@PostMapping("/factures")','ResponseEntity<?> creer(@Valid @RequestBody FactureDto dto) { ... }','// JSON reçu : { "clientId": null, "totalHt": -5 }'],
+ n:[["json","JSON reçu","clientId vide, totalHt = -5"],["val","@Valid","vérifie les annotations"],["err1","clientId","ne doit pas être vide","L",2],["err2","totalHt","doit être positif","R",2],["rep","400 Bad Request","la méthode n’est pas exécutée","f",3]],
+ e:[["json","val"],["val","err1",2],["val","err2",2],["err1","rep",3],["err2","rep",3]],
+ s:[{l:[6],on:["json"],t:"Le front envoie un JSON incorrect."},
+  {l:[5],on:["json>val","val"],t:"@Valid demande à Spring de vérifier les règles du DTO avant d’entrer dans la méthode."},
+  {l:[2,3],on:["val>err1","val>err2"],bad:["err1","err2"],t:"Deux règles ne sont pas respectées."},
+  {l:[5],on:["err1>rep","err2>rep","rep"],t:"Réponse 400 avec la liste des erreurs. Le code de la méthode n’a jamais été exécuté."}]});
+auto({sec:SP,q:10,tab:"Profils",f:"application.yml",
+ c:['# application-dev.yml','spring.datasource.url: jdbc:postgresql://localhost/novia','# application-prod.yml','spring.datasource.url: ${DB_URL}','# lancement','java -jar app.jar --spring.profiles.active=prod'],
+ n:[["app","app.jar","le même fichier partout"],["dev","profil dev","base locale","L",1],["prod","profil prod","base de production","R",2],["sec","DB_URL","variable d’environnement","R",3]],
+ e:[["app","dev",1],["app","prod",2],["prod","sec",3]],
+ s:[{l:[],on:["app"],t:"On construit une seule application."},
+  {l:[1,2],on:["app>dev","dev"],t:"En développement, le profil dev pointe vers la base locale."},
+  {l:[3,4,6],on:["app>prod","prod"],t:"En production, on active le profil prod au lancement."},
+  {l:[4],on:["prod>sec","sec"],t:"L’URL et le mot de passe viennent de variables d’environnement, jamais du code."}]});
+auto({sec:SP,q:11,tab:"Tests",f:"Tests.java",
+ c:['@ExtendWith(MockitoExtension.class)','class FactureServiceTest { @Mock FactureRepository repo; }','@WebMvcTest(FactureController.class)','class FactureControllerTest { @Autowired MockMvc mvc; }','@DataJpaTest','class FactureRepositoryTest { }','@SpringBootTest @Testcontainers','class FactureIT { }'],
+ n:[["u","Unitaire : JUnit + Mockito","rapide, sans Spring"],["w","@WebMvcTest","contrôleur seul + MockMvc"],["j","@DataJpaTest","repository + base de test"],["i","@SpringBootTest","toute l’application"]],
+ e:[],
+ s:[{l:[1,2],on:["u"],t:"Test unitaire : on teste le service seul, le repository est remplacé par un faux (mock). Très rapide, on en écrit beaucoup."},
+  {l:[3,4],on:["w"],t:"On teste le contrôleur seul : URL, JSON, codes HTTP. Le service est remplacé par un faux."},
+  {l:[5,6],on:["j"],t:"On teste les requêtes du repository sur une vraie base de test."},
+  {l:[7,8],on:["i"],t:"Test d’intégration : toute l’application démarre, avec un vrai PostgreSQL dans Docker. Plus lent, on en écrit moins."}]});
+auto({sec:SP,q:12,tab:"Actuator",f:"application.properties",
+ c:['<artifactId>spring-boot-starter-actuator</artifactId>','management.endpoints.web.exposure.include=health,metrics,info','GET /actuator/health    →  {"status":"UP"}','GET /actuator/metrics/http.server.requests'],
+ n:[["k8s","Docker / Kubernetes","","L"],["mon","Monitoring","tableaux de bord","R"],["act","Actuator","/actuator/..."],["db","PostgreSQL","","L"],["disk","Disque","","R"]],
+ e:[["k8s","act"],["mon","act"],["act","db"],["act","disk"]],
+ s:[{l:[1,2],on:["act"],t:"On ajoute Actuator : l’application expose des adresses de surveillance."},
+  {l:[3],on:["k8s","k8s>act","act","act>db","db","act>disk","disk"],lab:{"act.s":"health : UP"},t:"/health vérifie la base, le disque… et répond UP ou DOWN. Si DOWN, l’app peut être redémarrée automatiquement."},
+  {l:[4],on:["mon","mon>act","act"],lab:{"act.s":"metrics"},t:"/metrics donne des chiffres : nombre de requêtes, temps de réponse, mémoire."}]});
+auto({sec:SP,q:13,tab:"Champ ou constructeur",f:"FactureService.java",
+ c:['// Injection par champ','@Autowired private FactureRepository repo;','// Injection par constructeur','private final FactureRepository repo;','FactureService(FactureRepository repo) { this.repo = repo; }','// Test sans Spring :','new FactureService(fauxRepo);'],
+ n:[["champ","Par champ","","L"],["cons","Par constructeur","","R"],["test","Test unitaire",""]],
+ e:[["champ","test"],["cons","test"]],
+ s:[{l:[1,2],on:["champ"],lab:{"champ.s":"rempli en cachette"},t:"Par champ : Spring remplit le champ en cachette. Impossible de le rendre final."},
+  {l:[3,4,5],on:["cons"],lab:{"cons.s":"final, visible"},t:"Par constructeur : la dépendance est obligatoire, final, et visible dans la signature."},
+  {l:[6,7],on:["cons>test","test"],bad:["champ>test"],lab:{"test.s":"new FactureService(fauxRepo)"},t:"Pour tester, on passe un faux repository au constructeur. Avec un champ, il faudrait démarrer Spring."}]});
+auto({sec:SP,q:14,tab:"@Primary / @Qualifier",f:"Taxes.java",
+ c:['@Service @Primary class TaxeTva implements CalculTaxe { }','@Service("timbre") class TaxeTimbre implements CalculTaxe { }','FactureService(CalculTaxe taxe) { }                      // reçoit TaxeTva','TimbreService(@Qualifier("timbre") CalculTaxe taxe) { }  // reçoit TaxeTimbre'],
+ n:[["tva","TaxeTva","@Primary","L"],["tim","TaxeTimbre","nommé « timbre »","R"],["q","Lequel injecter ?",""],["fs","FactureService","","L"],["ts","TimbreService","","R"]],
+ e:[["tva","q"],["tim","q"],["q","fs"],["q","ts"]],
+ s:[{l:[1,2],on:["tva","tim","tva>q","tim>q"],bad:["q"],lab:{"q.s":"2 candidats : ambigu"},t:"Deux beans implémentent CalculTaxe : sans indication, Spring ne sait pas lequel choisir."},
+  {l:[1,3],on:["tva","q>fs","fs"],lab:{"q.s":"@Primary = choix par défaut","fs.s":"reçoit TaxeTva"},t:"@Primary désigne le choix par défaut."},
+  {l:[2,4],on:["tim","q>ts","ts"],lab:{"ts.s":"reçoit TaxeTimbre"},t:"@Qualifier demande un bean précis, par son nom."}]});
+auto({sec:SP,q:15,tab:"Lire la requête",f:"FactureController.java",
+ c:['@PutMapping("/factures/{id}")','Facture modifier(@PathVariable Long id,','                 @RequestParam(required = false) String statut,','                 @RequestBody FactureDto dto) { ... }','// PUT /factures/42?statut=PAYEE   corps : { "totalHt": 100 }'],
+ n:[["url","PUT /factures/42?statut=PAYEE","+ corps JSON"],["pv","@PathVariable","id = 42","L"],["rp","@RequestParam","statut = PAYEE","R"],["rb","@RequestBody","dto.totalHt = 100"]],
+ e:[["url","pv"],["url","rp"],["url","rb"]],
+ s:[{l:[5],on:["url"],t:"Une requête arrive avec trois informations à trois endroits différents."},
+  {l:[1,2],on:["url>pv","pv"],t:"@PathVariable lit un morceau de l’adresse : l’identifiant de la ressource."},
+  {l:[3],on:["url>rp","rp"],t:"@RequestParam lit ce qui suit le « ? » : un filtre ou une option."},
+  {l:[4],on:["url>rb","rb"],t:"@RequestBody transforme le JSON du corps en objet Java."}]});
+auto({sec:SP,q:16,tab:"ResponseEntity",f:"FactureController.java",
+ c:['@PostMapping("/factures")','ResponseEntity<FactureDto> creer(@RequestBody FactureDto dto) {','  FactureDto cree = service.creer(dto);','  return ResponseEntity','      .created(URI.create("/factures/" + cree.id()))','      .body(cree);','}'],
+ n:[["svc","service.creer(dto)","facture enregistrée"],["re","ResponseEntity",""],["st","Code","","L",1],["hd","En-tête Location","","R",2],["bd","Corps","la facture en JSON","f",3]],
+ e:[["svc","re",1],["re","st",1],["re","hd",2],["re","bd",3]],
+ s:[{l:[3],on:["svc"],t:"Le service crée la facture."},
+  {l:[4],on:["svc>re","re","re>st","st"],lab:{"st.s":"201 Created"},t:"ResponseEntity permet de choisir le code : 201 = ressource créée."},
+  {l:[5],on:["re>hd","hd"],lab:{"hd.s":"/factures/57"},t:"On ajoute l’adresse de la nouvelle facture dans l’en-tête Location."},
+  {l:[6],on:["re>bd","bd"],t:"Et on renvoie la facture créée dans le corps."}]});
+auto({sec:SP,q:17,tab:"Codes HTTP",f:"codes-http.txt",lang:"HTTP",
+ c:['GET /factures/42              → 200 OK','POST /factures                → 201 Created','DELETE /factures/42           → 204 No Content','POST /factures (total < 0)    → 400 Bad Request','GET /factures (sans token)    → 401 Unauthorized','DELETE /factures/42 (USER)    → 403 Forbidden','GET /factures/999             → 404 Not Found','bug dans le code              → 500 Internal Server Error'],
+ n:[["req","Requête",""],["code","Code",""],["fam","Famille",""]],
+ e:[["req","code"]],
+ s:[{l:[1],on:["req","req>code","code","fam"],lab:{req:"GET /factures/42",code:"200 OK","code.s":"la facture est renvoyée",fam:"2xx : succès"},t:"200 : tout s’est bien passé."},
+  {l:[2],on:["req","req>code","code","fam"],lab:{req:"POST /factures",code:"201 Created","code.s":"nouvelle ressource créée"},t:"201 : une ressource a été créée."},
+  {l:[3],on:["req","req>code","code","fam"],lab:{req:"DELETE /factures/42",code:"204 No Content","code.s":"fait, rien à renvoyer"},t:"204 : action réussie, pas de contenu à renvoyer."},
+  {l:[4],on:["req","req>code"],bad:["code","fam"],lab:{req:"POST total négatif",code:"400 Bad Request","code.s":"données invalides",fam:"4xx : erreur du client"},t:"400 : la requête est mal formée ou invalide."},
+  {l:[5],on:["req","req>code"],bad:["code","fam"],lab:{req:"GET sans token",code:"401 Unauthorized","code.s":"qui es-tu ? (pas connecté)"},t:"401 : l’utilisateur n’est pas identifié."},
+  {l:[6],on:["req","req>code"],bad:["code","fam"],lab:{req:"DELETE avec rôle USER",code:"403 Forbidden","code.s":"je sais qui tu es, mais c’est interdit"},t:"403 : identifié, mais pas autorisé. Ne pas confondre avec 401."},
+  {l:[7],on:["req","req>code"],bad:["code","fam"],lab:{req:"GET /factures/999",code:"404 Not Found","code.s":"cette facture n’existe pas"},t:"404 : la ressource n’existe pas."},
+  {l:[8],on:["req","req>code"],bad:["code","fam"],lab:{req:"bug côté serveur",code:"500 Internal Server Error","code.s":"erreur non prévue",fam:"5xx : erreur du serveur"},t:"500 : le problème vient du serveur, pas du client."}]});
+auto({sec:SP,q:18,tab:"CORS",f:"FactureController.java",
+ c:['// Angular sur http://localhost:4200 appelle :','this.http.get(\'http://localhost:8080/api/factures\');','@CrossOrigin(origins = "http://localhost:4200")','@RestController','class FactureController { }'],
+ n:[["ng","Angular","localhost:4200","L"],["api","API Spring","localhost:8080","R"],["nav","Navigateur",""]],
+ e:[["ng","api"],["api","nav"],["ng","nav"]],
+ s:[{l:[1,2],on:["ng","ng>api"],t:"La page Angular appelle une API sur un autre port : c’est une autre « origine »."},
+  {l:[2],bad:["nav","api>nav"],lab:{"nav.s":"bloqué : origine non autorisée"},t:"Sans autorisation de l’API, le navigateur bloque la réponse. C’est l’erreur CORS dans la console."},
+  {l:[3,4,5],on:["api","api>nav","nav","ng>nav","ng"],lab:{"api.s":"autorise localhost:4200","nav.s":"réponse transmise à la page"},t:"L’API déclare l’origine autorisée : le navigateur laisse passer la réponse."}]});
+auto({sec:SP,q:19,tab:"Flyway",f:"db/migration",lang:"SQL",
+ c:['-- V1__creation_facture.sql','CREATE TABLE facture (id BIGSERIAL PRIMARY KEY, numero VARCHAR(20));','-- V2__ajout_timbre.sql','ALTER TABLE facture ADD COLUMN timbre NUMERIC(10,3);','-- table flyway_schema_history : V1 appliqué, V2 appliqué'],
+ n:[["v1","V1 : création facture",""],["v2","V2 : ajout du timbre","","f",1],["hist","flyway_schema_history","","f",2],["db","Base de production","","f",3]],
+ e:[["v1","v2",1],["v2","hist",2],["hist","db",3]],
+ s:[{l:[1,2],on:["v1"],t:"Chaque changement de base est un script numéroté, rangé dans Git."},
+  {l:[3,4],on:["v1>v2","v2"],t:"Pour ajouter le timbre fiscal, on écrit un nouveau script V2. On ne modifie jamais V1."},
+  {l:[5],on:["v2>hist","hist"],lab:{"hist.s":"V1 et V2 appliqués"},t:"Au démarrage, Flyway regarde l’historique et n’applique que les scripts manquants."},
+  {l:[],on:["hist>db","db"],lab:{"db.s":"même structure que dev et test"},t:"Résultat : tous les environnements ont exactement la même structure."}]});
+auto({sec:SP,q:20,tab:"Logs",f:"FactureService.java",
+ c:['private static final Logger log = LoggerFactory.getLogger(FactureService.class);','log.debug("Calcul TVA facture {}", id);','log.info("Facture {} validée par {}", id, user);','log.warn("Facture {} : client sans adresse", id);','log.error("Échec génération PDF facture {}", id, e);','// jamais : log.info("mot de passe = " + mdp);'],
+ n:[["lvl","Niveau en production : INFO",""],["dbg","DEBUG","","L"],["inf","INFO","","R"],["wrn","WARN","","L"],["err","ERROR","","R"]],
+ e:[],
+ s:[{l:[2],bad:["dbg"],lab:{"dbg.s":"pas affiché en prod"},t:"DEBUG : détails pour le développement. En production (niveau INFO), ils sont masqués."},
+  {l:[3],on:["inf"],lab:{"inf.s":"affiché"},t:"INFO : les événements normaux importants."},
+  {l:[4],on:["wrn"],lab:{"wrn.s":"affiché"},t:"WARN : quelque chose d’anormal, mais l’application continue."},
+  {l:[5],on:["err"],lab:{"err.s":"affiché + erreur"},t:"ERROR : un vrai problème. On ajoute l’exception pour avoir la cause."},
+  {l:[6],bad:["lvl"],lab:{lvl:"Jamais de mot de passe ni de token"},t:"Les logs sont lus par beaucoup de monde : on n’y écrit jamais de données secrètes."}]});
+auto({sec:JP,q:1,tab:"JPA, Hibernate, Spring Data",f:"FactureRepository.java",
+ c:['public interface FactureRepository extends JpaRepository<Facture, Long> {','  List<Facture> findByClientIdAndStatut(Long clientId, Statut statut);','}','// SQL généré :','// select * from facture where client_id = ? and statut = ?'],
+ n:[["sd","Spring Data JPA","tu écris une interface"],["jpa","JPA","la norme : annotations, EntityManager"],["hib","Hibernate","l’implémentation : écrit le SQL"],["db","PostgreSQL",""]],
+ e:[["sd","jpa"],["jpa","hib"],["hib","db"]],
+ s:[{l:[1,2],on:["sd"],t:"Tu déclares seulement une méthode dans une interface. Spring Data comprend son nom."},
+  {l:[2],on:["sd>jpa","jpa"],t:"Spring Data passe par JPA, la norme Java."},
+  {l:[4,5],on:["jpa>hib","hib"],t:"Hibernate, qui applique cette norme, écrit la requête SQL."},
+  {l:[5],on:["hib>db","db"],t:"Le SQL est exécuté sur PostgreSQL. Tu n’as écrit aucune requête."}]});
+auto({sec:JP,q:2,tab:"LAZY ou EAGER",f:"Facture.java",
+ c:['@ManyToOne(fetch = FetchType.LAZY)','Client client;','@OneToMany(mappedBy = "facture")   // LAZY par défaut','List<Ligne> lignes;','Facture f = repo.findById(1L).get();','f.getLignes().size();   // chargement maintenant'],
+ n:[["fac","Facture","chargée"],["cli","client","","L"],["lig","lignes","","R"],["sql","SQL exécuté",""]],
+ e:[["fac","cli"],["fac","lig"]],
+ s:[{l:[5],on:["fac","sql"],lab:{"sql.s":"SELECT facture"},t:"findById charge seulement la facture."},
+  {l:[1,2,3,4],bad:["cli","lig"],lab:{"cli.s":"pas chargé (LAZY)","lig.s":"pas chargées (LAZY)"},t:"Le client et les lignes sont LAZY : Hibernate met juste une « boîte vide » à leur place."},
+  {l:[6],on:["fac>lig","lig","sql"],lab:{"lig.s":"chargées","sql.s":"SELECT lignes, à la demande"},t:"Au premier accès, Hibernate va chercher les lignes. En EAGER, elles auraient été chargées dès le début, même inutiles."}]});
+auto({sec:JP,q:4,tab:"LazyInitializationException",f:"FactureService.java",
+ c:['@Transactional(readOnly = true)','public Facture trouver(Long id) { return repo.findById(id).get(); }','// dans le contrôleur, après la transaction :','facture.getLignes().size();    // LazyInitializationException','// solution : JOIN FETCH ou DTO rempli dans le service'],
+ n:[["tx","Service (transaction)","session ouverte"],["fac","Facture chargée","lignes : LAZY"],["ctl","Contrôleur",""],["sol","Solution","","f",3]],
+ e:[["tx","fac"],["fac","ctl"]],
+ s:[{l:[1,2],on:["tx","tx>fac","fac"],t:"Dans le service, la session Hibernate est ouverte : la facture est chargée, sans ses lignes."},
+  {l:[3],on:["fac>ctl","ctl"],bad:["tx"],lab:{"tx.s":"session fermée"},t:"La méthode se termine : la session se ferme. La facture arrive dans le contrôleur."},
+  {l:[4],bad:["ctl","fac"],lab:{"ctl.s":"getLignes() → erreur"},t:"Le contrôleur demande les lignes, mais il n’y a plus de session pour les charger : erreur."},
+  {l:[5],on:["sol"],lab:{"sol.s":"JOIN FETCH ou DTO dans le service"},t:"Solution : tout charger pendant que la session est encore ouverte."}]});
+auto({sec:JP,q:5,tab:"États d’une entité",f:"Etats.java",
+ c:['Facture f = new Facture();     // transient','em.persist(f);                 // managed','f.setStatut(PAYEE);            // suivi automatiquement','// commit → UPDATE envoyé','em.detach(f);                  // detached','f = em.merge(f);               // de nouveau managed','em.remove(f);                  // removed'],
+ n:[["tr","Transient","","L"],["ma","Managed","","R"],["de","Detached","","L"],["re","Removed","","R"]],
+ e:[["tr","ma"],["ma","de",0,-6],["de","ma",0,6],["ma","re"]],
+ s:[{l:[1],on:["tr"],t:"new crée un objet Java normal : Hibernate ne le connaît pas."},
+  {l:[2],on:["tr>ma","ma"],t:"persist : l’entité devient « managed », suivie par Hibernate."},
+  {l:[3,4],on:["ma"],lab:{"ma.s":"changement vu → UPDATE"},t:"Chaque changement est remarqué et enregistré au commit, sans appeler save()."},
+  {l:[5],on:["ma>de","de"],t:"detach (ou fin de session) : l’entité n’est plus suivie. Ses changements sont ignorés."},
+  {l:[6],on:["de>ma","ma"],t:"merge : on la rattache, elle est de nouveau suivie."},
+  {l:[7],on:["ma>re"],bad:["re"],t:"remove : elle sera supprimée au commit."}]});
+auto({sec:JP,q:6,tab:"@Version",f:"Facture.java",
+ c:['@Version','private Long version;','// Ali et Sami ouvrent la facture 42 (version 1)','// Ali enregistre → UPDATE ... WHERE version = 1 → version 2','// Sami enregistre → UPDATE ... WHERE version = 1 → 0 ligne','// → OptimisticLockException pour Sami'],
+ n:[["ali","Ali","","L"],["sami","Sami","","R"],["db","Facture 42","version 1"]],
+ e:[["ali","db"],["sami","db"]],
+ s:[{l:[1,2,3],on:["ali","sami","db"],lab:{"ali.s":"lit la version 1","sami.s":"lit la version 1"},t:"Ali et Sami ouvrent la même facture, en version 1."},
+  {l:[4],on:["ali","ali>db","db"],lab:{"ali.s":"enregistre","db.s":"version 2"},t:"Ali enregistre en premier : la version passe à 2."},
+  {l:[5,6],bad:["sami","sami>db"],lab:{"sami.s":"refusé : version périmée"},t:"Sami enregistre avec la version 1, qui n’existe plus : refusé. Il n’écrase pas le travail d’Ali."},
+  {l:[],on:["sami"],lab:{"sami.s":"recharge et recommence"},t:"On lui affiche « modifiée par quelqu’un d’autre » et il recharge la facture."}]});
+auto({sec:JP,q:7,tab:"Filtres dynamiques",f:"FactureService.java",
+ c:['Specification<Facture> spec = Specification.where(null);','if (filtre.client() != null)','  spec = spec.and((r, q, cb) -> cb.equal(r.get("clientId"), filtre.client()));','if (filtre.statut() != null)','  spec = spec.and((r, q, cb) -> cb.equal(r.get("statut"), filtre.statut()));','repo.findAll(spec, PageRequest.of(0, 20));'],
+ n:[["form","Formulaire de recherche","client : 7, statut : vide"],["c","filtre client","","L"],["s","filtre statut","","R"],["sql","SQL généré",""]],
+ e:[["form","c"],["form","s"],["c","sql"]],
+ s:[{l:[1],on:["form"],t:"L’utilisateur remplit seulement le client."},
+  {l:[2,3],on:["form>c","c"],lab:{"c.s":"ajouté"},t:"Le client est renseigné : on ajoute la condition."},
+  {l:[4,5],bad:["s"],lab:{"s.s":"ignoré (vide)"},t:"Le statut est vide : on n’ajoute rien."},
+  {l:[6],on:["c>sql","sql"],lab:{"sql.s":"WHERE client_id = 7 LIMIT 20"},t:"La requête ne contient que les filtres utiles, avec la pagination."}]});
+auto({sec:JP,q:8,tab:"save ou saveAndFlush",f:"FactureService.java",
+ c:['@Transactional','void creer() {','  repo.save(f1);            // en attente','  repo.saveAndFlush(f2);    // SQL envoyé tout de suite','  repo.save(f3);','}                           // commit : le reste est envoyé'],
+ n:[["mem","Mémoire Hibernate","en attente : rien"],["db","PostgreSQL",""]],
+ e:[["mem","db"]],
+ s:[{l:[3],on:["mem"],lab:{"mem.s":"en attente : f1"},t:"save garde f1 en mémoire. Le SQL peut attendre."},
+  {l:[4],on:["mem","mem>db","db"],lab:{"mem.s":"en attente : rien","db.s":"INSERT f1, INSERT f2"},t:"saveAndFlush envoie tout de suite tout ce qui attend. Une erreur (doublon…) apparaît ici."},
+  {l:[5],on:["mem"],lab:{"mem.s":"en attente : f3"},t:"f3 attend à son tour."},
+  {l:[6],on:["mem>db","db"],lab:{"mem.s":"en attente : rien","db.s":"INSERT f3 + COMMIT"},t:"À la fin de la transaction, le reste est envoyé puis validé."}]});
+auto({sec:JP,q:9,tab:"Relation bidirectionnelle",f:"Facture.java",
+ c:['class Facture {','  @OneToMany(mappedBy = "facture") List<Ligne> lignes = new ArrayList<>();','  void ajouterLigne(Ligne l) { lignes.add(l); l.setFacture(this); }','}','class Ligne {','  @ManyToOne @JoinColumn(name = "facture_id") Facture facture;','}'],
+ n:[["fac","Facture","lignes (mappedBy)","L"],["lig","Ligne","facture","R"],["col","Colonne facture_id","dans la table ligne"]],
+ e:[["fac","lig",0,-8],["lig","fac",0,8],["lig","col"]],
+ s:[{l:[1,2],on:["fac","fac>lig"],t:"Côté Facture : la liste des lignes. mappedBy veut dire « ce n’est pas moi qui gère la colonne »."},
+  {l:[5,6],on:["lig","lig>col","col"],t:"Côté Ligne : @ManyToOne porte la vraie colonne facture_id. C’est le côté « propriétaire »."},
+  {l:[3],on:["fac>lig","lig>fac","fac","lig"],t:"ajouterLigne remplit les deux côtés en même temps, pour que Java et la base restent d’accord."}]});
+auto({sec:JP,q:10,tab:"cascade, orphanRemoval",f:"Facture.java",
+ c:['@OneToMany(mappedBy = "facture", cascade = CascadeType.ALL, orphanRemoval = true)','List<Ligne> lignes;','repo.save(facture);              // facture + lignes enregistrées','facture.getLignes().remove(0);   // ligne 1 supprimée en base','repo.delete(facture);            // facture + lignes supprimées'],
+ n:[["fac","Facture",""],["l1","Ligne 1","","L"],["l2","Ligne 2","","R"]],
+ e:[["fac","l1"],["fac","l2"]],
+ s:[{l:[1,2,3],on:["fac","fac>l1","fac>l2","l1","l2"],lab:{"fac.s":"INSERT","l1.s":"INSERT","l2.s":"INSERT"},t:"cascade ALL : en enregistrant la facture, ses lignes sont enregistrées aussi."},
+  {l:[4],bad:["l1","fac>l1"],lab:{"l1.s":"DELETE (orpheline)"},t:"orphanRemoval : une ligne retirée de la liste est supprimée en base."},
+  {l:[5],bad:["fac","l2","fac>l2"],lab:{"fac.s":"DELETE","l2.s":"DELETE"},t:"Supprimer la facture supprime aussi ses lignes. À réserver aux enfants qui n’existent pas sans leur parent."}]});
+auto({sec:JP,q:11,tab:"Pagination",f:"FactureService.java",
+ c:['Page<Facture> page = repo.findAll(','    PageRequest.of(0, 20, Sort.by("date").descending()));','page.getContent();        // 20 factures','page.getTotalElements();  // 1 250','page.getTotalPages();     // 63'],
+ n:[["req","PageRequest.of(0, 20)","page 1, 20 par page, plus récentes d’abord"],["sql1","Requête 1",""],["sql2","Requête 2",""],["page","Page",""]],
+ e:[["req","sql1"],["sql1","sql2"],["sql2","page"]],
+ s:[{l:[1,2],on:["req"],t:"On demande la première page de 20 factures, les plus récentes d’abord."},
+  {l:[3],on:["req>sql1","sql1"],lab:{"sql1.s":"SELECT … ORDER BY date DESC LIMIT 20"},t:"Hibernate charge seulement 20 lignes, pas les 1 250."},
+  {l:[4,5],on:["sql1>sql2","sql2"],lab:{"sql2.s":"SELECT count(*) → 1 250"},t:"Une deuxième requête compte le total, pour afficher « page 1 sur 63 »."},
+  {l:[3,4,5],on:["sql2>page","page"],lab:{"page.s":"20 factures, 1 250 au total, 63 pages"},t:"L’objet Page contient tout ce qu’il faut pour la pagination côté Angular."}]});
+auto({sec:JP,q:12,tab:"Projection",f:"FactureRepository.java",
+ c:['record FactureResume(String numero, BigDecimal totalTtc) {}','@Query("SELECT new com.app.FactureResume(f.numero, f.totalTtc) FROM Facture f")','List<FactureResume> resumes();'],
+ n:[["ent","Entité complète","25 colonnes + relations","L"],["dto","Projection","2 colonnes","R"],["sql","SQL",""]],
+ e:[],
+ s:[{l:[],bad:["ent"],on:["sql"],lab:{"sql.s":"SELECT * : 25 colonnes"},t:"Pour une simple liste, charger l’entité complète ramène beaucoup de colonnes inutiles."},
+  {l:[1,2,3],on:["dto","sql"],lab:{"sql.s":"SELECT numero, total_ttc"},t:"Avec une projection, on ne lit que les 2 colonnes affichées : plus rapide."},
+  {l:[3],on:["dto"],lab:{"dto.s":"pas de relation LAZY"},t:"Un DTO n’a pas de relations LAZY : pas de LazyInitializationException possible."}]});
+auto({sec:AN,q:2,tab:"Communication",f:"ligne.component.ts",
+ c:['<!-- parent.html -->','<app-ligne [ligne]="l" (supprimer)="retirer($event)"></app-ligne>','// ligne.component.ts','@Input() ligne!: Ligne;','@Output() supprimer = new EventEmitter<Ligne>();','onClic() { this.supprimer.emit(this.ligne); }','// service partagé','panier$ = new BehaviorSubject<Ligne[]>([]);'],
+ n:[["par","Parent : facture",""],["enf","Enfant : ligne",""],["svc","Service partagé","BehaviorSubject","L",2],["autre","Autre composant","affiche le total","R",2]],
+ e:[["par","enf",0,-40],["enf","par",0,40],["svc","autre",2]],
+ s:[{l:[2,4],on:["par","par>enf","enf"],lab:{"enf.s":"reçoit la ligne"},t:"@Input : le parent donne une donnée à l’enfant."},
+  {l:[5,6],on:["enf","enf>par","par"],lab:{"par.s":"reçoit « supprimer »"},t:"@Output : l’enfant prévient le parent qu’il s’est passé quelque chose."},
+  {l:[7,8],on:["svc","svc>autre","autre"],t:"Pour des composants éloignés, on passe par un service partagé : l’un envoie, l’autre écoute."}]});
+auto({sec:AN,q:3,tab:"Détection des changements",f:"ligne.component.ts",
+ c:['@Component({ changeDetection: ChangeDetectionStrategy.OnPush })','export class LigneComponent { @Input() ligne!: Ligne; }','// dans le parent :','this.ligne.quantite = 5;                       // même objet','this.ligne = { ...this.ligne, quantite: 5 };   // nouvel objet'],
+ n:[["evt","Événement","clic, réponse HTTP, timer"],["par","Parent",""],["c1","LigneComponent","OnPush","L"],["c2","Autre composant","OnPush","R"]],
+ e:[["evt","par"],["par","c1"],["par","c2"]],
+ s:[{l:[],on:["evt","evt>par","par"],t:"Après chaque événement, Angular vérifie les composants pour mettre l’écran à jour."},
+  {l:[1,2],on:["c1","c2"],lab:{"c1.s":"vérifié si besoin","c2.s":"ignoré"},t:"Avec OnPush, un composant n’est vérifié que si son @Input change de référence (ou s’il a son propre événement)."},
+  {l:[4],bad:["c1"],lab:{"c1.s":"même objet : rien"},t:"Modifier l’objet existant ne change pas sa référence : l’écran n’est pas mis à jour."},
+  {l:[5],on:["par>c1","c1"],lab:{"c1.s":"nouvel objet : mis à jour"},t:"On crée un nouvel objet : Angular voit le changement. D’où l’habitude de ne pas modifier les objets."}]});
+auto({sec:AN,q:4,tab:"Signals",f:"panier.component.ts",
+ c:['quantite = signal(2);','prix = signal(50);','total = computed(() => this.quantite() * this.prix());','constructor() { effect(() => console.log(\'Total :\', this.total())); }','ajouter() { this.quantite.update(q => q + 1); }'],
+ n:[["q","quantite","2","L"],["p","prix","50","R"],["t","total (computed)","100"],["e","effect",""]],
+ e:[["q","t"],["p","t"],["t","e"]],
+ s:[{l:[1,2],on:["q","p"],t:"Deux signals : des valeurs qu’Angular surveille."},
+  {l:[3],on:["q>t","p>t","t"],t:"computed calcule le total à partir d’eux, et sait de qui il dépend."},
+  {l:[4],on:["t>e","e"],lab:{"e.s":"Total : 100"},t:"effect s’exécute à chaque changement du total."},
+  {l:[5],on:["q","q>t","t","t>e","e"],lab:{"q.s":"3","t.s":"150","e.s":"Total : 150"},t:"quantite passe à 3 : seul ce qui en dépend est recalculé, automatiquement."}]});
+auto({sec:AN,q:5,tab:"Standalone",f:"facture.component.ts",
+ c:['@Component({','  selector: \'app-facture\',','  standalone: true,','  imports: [CurrencyPipe, LigneComponent],','  templateUrl: \'./facture.html\'','})','export class FactureComponent { }','// route : { path: \'facture\', loadComponent: () => import(\'./facture.component\') }'],
+ n:[["old","Avant : NgModule","déclare tout","L"],["nw","Standalone","importe ce qu’il utilise","R"],["route","Route chargée à la demande","loadComponent"]],
+ e:[["nw","route"]],
+ s:[{l:[],on:["old"],t:"Avant, chaque composant devait être déclaré dans un NgModule."},
+  {l:[1,3,4],on:["nw"],t:"Un composant standalone importe directement ce dont il a besoin."},
+  {l:[8],on:["nw>route","route"],t:"Il peut être chargé à la demande depuis une route, sans module intermédiaire."}]});
+auto({sec:AN,q:6,tab:"Guards",f:"auth.guard.ts",
+ c:['export const authGuard: CanActivateFn = () => {','  const auth = inject(AuthService);','  return auth.estConnecte() ? true : inject(Router).createUrlTree([\'/login\']);','};','{ path: \'factures\', component: FacturesComponent, canActivate: [authGuard] }'],
+ n:[["clic","Clic sur « Factures »",""],["g","authGuard",""],["ok","Page Factures","","L"],["login","Page Connexion","","R"]],
+ e:[["clic","g"],["g","ok"],["g","login"]],
+ s:[{l:[5],on:["clic","clic>g","g"],t:"Avant d’ouvrir la page, Angular exécute le guard."},
+  {l:[2,3],on:["g>login","login"],lab:{"g.s":"non connecté"},t:"Utilisateur non connecté : le guard l’envoie vers la page de connexion."},
+  {l:[3],on:["g>ok","ok"],lab:{"g.s":"connecté"},t:"Utilisateur connecté : la page s’ouvre normalement."}]});
+auto({sec:AN,q:7,tab:"Interceptor",f:"erreur.interceptor.ts",
+ c:['export const erreurInterceptor: HttpInterceptorFn = (req, next) =>','  next(req.clone({ setHeaders: { Authorization: `Bearer ${token()}` } })).pipe(','    catchError(err => {','      if (err.status === 401) inject(Router).navigate([\'/login\']);','      return throwError(() => err);','    }));'],
+ n:[["svc","Service Angular","http.get(...)"],["int","Interceptor",""],["api","API",""]],
+ e:[["svc","int",0,-40],["int","svc",0,40],["int","api",0,-40],["api","int",0,40]],
+ s:[{l:[],on:["svc"],t:"Un service lance une requête, sans s’occuper du token."},
+  {l:[1,2],on:["svc>int","int","int>api","api"],lab:{"int.s":"ajoute le token"},t:"L’interceptor ajoute le token à chaque requête, à un seul endroit."},
+  {l:[3,4],on:["int"],bad:["api>int","api"],lab:{"api.s":"répond 401","int.s":"redirige vers /login"},t:"La réponse revient en 401 : l’interceptor redirige vers la connexion, pour tous les écrans."},
+  {l:[5],on:["int>svc","svc"],t:"L’erreur continue jusqu’au service, qui peut afficher un message."}]});
+auto({sec:AN,q:8,tab:"Lazy loading",f:"app.routes.ts",
+ c:['const routes: Routes = [','  { path: \'\', component: AccueilComponent },','  { path: \'factures\', loadComponent: () => import(\'./factures.component\') },','  { path: \'paie\', loadChildren: () => import(\'./paie/paie.routes\') }','];'],
+ n:[["main","main.js","chargé au démarrage"],["fac","factures.js","pas chargé","L"],["paie","paie.js","pas chargé","R"]],
+ e:[["main","fac"],["main","paie"]],
+ s:[{l:[1,2],on:["main"],t:"Au démarrage, seul le code de base est téléchargé : premier affichage rapide."},
+  {l:[3],on:["main>fac","fac"],lab:{"fac.s":"téléchargé au clic"},t:"L’utilisateur va sur /factures : ce code est téléchargé à ce moment-là."},
+  {l:[4],bad:["paie"],lab:{"paie.s":"jamais téléchargé"},t:"S’il ne va jamais sur la paie, ce code n’est jamais téléchargé."}]});
+auto({sec:AN,q:9,tab:"Reactive forms",f:"facture-form.component.ts",
+ c:['form = this.fb.group({','  client: [\'\', Validators.required],','  lignes: this.fb.array([])','});','ajouterLigne() {','  this.lignes.push(this.fb.group({ article: [\'\'], quantite: [1, Validators.min(1)] }));','}'],
+ n:[["fg","FormGroup facture",""],["cl","client","obligatoire","L"],["fa","FormArray lignes","0 ligne","R"],["l1","ligne 1","","R",1]],
+ e:[["fg","cl"],["fg","fa"],["fa","l1",1]],
+ s:[{l:[1,2,3,4],on:["fg","fg>cl","cl","fg>fa","fa"],t:"Le formulaire est décrit en TypeScript : un client et une liste de lignes."},
+  {l:[5,6],on:["fa","fa>l1","l1"],lab:{"fa.s":"1 ligne","l1.s":"article, quantité ≥ 1"},t:"Un clic sur « Ajouter » crée une ligne, avec ses propres règles."},
+  {l:[2],bad:["cl","fg"],lab:{"cl.s":"vide : invalide","fg.s":"formulaire invalide"},t:"Si le client est vide, tout le formulaire est invalide : on désactive le bouton Enregistrer."}]});
+auto({sec:AN,q:10,tab:"Longues listes",f:"liste.component.html",
+ c:['@for (f of factures(); track f.id) {','  <app-ligne-facture [facture]="f" />','}','<cdk-virtual-scroll-viewport itemSize="48">','  <div *cdkVirtualFor="let f of factures">{{ f.numero }}</div>','</cdk-virtual-scroll-viewport>'],
+ n:[["data","1 000 factures",""],["dom","Éléments affichés",""]],
+ e:[["data","dom"]],
+ s:[{l:[1,2,3],on:["data","data>dom","dom"],lab:{"dom.s":"seules les lignes modifiées sont recréées"},t:"track dit comment reconnaître chaque élément. Après un rechargement, Angular ne recrée que ce qui a changé."},
+  {l:[],bad:["dom"],lab:{"dom.s":"1 000 lignes dans la page"},t:"Afficher 1 000 lignes d’un coup alourdit fortement la page."},
+  {l:[4,5,6],on:["dom"],lab:{"dom.s":"environ 15 lignes visibles"},t:"Le virtual scroll n’affiche que les lignes visibles et les remplace pendant le défilement."}]});
+auto({sec:AN,q:11,tab:"Pipes",f:"montant.pipe.ts",
+ c:['@Pipe({ name: \'montant\', pure: true })','export class MontantPipe implements PipeTransform {','  transform(v: number) { return v.toFixed(3) + \' TND\'; }','}','{{ facture.total | montant }}'],
+ n:[["cd","Vérification n°1","total = 100"],["pure","Pipe pur","","L"],["imp","Pipe impur","","R"]],
+ e:[],
+ s:[{l:[5],on:["cd","pure","imp"],lab:{"pure.s":"calcule","imp.s":"calcule"},t:"Premier affichage : les deux pipes calculent « 100.000 TND »."},
+  {l:[1],on:["cd","imp"],lab:{cd:"Vérification n°2","cd.s":"total inchangé","pure.s":"réutilise le résultat","imp.s":"recalcule pour rien"},t:"Nouvelle vérification, total inchangé : le pipe pur ne refait rien, l’impur recalcule."},
+  {l:[3],on:["cd","pure","imp"],lab:{cd:"Vérification n°3","cd.s":"total = 120","pure.s":"recalcule","imp.s":"recalcule"},t:"La valeur change : le pipe pur recalcule. Pur = calcul seulement quand c’est nécessaire."}]});
+auto({sec:AN,q:12,tab:"Data binding",f:"facture.component.html",
+ c:['<h2>{{ facture.numero }}</h2>','<button [disabled]="enCours">Valider</button>','<button (click)="valider()">Valider</button>','<input [(ngModel)]="facture.remarque">'],
+ n:[["ts","Composant (TypeScript)",""],["html","Template (HTML)",""]],
+ e:[["ts","html",0,-40],["html","ts",0,40]],
+ s:[{l:[1],on:["ts>html","html"],lab:{"html.s":"{{ }} : affiche F-2026-001"},t:"Interpolation : la valeur du code s’affiche dans la page."},
+  {l:[2],on:["ts>html","html"],lab:{"html.s":"[disabled] : bouton grisé si enCours"},t:"Property binding : le code contrôle une propriété HTML."},
+  {l:[3],on:["html>ts","ts"],lab:{"ts.s":"(click) : valider() est appelée"},t:"Event binding : la page prévient le code qu’un événement a eu lieu."},
+  {l:[4],on:["ts>html","html>ts","ts","html"],lab:{"html.s":"[( )] : champ ↔ variable"},t:"Two-way binding : le champ et la variable restent synchronisés dans les deux sens."}]});
+auto({sec:AN,q:13,tab:"Directives",f:"liste.component.html",
+ c:['@if (factures().length === 0) { <p>Aucune facture</p> }','@for (f of factures(); track f.id) { <li>{{ f.numero }}</li> }','<li [ngClass]="{ \'en-retard\': f.enRetard }">...</li>','<app-ligne-facture />   <!-- un composant -->'],
+ n:[["s1","@if","ajoute ou retire","L"],["s2","@for","répète","R"],["at","ngClass","change l’apparence","L"],["cp","Composant","directive + template","R"]],
+ e:[],
+ s:[{l:[1],on:["s1"],t:"Directive structurelle : @if ajoute ou retire un bloc selon une condition."},
+  {l:[2],on:["s2"],t:"@for répète un bloc pour chaque élément de la liste."},
+  {l:[3],on:["at"],t:"Directive d’attribut : ngClass change le style, sans ajouter ni retirer d’élément."},
+  {l:[4],on:["cp"],t:"Un composant est une directive avec son propre template."}]});
+auto({sec:AN,q:14,tab:"Injection Angular",f:"facture.service.ts",
+ c:['@Injectable({ providedIn: \'root\' })','export class FactureService { }','export class ListeComponent { private service = inject(FactureService); }','export class DetailComponent { constructor(private service: FactureService) {} }'],
+ n:[["root","Injecteur racine",""],["svc","FactureService","1 seule instance"],["c1","ListeComponent","","L"],["c2","DetailComponent","","R"]],
+ e:[["root","svc"],["svc","c1"],["svc","c2"]],
+ s:[{l:[1,2],on:["root","root>svc","svc"],t:"providedIn root : Angular crée un seul FactureService pour toute l’application."},
+  {l:[3],on:["svc>c1","c1"],t:"Un composant le demande avec inject()…"},
+  {l:[4],on:["svc>c2","c2"],t:"…un autre par son constructeur. Les deux reçoivent la même instance, comme un singleton Spring."}]});
+auto({sec:AN,q:15,tab:"@ViewChild",f:"client-form.component.ts",
+ c:['@ViewChild(\'champClient\') champ!: ElementRef<HTMLInputElement>;','constructor() { /* this.champ est undefined ici */ }','ngAfterViewInit() { this.champ.nativeElement.focus(); }','<!-- template --> <input #champClient>'],
+ n:[["ts","Composant",""],["inp","<input #champClient>",""]],
+ e:[["ts","inp"]],
+ s:[{l:[1,4],on:["inp"],t:"#champClient pose une étiquette sur l’élément du template."},
+  {l:[2],bad:["ts"],lab:{"ts.s":"constructeur : champ = undefined"},t:"Dans le constructeur, la vue n’existe pas encore : impossible d’y accéder."},
+  {l:[3],on:["ts","ts>inp","inp"],lab:{"ts.s":"ngAfterViewInit : champ disponible","inp.s":"focus()"},t:"Dans ngAfterViewInit, la vue est prête : on peut placer le curseur dans le champ."}]});
+auto({sec:AN,q:16,tab:"Erreurs HTTP",f:"facture.component.ts",
+ c:['this.factureService.charger(id).pipe(','  catchError(err => {','    this.message = \'Impossible de charger la facture\';','    return of(null);','  })',').subscribe(f => this.facture = f);'],
+ n:[["svc","Requête HTTP",""],["ce","catchError",""],["ui","Écran",""]],
+ e:[["svc","ce"],["ce","ui"]],
+ s:[{l:[1],on:["svc"],lab:{"svc.s":"GET /factures/42"},t:"On demande la facture au serveur."},
+  {l:[1],bad:["svc"],lab:{"svc.s":"erreur 500"},t:"Le serveur répond par une erreur."},
+  {l:[2,3,4],on:["svc>ce","ce"],lab:{"ce.s":"message + valeur de repli"},t:"catchError attrape l’erreur : on prépare un message et une valeur de repli."},
+  {l:[6],on:["ce>ui","ui"],lab:{"ui.s":"« Impossible de charger la facture »"},t:"L’écran affiche un message clair au lieu de planter."}]});
+auto({sec:AN,q:17,tab:"Build de production",f:"terminal",
+ c:['ng build --configuration production','// environment.prod.ts','export const environment = { apiUrl: \'https://api.mon-domaine.com\' };'],
+ n:[["src","Code source","+ config de production"],["aot","Compilation AOT","templates compilés à l’avance"],["ts","Tree-shaking","code inutilisé retiré"],["min","Minification","fichiers compressés"]],
+ e:[["src","aot"],["aot","ts"],["ts","min"]],
+ s:[{l:[1,2,3],on:["src"],t:"Le code de l’application, avec la config de production (adresse de l’API)."},
+  {l:[1],on:["src>aot","aot"],t:"Les templates sont compilés à l’avance : le navigateur n’a plus ce travail à faire."},
+  {l:[1],on:["aot>ts","ts"],t:"Le code jamais utilisé est supprimé."},
+  {l:[1],on:["ts>min","min"],t:"Les noms sont raccourcis et les espaces retirés : des fichiers beaucoup plus légers."}]});
+auto({sec:AN,q:18,tab:"Tester un composant",f:"facture.component.spec.ts",
+ c:['beforeEach(() => TestBed.configureTestingModule({','  imports: [FactureComponent],','  providers: [{ provide: FactureService, useValue: { valider: () => of(true) } }]','}));','it(\'affiche Validée après le clic\', () => {','  const fixture = TestBed.createComponent(FactureComponent);','  fixture.nativeElement.querySelector(\'button\').click();','  fixture.detectChanges();','  expect(fixture.nativeElement.textContent).toContain(\'Validée\');','});'],
+ n:[["tb","TestBed","mini application Angular"],["mock","Faux FactureService","","L"],["cmp","FactureComponent","","R"],["res","Vérification",""]],
+ e:[["mock","cmp"],["cmp","res"]],
+ s:[{l:[1,2],on:["tb"],t:"TestBed prépare un mini environnement Angular juste pour ce composant."},
+  {l:[3],on:["mock","mock>cmp","cmp"],t:"On remplace le vrai service par un faux : pas d’appel HTTP réel."},
+  {l:[6,7,8],on:["cmp"],lab:{"cmp.s":"clic simulé"},t:"On crée le composant, on simule un clic et on met l’affichage à jour."},
+  {l:[9],on:["cmp>res","res"],lab:{"res.s":"« Validée » est affiché"},t:"On vérifie que le texte attendu est bien affiché."}]});
+auto({sec:RXS,q:1,tab:"Observable ou Promise",f:"statut.service.ts",
+ c:['const p = fetch(\'/api/statut\');                  // démarre tout de suite','const o$ = this.http.get(\'/api/statut\');         // ne démarre pas','const sub = o$.subscribe(s => console.log(s));   // démarre ici','interval(1000).subscribe(n => console.log(n));   // plusieurs valeurs','sub.unsubscribe();                               // annulable'],
+ n:[["pr","Promise","","L"],["ob","Observable","","R"],["v","Valeurs reçues","","R"]],
+ e:[["ob","v"]],
+ s:[{l:[1],on:["pr"],lab:{"pr.s":"démarre tout de suite"},t:"Une Promise démarre dès sa création."},
+  {l:[2],on:["ob"],lab:{"ob.s":"attend un abonné"},t:"Un Observable ne fait rien tant que personne ne s’abonne."},
+  {l:[3],on:["ob","ob>v","v"],lab:{"ob.s":"démarré par subscribe","v.s":"1 valeur"},t:"subscribe le démarre."},
+  {l:[4],on:["ob","ob>v","v"],lab:{"v.s":"0, 1, 2, 3…"},t:"Un Observable peut envoyer plusieurs valeurs dans le temps. Une Promise, une seule."},
+  {l:[5],bad:["ob"],lab:{"ob.s":"annulé"},t:"Et on peut l’annuler avec unsubscribe. Une Promise, non."}]});
+auto({sec:RXS,q:3,tab:"Autocomplétion",f:"recherche-client.component.ts",
+ c:['this.resultats$ = this.recherche.valueChanges.pipe(','  debounceTime(300),','  distinctUntilChanged(),','  switchMap(terme => this.clientService.rechercher(terme))',');'],
+ n:[["in","Saisie",""],["deb","debounceTime(300)",""],["dis","distinctUntilChanged",""],["api","Appel API",""]],
+ e:[["in","deb"],["deb","dis"],["dis","api"]],
+ s:[{l:[1],on:["in"],lab:{"in.s":"a, al, ali en 200 ms"},t:"L’utilisateur tape « ali » rapidement : 3 valeurs."},
+  {l:[2],on:["in>deb","deb"],lab:{"deb.s":"garde seulement « ali »"},t:"debounceTime attend 300 ms de calme : seule la dernière valeur passe."},
+  {l:[3],on:["deb>dis","dis"],lab:{"dis.s":"« ali » est nouveau : passe"},t:"distinctUntilChanged bloque une valeur identique à la précédente."},
+  {l:[4],on:["dis>api","api"],lab:{"api.s":"1 seul appel au lieu de 3"},t:"switchMap lance l’appel. Résultat : 1 requête au lieu de 3."},
+  {l:[3],bad:["dis"],lab:{"in.s":"ali → alin → ali","dis.s":"identique : bloqué"},t:"S’il tape une lettre puis l’efface, la valeur redevient « ali » : aucun appel inutile."}]});
+auto({sec:RXS,q:4,tab:"Les Subjects",f:"session.service.ts",
+ c:['const s = new Subject<string>();','const b = new BehaviorSubject<string>(\'invité\');','s.next(\'Ali\');  b.next(\'Ali\');','// un nouvel abonné arrive :','s.subscribe(v => ...);   // ne reçoit rien','b.subscribe(v => ...);   // reçoit Ali tout de suite','const r = new ReplaySubject<string>(2);   // rejoue les 2 dernières'],
+ n:[["sub","Subject","pas de valeur","L"],["beh","BehaviorSubject","valeur : invité","R"],["ab1","Nouvel abonné","","L"],["ab2","Nouvel abonné","","R"],["rep","ReplaySubject(2)","rejoue les 2 dernières valeurs"]],
+ e:[["sub","ab1"],["beh","ab2"]],
+ s:[{l:[1,2],on:["sub","beh"],t:"Subject n’a pas de valeur au départ. BehaviorSubject en a toujours une."},
+  {l:[3],on:["sub","beh"],lab:{"sub.s":"a envoyé Ali","beh.s":"valeur : Ali"},t:"Les deux envoient « Ali »."},
+  {l:[5],bad:["sub>ab1","ab1"],lab:{"ab1.s":"ne reçoit rien"},t:"Un abonné arrivé après coup ne reçoit rien du Subject."},
+  {l:[6],on:["beh>ab2","ab2"],lab:{"ab2.s":"reçoit Ali tout de suite"},t:"Avec BehaviorSubject, il reçoit tout de suite la dernière valeur : idéal pour l’utilisateur connecté."},
+  {l:[7],on:["rep"],t:"ReplaySubject rejoue les N dernières valeurs à chaque nouvel abonné."}]});
+auto({sec:RXS,q:5,tab:"Fuites mémoire",f:"tableau.component.ts",
+ c:['ngOnInit() {','  interval(1000).subscribe(() => this.rafraichir());              // fuite','  interval(1000).pipe(takeUntilDestroyed(this.destroyRef))','    .subscribe(() => this.rafraichir());                         // propre','}','// template : {{ statut$ | async }}  → arrêt automatique'],
+ n:[["cmp","Composant","affiché"],["a","Sans arrêt","","L"],["b","takeUntilDestroyed","","R"]],
+ e:[["cmp","a"],["cmp","b"]],
+ s:[{l:[1,2,3,4],on:["cmp","cmp>a","a","cmp>b","b"],lab:{"a.s":"tourne","b.s":"tourne"},t:"Deux abonnements, toutes les secondes."},
+  {l:[],bad:["cmp"],lab:{"cmp.s":"détruit (on quitte l’écran)"},t:"L’utilisateur quitte l’écran : le composant est détruit."},
+  {l:[2],bad:["a"],lab:{"a.s":"tourne encore : fuite"},t:"Le premier continue pour rien. À chaque visite, un nouveau s’ajoute : fuite mémoire."},
+  {l:[3,4,6],on:["b"],lab:{"b.s":"arrêté automatiquement"},t:"takeUntilDestroyed (ou le pipe async) arrête l’abonnement tout seul."}]});
+auto({sec:RXS,q:6,tab:"forkJoin",f:"facture-form.component.ts",
+ c:['forkJoin({','  client: this.api.client(7),','  articles: this.api.articles(),','  taux: this.api.tauxTva()','}).subscribe(({ client, articles, taux }) => this.ouvrirFormulaire(client, articles, taux));'],
+ n:[["c","client","","L"],["a","articles","","R"],["t","taux TVA","","L"],["fj","forkJoin","","R"],["form","Formulaire",""]],
+ e:[["c","fj"],["a","fj"],["t","fj"],["fj","form"]],
+ s:[{l:[1,2,3,4],on:["c","a","t"],lab:{"c.s":"en cours","a.s":"en cours","t.s":"en cours"},t:"Trois appels partent en même temps."},
+  {l:[2,3],on:["c","a"],lab:{"c.s":"terminé","a.s":"terminé"},t:"Deux sont terminés. forkJoin attend encore le dernier."},
+  {l:[4],on:["t","c>fj","a>fj","t>fj","fj"],lab:{"t.s":"terminé","fj.s":"les 3 sont prêts"},t:"Le dernier arrive : forkJoin envoie les 3 résultats ensemble."},
+  {l:[5],on:["fj>form","form"],t:"On ouvre le formulaire une seule fois, avec toutes les données."}]});
+auto({sec:RXS,q:7,tab:"catchError et retry",f:"taux.service.ts",
+ c:['this.http.get(\'/api/taux\').pipe(','  retry(2),','  catchError(() => of(TAUX_PAR_DEFAUT))',').subscribe(t => this.taux = t);'],
+ n:[["a1","Essai 1",""],["a2","Essai 2","","L"],["a3","Essai 3","","R"],["ce","catchError",""]],
+ e:[],
+ s:[{l:[1],bad:["a1"],lab:{"a1.s":"échec réseau"},t:"Premier essai : échec."},
+  {l:[2],bad:["a2"],lab:{"a2.s":"échec"},t:"retry(2) réessaie automatiquement…"},
+  {l:[2],bad:["a3"],lab:{"a3.s":"échec"},t:"…une deuxième fois. Toujours en échec."},
+  {l:[3,4],on:["ce"],lab:{"ce.s":"valeur par défaut utilisée"},t:"catchError prend le relais avec une valeur de repli : l’écran continue de fonctionner."}]});
+auto({sec:RXS,q:8,tab:"Froid ou chaud",f:"factures.service.ts",
+ c:['const factures$ = this.http.get(\'/api/factures\');','factures$.subscribe(...);     // requête 1','factures$.subscribe(...);     // requête 2 !','const partage$ = factures$.pipe(shareReplay(1));','partage$.subscribe(...);      // requête unique','partage$.subscribe(...);      // réutilise le résultat'],
+ n:[["s1","Abonné 1","","L"],["s2","Abonné 2","","R"],["api","Serveur",""]],
+ e:[["s1","api"],["s2","api"]],
+ s:[{l:[1,2],on:["s1","s1>api","api"],lab:{"api.s":"requêtes : 1"},t:"Observable froid : le premier abonné déclenche une requête."},
+  {l:[3],bad:["s2","s2>api"],lab:{"api.s":"requêtes : 2"},t:"Le deuxième abonné déclenche une autre requête, identique. Gaspillage."},
+  {l:[4,5],on:["s1","s1>api","api"],lab:{"api.s":"requêtes : 1","s2.s":""},t:"Avec shareReplay(1), la requête est partagée."},
+  {l:[6],on:["s2"],lab:{"s2.s":"reçoit le résultat gardé","api.s":"requêtes : 1"},t:"Le deuxième abonné reçoit le résultat déjà obtenu, sans nouvel appel."}]});
+auto({sec:RXS,q:9,tab:"map ou tap",f:"facture.component.ts",
+ c:['this.http.get<Facture>(\'/api/factures/42\').pipe(','  tap(f => console.log(\'reçue\', f.numero)),','  map(f => f.totalTtc)',').subscribe(total => this.total = total);'],
+ n:[["src","Facture reçue","numero, totalTtc, client…"],["tap","tap",""],["map","map",""],["out","subscribe",""]],
+ e:[["src","tap"],["tap","map"],["map","out"]],
+ s:[{l:[1],on:["src"],t:"Le serveur renvoie une facture complète."},
+  {l:[2],on:["src>tap","tap"],lab:{"tap.s":"log, la valeur ne change pas"},t:"tap fait une action à côté (un log) et laisse passer la facture telle quelle."},
+  {l:[3],on:["tap>map","map"],lab:{"map.s":"facture → 119,000"},t:"map transforme : on ne garde que le total."},
+  {l:[4],on:["map>out","out"],lab:{"out.s":"total = 119,000"},t:"L’abonné reçoit directement le total."}]});
+auto({sec:RXS,q:10,tab:"subscribe imbriqués",f:"client.component.ts",
+ c:['// À éviter','this.api.client(7).subscribe(c => {','  this.api.factures(c.id).subscribe(f => this.factures = f);','});','// Mieux','this.factures$ = this.api.client(7).pipe(','  switchMap(c => this.api.factures(c.id)));'],
+ n:[["c","client(7)","","L"],["f","factures(client)","","R"],["res","Résultat",""]],
+ e:[["c","f"],["f","res"]],
+ s:[{l:[2,3,4],on:["c>f"],bad:["c","f"],lab:{"c.s":"subscribe 1","f.s":"subscribe 2 caché dedans"},t:"Un subscribe dans un subscribe : difficile à lire, et celui de l’intérieur n’est jamais annulé."},
+  {l:[6,7],on:["c","c>f","f"],lab:{"c.s":"étape 1","f.s":"étape 2 (switchMap)"},t:"switchMap enchaîne les deux appels dans un seul flux."},
+  {l:[6],on:["f>res","res"],lab:{"res.s":"pipe async : un seul abonnement"},t:"Un seul abonnement, géré par le pipe async : rien à fermer à la main."}]});
+auto({sec:RXS,q:11,tab:"Signals ou RxJS",f:"factures.component.ts",
+ c:['filtre = signal<\'toutes\' | \'payees\'>(\'toutes\');','factures = toSignal(this.api.factures(), { initialValue: [] });','visibles = computed(() => this.filtre() === \'toutes\'','  ? this.factures() : this.factures().filter(f => f.payee));'],
+ n:[["rx","RxJS","requête HTTP","L"],["sig","signal","filtre choisi","R"],["comp","computed : visibles",""],["ui","Écran",""]],
+ e:[["rx","comp"],["sig","comp"],["comp","ui"]],
+ s:[{l:[2],on:["rx"],t:"Les données arrivent du serveur : c’est un flux asynchrone, le domaine de RxJS."},
+  {l:[2],on:["rx>comp"],lab:{"rx.s":"toSignal()"},t:"toSignal transforme ce flux en signal."},
+  {l:[1],on:["sig"],t:"Le filtre choisi par l’utilisateur est un simple état : un signal suffit."},
+  {l:[3,4],on:["sig>comp","rx>comp","comp","comp>ui","ui"],t:"computed combine les deux et l’écran se met à jour tout seul."}]});
+auto({sec:SQ,q:1,tab:"Jointures",f:"requete.sql",lang:"SQL",
+ c:['SELECT c.nom, f.numero','FROM client c','INNER JOIN facture f ON f.client_id = c.id;','-- LEFT JOIN facture f ON f.client_id = c.id;'],
+ n:[["cl","client","Ali, Sami, Rim","L"],["fa","facture","F1, F2 → Ali ; F3 → Sami","R"],["res","Résultat",""]],
+ e:[["cl","res"],["fa","res"]],
+ s:[{l:[1,2],on:["cl","fa"],t:"Deux tables : 3 clients, 3 factures. Rim n’a aucune facture."},
+  {l:[3],on:["cl>res","fa>res","res"],lab:{"res.s":"Ali F1, Ali F2, Sami F3"},t:"INNER JOIN : seulement les clients qui ont une facture. Rim disparaît."},
+  {l:[4],on:["cl>res","res"],lab:{"res.s":"Ali F1, Ali F2, Sami F3, Rim NULL"},t:"LEFT JOIN : tous les clients. Rim apparaît, avec NULL à la place du numéro."}]});
+auto({sec:SQ,q:2,tab:"WHERE ou HAVING",f:"requete.sql",lang:"SQL",
+ c:['SELECT client_id, SUM(total_ttc) AS ca','FROM facture','WHERE statut = \'PAYEE\'','GROUP BY client_id','HAVING SUM(total_ttc) > 10000;'],
+ n:[["t","Table facture","8 lignes"],["w","WHERE",""],["g","GROUP BY",""],["h","HAVING",""]],
+ e:[["t","w"],["w","g"],["g","h"]],
+ s:[{l:[2],on:["t"],t:"On part de toutes les factures."},
+  {l:[3],on:["t>w","w"],lab:{"w.s":"garde 5 lignes payées"},t:"WHERE filtre les lignes une par une, avant tout regroupement."},
+  {l:[1,4],on:["w>g","g"],lab:{"g.s":"3 clients avec leur total"},t:"GROUP BY regroupe par client et calcule la somme."},
+  {l:[5],on:["g>h","h"],lab:{"h.s":"garde 1 client > 10 000"},t:"HAVING filtre les groupes, avec la somme. WHERE ne peut pas le faire."}]});
+auto({sec:SQ,q:3,tab:"Index",f:"requete.sql",lang:"SQL",
+ c:['SELECT * FROM facture WHERE numero = \'F-2026-0420\';','CREATE INDEX idx_facture_numero ON facture(numero);'],
+ n:[["q","Recherche d’une facture par numéro",""],["seq","Sans index","","L"],["idx","Avec index","","R"]],
+ e:[["q","seq"],["q","idx"]],
+ s:[{l:[1],on:["q","q>seq"],bad:["seq"],lab:{"seq.s":"lit toute la table"},t:"Sans index, PostgreSQL lit toute la table, ligne par ligne."},
+  {l:[2],on:["idx"],lab:{"idx.s":"sommaire trié créé"},t:"On crée un index : une sorte de sommaire trié de la colonne."},
+  {l:[1],on:["q","q>idx","idx"],lab:{"idx.s":"va directement à la ligne"},t:"La recherche va directement à la bonne ligne, comme l’index d’un livre. En échange, les écritures sont un peu plus lentes."}]});
+auto({sec:SQ,q:4,tab:"Requête lente",f:"requete.sql",lang:"SQL",
+ c:['EXPLAIN ANALYZE','SELECT * FROM facture WHERE client_id = 7;','-- Seq Scan on facture  (environ 800 ms)','CREATE INDEX idx_facture_client ON facture(client_id);','-- Index Scan using idx_facture_client  (quelques ms)'],
+ n:[["q","Requête lente",""],["plan","EXPLAIN ANALYZE",""],["fix","Correction",""],["after","Après",""]],
+ e:[["q","plan"],["plan","fix"],["fix","after"]],
+ s:[{l:[2],bad:["q"],lab:{"q.s":"environ 800 ms"},t:"Une requête est lente."},
+  {l:[1,3],on:["q>plan","plan"],lab:{"plan.s":"Seq Scan : lit toute la table"},t:"EXPLAIN ANALYZE montre comment PostgreSQL l’exécute vraiment."},
+  {l:[4],on:["plan>fix","fix"],lab:{"fix.s":"index sur client_id"},t:"On ajoute l’index qui manque."},
+  {l:[5],on:["fix>after","after"],lab:{"after.s":"Index Scan : quelques ms"},t:"On vérifie à nouveau : la requête est devenue très rapide."}]});
+auto({sec:SQ,q:5,tab:"ACID",f:"paiement.sql",lang:"SQL",
+ c:['BEGIN;','UPDATE facture SET statut = \'PAYEE\' WHERE id = 42;','INSERT INTO paiement (facture_id, montant) VALUES (42, 119);','COMMIT;   -- ou ROLLBACK si une étape échoue'],
+ n:[["A","Atomicité","tout ou rien","L"],["C","Cohérence","règles respectées","R"],["I","Isolation","invisible avant COMMIT","L"],["D","Durabilité","gardé même en panne","R"]],
+ e:[],
+ s:[{l:[1,2,3],on:["A"],t:"Atomicité : la facture payée et le paiement sont enregistrés ensemble, ou pas du tout."},
+  {l:[3],on:["C"],t:"Cohérence : les règles (clé étrangère, montant positif…) sont toujours respectées."},
+  {l:[2,3],on:["I"],t:"Isolation : pendant ce temps, les autres utilisateurs ne voient pas le travail à moitié fait."},
+  {l:[4],on:["D"],t:"Durabilité : après COMMIT, c’est enregistré, même si le serveur tombe juste après."}]});
+auto({sec:SQ,q:6,tab:"Fonctions de fenêtrage",f:"requete.sql",lang:"SQL",
+ c:['SELECT client_id, numero, date,','  ROW_NUMBER() OVER (PARTITION BY client_id ORDER BY date DESC) AS rang','FROM facture;','-- garder rang = 1 → dernière facture de chaque client'],
+ n:[["r1","Ali : F3","mars","L"],["r2","Sami : F5","avril","R"],["r3","Ali : F2","février","L"],["r4","Sami : F4","janvier","R"]],
+ e:[],
+ s:[{l:[3],on:["r1","r2","r3","r4"],t:"Toutes les factures. Chaque ligne est gardée, sans regroupement."},
+  {l:[2],on:["r1","r3"],lab:{"r1.s":"mars : rang 1","r3.s":"février : rang 2"},t:"PARTITION BY fait un groupe par client. Pour Ali, les factures sont classées de la plus récente à la plus ancienne."},
+  {l:[2],on:["r2","r4"],lab:{"r2.s":"avril : rang 1","r4.s":"janvier : rang 2"},t:"Même chose pour Sami. Les lignes restent séparées, contrairement à GROUP BY."},
+  {l:[4],on:["r1","r2"],bad:["r3","r4"],t:"On garde rang = 1 : la dernière facture de chaque client."}]});
+auto({sec:SQ,q:7,tab:"DELETE, TRUNCATE, DROP",f:"requete.sql",lang:"SQL",
+ c:['DELETE FROM facture WHERE statut = \'BROUILLON\';','TRUNCATE TABLE facture;','DROP TABLE facture;','UPDATE facture SET statut = \'ANNULEE\' WHERE id = 42;   -- suppression logique'],
+ n:[["tab","Table facture","structure + données"],["res","Effet",""]],
+ e:[],
+ s:[{l:[1],on:["tab","res"],lab:{"tab.s":"brouillons supprimés, le reste gardé",res:"DELETE : ligne par ligne, avec WHERE"},t:"DELETE retire les lignes choisies."},
+  {l:[2],bad:["tab"],on:["res"],lab:{"tab.s":"structure gardée, 0 ligne",res:"TRUNCATE : vide tout, très vite"},t:"TRUNCATE vide toute la table d’un coup."},
+  {l:[3],bad:["tab","res"],lab:{"tab.s":"la table n’existe plus",res:"DROP : supprime la table"},t:"DROP supprime la table elle-même."},
+  {l:[4],on:["tab","res"],lab:{"tab.s":"facture 42 : ANNULEE, toujours là",res:"Suppression logique"},t:"En facturation, on garde l’historique : on change le statut au lieu de supprimer."}]});
+auto({sec:SQ,q:8,tab:"Clés",f:"schema.sql",lang:"SQL",
+ c:['CREATE TABLE facture (id BIGSERIAL PRIMARY KEY, numero VARCHAR(20));','CREATE TABLE ligne (','  id BIGSERIAL PRIMARY KEY,','  facture_id BIGINT REFERENCES facture(id));','INSERT INTO ligne (facture_id) VALUES (999);   -- erreur'],
+ n:[["f","facture","id : clé primaire","L"],["l","ligne","facture_id : clé étrangère","R"],["err","Ligne avec facture_id = 999",""]],
+ e:[["l","f"]],
+ s:[{l:[1],on:["f"],t:"La clé primaire identifie chaque facture de façon unique."},
+  {l:[2,3,4],on:["l","l>f","f"],t:"La clé étrangère relie chaque ligne à une facture qui existe."},
+  {l:[5],bad:["err"],lab:{"err.s":"refusée : la facture 999 n’existe pas"},t:"PostgreSQL refuse une ligne qui pointe vers une facture inexistante."}]});
+auto({sec:SQ,q:9,tab:"Normalisation",f:"schema.sql",lang:"SQL",
+ c:['-- Avant : adresse recopiée dans chaque facture','facture(id, client_nom, client_adresse, total)','-- Après : une table client','client(id, nom, adresse)','facture(id, client_id, total)'],
+ n:[["f1","Facture 1","Ali, Sfax","L"],["f2","Facture 2","Ali, Sfax","R"],["cl","Client Ali","Sfax","f",2]],
+ e:[["f1","cl",2],["f2","cl",2]],
+ s:[{l:[1,2],bad:["f1","f2"],t:"Avant : l’adresse d’Ali est recopiée dans chaque facture."},
+  {l:[1],bad:["f1","f2"],lab:{"f1.s":"Ali, Tunis (modifiée)","f2.s":"Ali, Sfax (oubliée)"},t:"Ali déménage : il faut modifier toutes les factures. Si on en oublie une, les données se contredisent."},
+  {l:[3,4,5],on:["cl","f1>cl","f2>cl"],lab:{"f1.s":"client_id = 1","f2.s":"client_id = 1","cl.s":"Tunis"},t:"Après : l’adresse est stockée une seule fois. Une seule modification suffit."}]});
+auto({sec:SQ,q:10,tab:"UNION",f:"requete.sql",lang:"SQL",
+ c:['SELECT numero FROM facture','UNION','SELECT numero FROM avoir;','-- UNION ALL : garde les doublons, plus rapide'],
+ n:[["a","facture","F1, F2","L"],["b","avoir","F2, A1","R"],["res","Résultat",""]],
+ e:[["a","res"],["b","res"]],
+ s:[{l:[1,3],on:["a","b"],t:"Deux requêtes, avec une valeur en commun : F2."},
+  {l:[2],on:["a>res","b>res","res"],lab:{"res.s":"F1, F2, A1 (doublon retiré)"},t:"UNION empile les résultats et retire les doublons : il doit comparer, donc c’est plus lent."},
+  {l:[4],on:["a>res","b>res","res"],lab:{"res.s":"F1, F2, F2, A1"},t:"UNION ALL empile tout, sans vérifier : plus rapide."}]});
+auto({sec:SQ,q:11,tab:"EXISTS",f:"requete.sql",lang:"SQL",
+ c:['SELECT c.nom FROM client c','WHERE EXISTS (','  SELECT 1 FROM facture f','  WHERE f.client_id = c.id AND f.statut = \'IMPAYEE\');'],
+ n:[["c","Client Ali","","L"],["fs","Factures d’Ali","","R"],["res","Résultat",""]],
+ e:[["c","fs"],["fs","res"]],
+ s:[{l:[1],on:["c"],t:"Pour chaque client, une question : a-t-il au moins une facture impayée ?"},
+  {l:[2,3,4],on:["c>fs","fs"],lab:{"fs.s":"F1 payée, F2 impayée : stop"},t:"EXISTS parcourt ses factures et s’arrête dès la première impayée."},
+  {l:[1],on:["fs>res","res"],lab:{"res.s":"Ali est gardé"},t:"Ali est gardé. Pas besoin de compter toutes ses factures : c’est souvent rapide."}]});
+auto({sec:SQ,q:12,tab:"Vues",f:"vues.sql",lang:"SQL",
+ c:['CREATE VIEW ca_client AS','SELECT client_id, SUM(total_ttc) AS ca FROM facture GROUP BY client_id;','SELECT * FROM ca_client WHERE ca > 10000;','CREATE MATERIALIZED VIEW ca_client_mat AS ...;','REFRESH MATERIALIZED VIEW ca_client_mat;'],
+ n:[["v","Vue","requête enregistrée","L"],["m","Vue matérialisée","résultat stocké","R"],["t","Table facture",""]],
+ e:[["v","t"],["m","t"]],
+ s:[{l:[1,2],on:["v"],t:"Une vue est une requête enregistrée sous un nom."},
+  {l:[3],on:["v","v>t","t"],lab:{"v.s":"recalculée à chaque lecture"},t:"Chaque fois qu’on l’interroge, PostgreSQL relance la requête sur la table."},
+  {l:[4],on:["m"],lab:{"m.s":"lecture instantanée"},t:"Une vue matérialisée garde le résultat déjà calculé : lecture très rapide."},
+  {l:[5],on:["m","m>t","t"],lab:{"m.s":"rafraîchie"},t:"Mais il faut la rafraîchir pour voir les nouvelles factures."}]});
+auto({sec:DV,q:1,tab:"API REST",f:"api.http",lang:"HTTP",
+ c:['GET    /api/factures         → liste','GET    /api/factures/42      → une facture','POST   /api/factures         → créer','PUT    /api/factures/42      → remplacer','DELETE /api/factures/42      → supprimer'],
+ n:[["cli","Client (Angular, mobile…)",""],["api","API REST","sans état"],["res","Ressource : factures","JSON"]],
+ e:[["cli","api"],["api","res"]],
+ s:[{l:[1],on:["cli","cli>api","api","api>res","res"],lab:{"res.s":"liste en JSON"},t:"Chaque ressource a une adresse. GET /api/factures renvoie la liste en JSON."},
+  {l:[2],on:["cli>api","api","res"],lab:{"res.s":"la facture 42 en JSON"},t:"Le verbe dit l’action, l’adresse dit sur quoi."},
+  {l:[3,4,5],on:["api"],lab:{"api.s":"chaque requête se suffit à elle-même"},t:"Sans état : chaque requête contient tout ce qu’il faut (dont le token). Le serveur ne se souvient de rien entre deux appels."}]});
+auto({sec:DV,q:2,tab:"Verbes HTTP",f:"api.http",lang:"HTTP",
+ c:['PUT /api/factures/42   { "statut": "PAYEE" }   // 1 ou 3 fois : même résultat','DELETE /api/factures/42                        // 2e fois : déjà supprimée','POST /api/factures     { "client": 7 }         // 2 fois → 2 factures !','PATCH /api/factures/42 { "remarque": "ok" }    // modifie un seul champ'],
+ n:[["req","Requête envoyée 2 fois",""],["res","État du serveur",""]],
+ e:[["req","res"]],
+ s:[{l:[1],on:["req","req>res","res"],lab:{"req.s":"PUT statut = PAYEE","res.s":"facture 42 : PAYEE, inchangé"},t:"PUT est idempotent : le répéter donne le même état."},
+  {l:[2],on:["req","req>res","res"],lab:{"req.s":"DELETE /factures/42","res.s":"facture 42 : supprimée"},t:"DELETE aussi : la facture reste supprimée."},
+  {l:[3],on:["req","req>res"],bad:["res"],lab:{"req.s":"POST nouvelle facture","res.s":"2 factures créées !"},t:"POST n’est pas idempotent : un double clic crée deux factures. D’où l’intérêt de désactiver le bouton."},
+  {l:[4],on:["req","req>res","res"],lab:{"req.s":"PATCH remarque","res.s":"seule la remarque change"},t:"PATCH modifie une partie. PUT remplace la ressource entière."}]});
+auto({sec:DV,q:3,tab:"merge ou rebase",f:"terminal",lang:"Git",
+ c:['git switch ma-branche','git merge main     # crée un commit de fusion','git rebase main    # rejoue X et Y après C'],
+ n:[["main","main","A → B → C"],["feat","ma-branche","A → X → Y"],["res","Historique obtenu",""]],
+ e:[["feat","res"]],
+ s:[{l:[1],on:["main","feat"],t:"main a avancé (B, C) pendant que tu travaillais (X, Y)."},
+  {l:[2],on:["feat>res","res"],lab:{"res.s":"X, Y, B, C + commit de fusion"},t:"merge réunit les deux avec un commit de fusion : l’historique réel est conservé."},
+  {l:[3],on:["feat>res","res"],lab:{"res.s":"A → B → C → X → Y, en ligne droite"},t:"rebase rejoue tes commits après C : historique en ligne droite. À éviter sur une branche déjà partagée."}]});
+auto({sec:DV,q:4,tab:"Conflit Git",f:"FactureService.java",lang:"Git",
+ c:['<<<<<<< HEAD','String titre = "Facture";','=======','String titre = "Facture client";','>>>>>>> collegue','git add FactureService.java','git commit'],
+ n:[["moi","Ma version","titre : Facture","L"],["col","Version du collègue","titre : Facture client","R"],["fin","Fichier final","?"]],
+ e:[["moi","fin"],["col","fin"]],
+ s:[{l:[1,2,3,4,5],bad:["moi","col"],t:"Deux personnes ont modifié la même ligne : Git ne peut pas choisir seul."},
+  {l:[2,4],on:["moi","col"],t:"On compare les deux versions, et on vérifie avec le collègue ou le besoin laquelle est juste."},
+  {l:[],on:["col>fin","fin"],lab:{"fin.s":"bonne version gardée, marqueurs supprimés"},t:"On garde la bonne version et on supprime les lignes <<<<, ==== et >>>>."},
+  {l:[6,7],on:["fin"],lab:{"fin.s":"testé, add, commit"},t:"On teste, puis git add et commit pour terminer."}]});
+auto({sec:DV,q:5,tab:"Image et conteneur",f:"Dockerfile",lang:"Docker",
+ c:['FROM eclipse-temurin:21-jre','COPY target/app.jar app.jar','ENTRYPOINT ["java", "-jar", "app.jar"]','docker build -t novia-api .','docker run -p 8080:8080 novia-api'],
+ n:[["df","Dockerfile","la recette"],["img","Image novia-api","le modèle, comme une classe"],["c1","Conteneur 1","","L"],["c2","Conteneur 2","","R"]],
+ e:[["df","img"],["img","c1"],["img","c2"]],
+ s:[{l:[1,2,3],on:["df"],t:"Le Dockerfile est la recette : partir de Java 21, copier le jar, le lancer."},
+  {l:[4],on:["df>img","img"],t:"docker build fabrique l’image : un paquet figé qui contient tout."},
+  {l:[5],on:["img>c1","c1"],lab:{"c1.s":"tourne sur le port 8080"},t:"docker run crée un conteneur : l’image qui tourne, comme un objet créé depuis une classe."},
+  {l:[5],on:["img>c2","c2"],lab:{"c2.s":"autre copie"},t:"On peut lancer plusieurs conteneurs à partir de la même image."}]});
+auto({sec:DV,q:6,tab:"Docker Compose",f:"docker-compose.yml",lang:"Docker",
+ c:['services:','  db:','    image: postgres:16','  api:','    build: .','    depends_on: [db]','  front:','    build: ./front','docker compose up'],
+ n:[["fr","front : Angular","arrêté"],["api","api : Spring Boot","arrêté"],["db","db : PostgreSQL","arrêté"]],
+ e:[["fr","api"],["api","db"]],
+ s:[{l:[1,2,3,4,5,6,7,8],on:["fr","api","db"],t:"Un seul fichier décrit les trois services."},
+  {l:[9,2,3],on:["db"],lab:{"db.s":"démarré"},t:"docker compose up démarre d’abord la base…"},
+  {l:[4,5,6],on:["api","api>db"],lab:{"api.s":"démarré, relié à db"},t:"…puis l’API, qui dépend de la base…"},
+  {l:[7,8],on:["fr","fr>api"],lab:{"fr.s":"démarré"},t:"…puis le front. Tout l’environnement tourne avec une seule commande."}]});
+auto({sec:DV,q:7,tab:"Monolithe ou microservices",f:"architecture.txt",lang:"Architecture",
+ c:['// Monolithe : une seule application','novia.jar  →  factures + clients + paie','// Microservices : plusieurs applications','factures-service.jar   clients-service.jar   paie-service.jar'],
+ n:[["mono","Monolithe","factures + clients + paie"],["ms1","Factures","","L",1],["ms2","Clients","","R",1],["ms3","Paie","","L",1]],
+ e:[],
+ s:[{l:[1,2],on:["mono"],t:"Monolithe : tout est dans une seule application. Simple à développer, tester et déployer."},
+  {l:[3,4],on:["ms1","ms2","ms3"],t:"Microservices : chaque partie est une application séparée."},
+  {l:[4],on:["ms3"],lab:{"ms3.s":"redéployé seul"},t:"Avantage : on peut modifier et déployer la paie sans toucher aux factures."},
+  {l:[4],bad:["ms1","ms2","ms3"],lab:{"ms3.s":""},t:"Inconvénient : réseau, plusieurs bases, surveillance… beaucoup plus complexe. On commence souvent par un monolithe bien organisé."}]});
+auto({sec:DV,q:8,tab:"Communication",f:"FactureService.java",lang:"Microservices",
+ c:['// Synchrone (REST)','Client client = restClient.get().uri("/clients/7").retrieve().body(Client.class);','// Asynchrone (message)','kafkaTemplate.send("factures-validees", facture.getId());','@KafkaListener(topics = "factures-validees")','void envoyerMail(Long factureId) { ... }'],
+ n:[["gw","API Gateway","point d’entrée du front"],["fac","Factures","","L"],["cli","Clients","","R"],["bus","Kafka","file de messages"],["mail","Notifications",""]],
+ e:[["gw","fac"],["fac","cli"],["fac","bus"],["bus","mail"]],
+ s:[{l:[],on:["gw","gw>fac","fac"],t:"Le front passe par la Gateway, qui envoie vers le bon service."},
+  {l:[1,2],on:["fac>cli","cli"],t:"REST : Factures demande le client et attend la réponse."},
+  {l:[3,4],on:["fac>bus","bus"],lab:{"bus.s":"message : facture validée"},t:"Message : Factures publie « facture validée » et continue sans attendre."},
+  {l:[5,6],on:["bus>mail","mail"],lab:{"mail.s":"envoie l’e-mail"},t:"Notifications lit le message quand il peut. Si ce service est en panne, le message attend."}]});
+auto({sec:DV,q:9,tab:"CI/CD",f:".github/workflows/ci.yml",lang:"GitHub Actions",
+ c:['on: push','jobs:','  build:','    steps:','      - run: mvn verify','      - run: docker build -t novia-api .','      - run: ./deployer.sh'],
+ n:[["push","git push",""],["build","Compilation + tests",""],["img","Image Docker",""],["dep","Déploiement",""]],
+ e:[["push","build"],["build","img"],["img","dep"]],
+ s:[{l:[1],on:["push"],t:"Tu envoies ton code."},
+  {l:[5],on:["push>build","build"],lab:{"build.s":"mvn verify : OK"},t:"CI : le serveur compile et lance tous les tests automatiquement."},
+  {l:[5],bad:["build"],lab:{"build.s":"1 test échoue : arrêt"},t:"Si un test échoue, tout s’arrête et tu es prévenu. Rien de cassé n’arrive en production."},
+  {l:[6],on:["build>img","img"],lab:{"build.s":"tests corrigés : OK"},t:"Une fois les tests verts, l’image Docker est construite."},
+  {l:[7],on:["img>dep","dep"],t:"CD : la nouvelle version est déployée automatiquement."}]});
+
+const EN = {"hashmap": {"tab": "hashCode and equals", "steps": ["A HashMap is like a cabinet with drawers (the \"buckets\"). Here, 4 empty drawers.", "We store customer 17. hashCode() gives the drawer number: 2. We put their invoice there.", "We store customer 42. It also goes into drawer 2. No problem: a drawer can hold several items.", "We look for customer 42. hashCode() says \"drawer 2\". Java opens that drawer directly, without checking the others.", "Inside the drawer, equals() compares: is it customer 42? The 17? No.", "The next one, the 42? Yes, we found it.", "Result: f42. Remember: two objects that are equal with equals() must have the same hashCode(). Otherwise, Java opens the wrong drawer."]}, "tx": {"tab": "@Transactional", "steps": ["The controller thinks it is calling the service. In reality, it calls a middleman created by Spring: the proxy.", "The proxy sees @Transactional. It opens a transaction: everything that follows will be committed or cancelled as one block.", "The proxy then hands over to the real service.", "The service reads the invoice from the database.", "We change the status. Nothing is written to the database yet: Hibernate just notes the change.", "Trap: this.archiver() calls the method directly, without going through the proxy. So its @Transactional is ignored.", "Everything went well: the proxy commits and the change is written to the database. If there had been an error, everything would have been cancelled (rollback)."]}, "jwt": {"tab": "JWT", "steps": ["The user logs in: Angular sends their username and password to the server.", "The server checks. If it is correct, it sends back a token: a kind of signed access badge.", "Angular keeps this badge aside, in localStorage.", "With every new request, the interceptor automatically sticks the badge onto the request.", "The request reaches the server. The JwtFilter, like a security guard, stops it at the door.", "The guard checks the badge: is it real? Is it still valid? If so, it lets the request in.", "The controller responds with the invoices. Fake or expired badge: error 401, access denied."]}, "n1": {"tab": "N+1", "steps": ["We ask for all invoices: 1 query. But their lines are not loaded yet.", "In the loop, we ask for the lines of invoice 1: Hibernate runs a new query.", "Invoice 2: another query.", "Invoice 3: another one. 3 invoices = 4 queries. 1,000 invoices = 1,001 queries.", "This is the N+1 problem: 1 query at the start, then 1 more for each invoice. It is very slow.", "The solution: JOIN FETCH. We load invoices and lines together, in just 1 query, however many there are."]}, "cycle": {"tab": "Lifecycle", "steps": ["Angular creates the component. The constructor is only used to receive services, nothing else.", "The parent passes factureId = 7. ngOnChanges fires and loads invoice 7.", "ngOnInit runs only once. We subscribe to status updates.", "The parent switches to invoice 8. ngOnChanges fires again and loads invoice 8. ngOnInit does not run again.", "We leave the screen: ngOnDestroy stops the subscription. Otherwise, it would keep running for nothing (memory leak)."]}, "switch": {"tab": "switchMap", "steps": ["The user types \"f\" in the search bar.", "They quickly type \"fa\". debounceTime waits for a short pause (300 ms) before acting. So \"f\" is never sent.", "Pause over: the search for \"fa\" starts.", "While \"fa\" is still searching, the user types \"fac\".", "switchMap cancels the old \"fa\" search and starts \"fac\". We keep only the most recent one.", "Only the \"fac\" results are shown: exactly what the user wants to see."]}, "eq": {"tab": "== or equals", "steps": ["a points to a first \"abc\" object in memory.", "new creates a second object, even if it contains the same text.", "== compares addresses: these are two different objects, so false.", "equals compares content: \"abc\" = \"abc\", so true.", "c points to the same object as a: this time, == returns true."]}, "list": {"tab": "ArrayList or LinkedList", "steps": ["ArrayList stores elements side by side, in an array.", "To read slot 2, Java calculates its position directly: very fast.", "Inserting in the middle means shifting all the following elements: slow on a large list.", "LinkedList: each element knows the next one, like the links of a chain.", "To read element 2, you have to follow the chain from the start.", "Adding at the front: we create a link and change one pointer. Nothing to shift."]}, "maps": {"tab": "The 3 Maps", "steps": ["We add C, then A, then B.", "HashMap stores by hashCode: iteration order is not guaranteed. It is the fastest, O(1).", "LinkedHashMap keeps insertion order: C, A, B.", "TreeMap sorts the keys: A, B, C. A bit slower, O(log n)."]}, "stream": {"tab": "Streams", "steps": ["We prepare the stream of 4 invoices. Nothing runs yet.", "filter is declared, but still nothing: intermediate operations wait.", "collect starts everything: F1 is paid, it passes and is added to customer 1's total.", "F2 is unpaid: the filter blocks it.", "F3 is paid: customer 1 goes up to 300.", "F4 is paid: customer 2 = 80. Final result: a Map customer → total."]}, "opt": {"tab": "Optional", "steps": ["findById returns a box: full if the customer exists, empty otherwise. Never null.", "The box is empty: map does nothing and passes the empty box along.", "orElse gives a default value when the box is empty. No NullPointerException.", "If the customer had existed, map would have taken out their name: \"Ali\".", "orElseThrow throws an exception if the box is empty: useful when absence is a real error."]}, "exc": {"tab": "Exceptions", "steps": ["IOException is checked: the compiler forces you to declare it (throws) or catch it (try/catch).", "IllegalArgumentException extends RuntimeException: unchecked, no obligation. It signals a programming or data error.", "Remember for Spring: @Transactional automatically rolls back only on unchecked exceptions."]}, "bigd": {"tab": "BigDecimal", "steps": ["double stores numbers in binary: 0.1 is not exact. On amounts, these small errors add up.", "BigDecimal calculates exactly. Tip: create it from a string (\"0.1\"), not from a double.", "We calculate VAT at 19%.", "setScale(3, HALF_UP) rounds to the millime, like the Tunisian dinar."]}, "final": {"tab": "final, finally, finalize", "steps": ["final: the variable can be assigned a value only once.", "Trying to change it gives an error at compile time.", "Case 1: no error. The finally block runs afterwards.", "Case 2: an exception. catch handles it, then finally runs anyway: the connection is always closed.", "finalize(): an old method called by the garbage collector, deprecated. Today, we use try-with-resources."]}, "abs": {"tab": "Abstract class or interface", "steps": ["The abstract class shares data (numero) and code (totalTtc). You cannot create a Document directly.", "Interfaces describe abilities: being able to print, being able to send.", "Facture extends only one class, but can implement several interfaces."]}, "conc": {"tab": "Concurrency", "steps": ["Thread 1 reads compteur: 0.", "At the same moment, Thread 2 also reads 0.", "Both write 1: one increment is lost. This is a \"race condition\".", "AtomicInteger (or synchronized) makes the operation indivisible: the result is correctly 2.", "ExecutorService reuses a pool of threads instead of creating a new one for each task."]}, "j21": {"tab": "Java 17 and 21", "steps": ["Java 17: record writes an immutable data class in one line.", "switch becomes an expression: it returns a value directly, without break.", "Java 21: thousands of very lightweight virtual threads. Ideal for lots of waiting (emails, HTTP calls)."]}, "sb": {"tab": "StringBuilder", "steps": ["Round 1: the string is \"A\".", "Round 2: a new object \"AB\" is created, the old one is thrown away.", "Round 3: yet another new object. With 10,000 lines: 10,000 objects thrown away.", "StringBuilder always modifies the same object.", "toString() creates the final string only once."]}, "immu": {"tab": "Immutable String", "steps": ["\"TND\" is stored in the String pool, an area of shared strings.", "b reuses the same object. This is only possible because a String cannot change.", "toLowerCase does not modify \"TND\": it creates a new object. a and b are never touched."]}, "over": {"tab": "Overloading or overriding", "steps": ["Overloading: two imprimer methods with different parameters. Java chooses at compile time based on the arguments.", "Overriding: Avoir replaces total() from Document, with the same signature.", "The choice is made at runtime, based on the real object: this is polymorphism."]}, "poo": {"tab": "4 pillars of OOP", "steps": ["Abstraction: Document says what to do (total), without saying how.", "Encapsulation: ht is hidden (private). We access it through getHt().", "Inheritance: Facture takes everything Document has.", "Polymorphism: d is declared as Document, but it is Facture's version that runs."]}, "static": {"tab": "static", "steps": ["compteur is static: it exists only once, in the class.", "First object: the counter goes to 1, the object gets F-1.", "Each object has its own numero, but they all share the same counter."]}, "comp": {"tab": "Comparable / Comparator", "steps": ["At the start, the list is not sorted.", "Comparable: the \"natural\" order is written in the class. Here, by number.", "Comparator: another order, defined outside. Here, from the largest total to the smallest."]}, "heap": {"tab": "Stack and heap", "steps": ["Call to creer(): a frame is added to the stack.", "quantite is a simple variable: it is stored directly on the stack.", "new creates the object on the heap. The stack only keeps a reference to it.", "End of the method: the frame disappears from the stack.", "Nothing points to the Facture anymore: the garbage collector frees the memory."]}, "solid": {"tab": "SOLID", "steps": ["S: each class does only one thing. Validating and generating a PDF are separate.", "O: for a new tax, we add a class. We do not modify code that works.", "L: wherever a Document is expected, an Avoir must work too.", "I: several small interfaces rather than one big one that forces you to implement everything.", "D: the service receives an interface. Spring injects the implementation: easy to change and to test."]}, "Spring Boot-1": {"tab": "Injection", "steps": ["At startup, Spring looks for annotated classes (@Service, @Repository…).", "It creates the repository first, because the service needs it.", "Then it creates the service.", "It passes the repository to the service's constructor: this is injection. The class never calls new itself.", "Advantage: in a test, we pass a fake repository to the constructor, with no database."]}, "Spring Boot-2": {"tab": "Annotations", "steps": ["@Component tells Spring: \"create and manage this object\". The other annotations are variants of it.", "@RestController: receives HTTP requests and returns JSON.", "@Service: business logic (calculating, validating). Same effect as @Component, but the role is clear.", "@Repository: database access. Bonus: SQL errors become Spring exceptions."]}, "Spring Boot-3": {"tab": "Scopes", "steps": ["Singleton: Spring creates a single TauxService and gives it to everyone.", "Prototype: each request gets a brand-new object.", "Trap: a singleton is shared. Never store data specific to a request or a user in it."]}, "Spring Boot-4": {"tab": "Auto-configuration", "steps": ["@SpringBootApplication enables auto-configuration.", "Spring Boot looks at the libraries you added: JPA and the PostgreSQL driver are there.", "It checks that you have not already configured your own connection.", "So it creates the connection with the URL from the config file. Zero code to write."]}, "Spring Boot-5": {"tab": "Propagation", "steps": ["The proxy opens a transaction before the method.", "The invoice is saved in this transaction.", "REQUIRED (the default): the log joins the same transaction.", "REQUIRES_NEW: the audit opens its own transaction, committed separately.", "An error occurs: everything in the main transaction is cancelled. The audit, being separate, stays."]}, "Spring Boot-7": {"tab": "Global error handling", "steps": ["The service cannot find invoice 42: it throws an exception.", "The exception travels up through the controller. No need for try/catch everywhere.", "The @RestControllerAdvice catches it, like a safety net shared by the whole API.", "It returns a 404 code and a clean JSON message, always in the same format."]}, "Spring Boot-8": {"tab": "Validation", "steps": ["The front end sends invalid JSON.", "@Valid asks Spring to check the DTO's rules before entering the method.", "Two rules are not respected.", "Response 400 with the list of errors. The method's code was never executed."]}, "Spring Boot-10": {"tab": "Profiles", "steps": ["We build a single application.", "In development, the dev profile points to the local database.", "In production, we activate the prod profile at launch.", "The URL and password come from environment variables, never from the code."]}, "Spring Boot-11": {"tab": "Tests", "steps": ["Unit test: we test the service alone, the repository is replaced by a fake (mock). Very fast, we write many of them.", "We test the controller alone: URL, JSON, HTTP codes. The service is replaced by a fake.", "We test the repository's queries on a real test database.", "Integration test: the whole application starts, with a real PostgreSQL in Docker. Slower, we write fewer of them."]}, "Spring Boot-12": {"tab": "Actuator", "steps": ["We add Actuator: the application exposes monitoring endpoints.", "/health checks the database, the disk… and answers UP or DOWN. If DOWN, the app can be restarted automatically.", "/metrics gives numbers: number of requests, response time, memory."]}, "Spring Boot-13": {"tab": "Field or constructor", "steps": ["By field: Spring fills the field behind the scenes. Impossible to make it final.", "By constructor: the dependency is mandatory, final, and visible in the signature.", "To test, we pass a fake repository to the constructor. With a field, we would have to start Spring."]}, "Spring Boot-14": {"tab": "@Primary / @Qualifier", "steps": ["Two beans implement CalculTaxe: without a hint, Spring does not know which one to choose.", "@Primary marks the default choice.", "@Qualifier asks for a specific bean, by its name."]}, "Spring Boot-15": {"tab": "Reading the request", "steps": ["A request arrives with three pieces of information in three different places.", "@PathVariable reads a piece of the URL: the resource's identifier.", "@RequestParam reads what comes after the \"?\": a filter or an option.", "@RequestBody turns the JSON body into a Java object."]}, "Spring Boot-16": {"tab": "ResponseEntity", "steps": ["The service creates the invoice.", "ResponseEntity lets you choose the code: 201 = resource created.", "We add the new invoice's address in the Location header.", "And we return the created invoice in the body."]}, "Spring Boot-17": {"tab": "HTTP codes", "steps": ["200: everything went well.", "201: a resource was created.", "204: action succeeded, no content to return.", "400: the request is malformed or invalid.", "401: the user is not identified.", "403: identified, but not allowed. Do not confuse with 401.", "404: the resource does not exist.", "500: the problem comes from the server, not the client."]}, "Spring Boot-18": {"tab": "CORS", "steps": ["The Angular page calls an API on another port: it is another \"origin\".", "Without permission from the API, the browser blocks the response. That is the CORS error in the console.", "The API declares the allowed origin: the browser lets the response through."]}, "Spring Boot-19": {"tab": "Flyway", "steps": ["Each database change is a numbered script, stored in Git.", "To add the timbre fiscal, we write a new V2 script. We never modify V1.", "At startup, Flyway looks at the history and applies only the missing scripts.", "Result: all environments have exactly the same structure."]}, "Spring Boot-20": {"tab": "Logs", "steps": ["DEBUG: details for development. In production (INFO level), they are hidden.", "INFO: important normal events.", "WARN: something abnormal, but the application keeps running.", "ERROR: a real problem. We add the exception to get the cause.", "Logs are read by many people: we never write secret data in them."]}, "JPA / Hibernate-1": {"tab": "JPA, Hibernate, Spring Data", "steps": ["You only declare a method in an interface. Spring Data understands its name.", "Spring Data goes through JPA, the Java standard.", "Hibernate, which implements this standard, writes the SQL query.", "The SQL runs on PostgreSQL. You did not write a single query."]}, "JPA / Hibernate-2": {"tab": "LAZY or EAGER", "steps": ["findById loads only the invoice.", "The customer and the lines are LAZY: Hibernate just puts an \"empty box\" in their place.", "On first access, Hibernate fetches the lines. With EAGER, they would have been loaded from the start, even if useless."]}, "JPA / Hibernate-4": {"tab": "LazyInitializationException", "steps": ["In the service, the Hibernate session is open: the invoice is loaded, without its lines.", "The method ends: the session closes. The invoice reaches the controller.", "The controller asks for the lines, but there is no session left to load them: error.", "Solution: load everything while the session is still open."]}, "JPA / Hibernate-5": {"tab": "Entity states", "steps": ["new creates a normal Java object: Hibernate does not know about it.", "persist: the entity becomes \"managed\", tracked by Hibernate.", "Every change is noticed and saved at commit, without calling save().", "detach (or end of session): the entity is no longer tracked. Its changes are ignored.", "merge: we reattach it, it is tracked again.", "remove: it will be deleted at commit."]}, "JPA / Hibernate-6": {"tab": "@Version", "steps": ["Ali and Sami open the same invoice, at version 1.", "Ali saves first: the version goes to 2.", "Sami saves with version 1, which no longer exists: rejected. He does not overwrite Ali's work.", "He is shown \"modified by someone else\" and he reloads the invoice."]}, "JPA / Hibernate-7": {"tab": "Dynamic filters", "steps": ["The user fills in only the customer.", "The customer is filled in: we add the condition.", "The status is empty: we add nothing.", "The query contains only the useful filters, with pagination."]}, "JPA / Hibernate-8": {"tab": "save or saveAndFlush", "steps": ["save keeps f1 in memory. The SQL can wait.", "saveAndFlush immediately sends everything that is waiting. An error (duplicate…) shows up here.", "f3 waits in turn.", "At the end of the transaction, the rest is sent and then committed."]}, "JPA / Hibernate-9": {"tab": "Bidirectional relationship", "steps": ["On the Facture side: the list of lines. mappedBy means \"I am not the one managing the column\".", "On the Ligne side: @ManyToOne holds the real facture_id column. It is the \"owning\" side.", "ajouterLigne fills both sides at the same time, so that Java and the database stay in agreement."]}, "JPA / Hibernate-10": {"tab": "cascade, orphanRemoval", "steps": ["cascade ALL: when saving the invoice, its lines are saved too.", "orphanRemoval: a line removed from the list is deleted in the database.", "Deleting the invoice also deletes its lines. Reserve this for children that cannot exist without their parent."]}, "JPA / Hibernate-11": {"tab": "Pagination", "steps": ["We ask for the first page of 20 invoices, most recent first.", "Hibernate loads only 20 rows, not all 1,250.", "A second query counts the total, to display \"page 1 of 63\".", "The Page object contains everything needed for pagination on the Angular side."]}, "JPA / Hibernate-12": {"tab": "Projection", "steps": ["For a simple list, loading the full entity brings back many useless columns.", "With a projection, we read only the 2 displayed columns: faster.", "A DTO has no LAZY relationships: no LazyInitializationException possible."]}, "Angular-2": {"tab": "Communication", "steps": ["@Input: the parent gives data to the child.", "@Output: the child tells the parent that something happened.", "For distant components, we go through a shared service: one sends, the other listens."]}, "Angular-3": {"tab": "Change detection", "steps": ["After each event, Angular checks the components to update the screen.", "With OnPush, a component is checked only if its @Input changes reference (or if it has its own event).", "Modifying the existing object does not change its reference: the screen is not updated.", "We create a new object: Angular sees the change. Hence the habit of not modifying objects."]}, "Angular-4": {"tab": "Signals", "steps": ["Two signals: values that Angular watches.", "computed calculates the total from them, and knows what it depends on.", "effect runs every time the total changes.", "quantite goes to 3: only what depends on it is recalculated, automatically."]}, "Angular-5": {"tab": "Standalone", "steps": ["Before, each component had to be declared in an NgModule.", "A standalone component directly imports what it needs.", "It can be loaded on demand from a route, without an intermediate module."]}, "Angular-6": {"tab": "Guards", "steps": ["Before opening the page, Angular runs the guard.", "User not logged in: the guard sends them to the login page.", "User logged in: the page opens normally."]}, "Angular-7": {"tab": "Interceptor", "steps": ["A service sends a request, without worrying about the token.", "The interceptor adds the token to every request, in a single place.", "The response comes back as 401: the interceptor redirects to login, for all screens.", "The error continues up to the service, which can display a message."]}, "Angular-8": {"tab": "Lazy loading", "steps": ["At startup, only the base code is downloaded: fast first display.", "The user goes to /factures: that code is downloaded at that moment.", "If they never go to payroll, that code is never downloaded."]}, "Angular-9": {"tab": "Reactive forms", "steps": ["The form is described in TypeScript: a customer and a list of lines.", "A click on \"Add\" creates a line, with its own rules.", "If the customer is empty, the whole form is invalid: we disable the Save button."]}, "Angular-10": {"tab": "Long lists", "steps": ["track says how to recognize each item. After a reload, Angular recreates only what changed.", "Displaying 1,000 rows at once makes the page much heavier.", "Virtual scroll displays only the visible rows and swaps them while scrolling."]}, "Angular-11": {"tab": "Pipes", "steps": ["First display: both pipes calculate \"100.000 TND\".", "New check, total unchanged: the pure pipe does nothing again, the impure one recalculates.", "The value changes: the pure pipe recalculates. Pure = calculate only when needed."]}, "Angular-12": {"tab": "Data binding", "steps": ["Interpolation: the value from the code is displayed on the page.", "Property binding: the code controls an HTML property.", "Event binding: the page tells the code that an event happened.", "Two-way binding: the field and the variable stay in sync in both directions."]}, "Angular-13": {"tab": "Directives", "steps": ["Structural directive: @if adds or removes a block based on a condition.", "@for repeats a block for each item in the list.", "Attribute directive: ngClass changes the style, without adding or removing any element.", "A component is a directive with its own template."]}, "Angular-14": {"tab": "Angular injection", "steps": ["providedIn root: Angular creates a single FactureService for the whole application.", "One component asks for it with inject()…", "…another through its constructor. Both receive the same instance, like a Spring singleton."]}, "Angular-15": {"tab": "@ViewChild", "steps": ["#champClient puts a label on the template element.", "In the constructor, the view does not exist yet: impossible to access it.", "In ngAfterViewInit, the view is ready: we can put the cursor in the field."]}, "Angular-16": {"tab": "HTTP errors", "steps": ["We ask the server for the invoice.", "The server responds with an error.", "catchError catches the error: we prepare a message and a fallback value.", "The screen shows a clear message instead of crashing."]}, "Angular-17": {"tab": "Production build", "steps": ["The application code, with the production config (the API address).", "Templates are compiled ahead of time: the browser no longer has to do this work.", "Code that is never used is removed.", "Names are shortened and spaces removed: much lighter files."]}, "Angular-18": {"tab": "Testing a component", "steps": ["TestBed sets up a mini Angular environment just for this component.", "We replace the real service with a fake one: no real HTTP call.", "We create the component, simulate a click and update the display.", "We check that the expected text is actually displayed."]}, "RxJS-1": {"tab": "Observable or Promise", "steps": ["A Promise starts as soon as it is created.", "An Observable does nothing as long as nobody subscribes.", "subscribe starts it.", "An Observable can send several values over time. A Promise, only one.", "And it can be cancelled with unsubscribe. A Promise cannot."]}, "RxJS-3": {"tab": "Autocomplete", "steps": ["The user quickly types \"ali\": 3 values.", "debounceTime waits for 300 ms of calm: only the last value goes through.", "distinctUntilChanged blocks a value identical to the previous one.", "switchMap makes the call. Result: 1 request instead of 3.", "If they type a letter then delete it, the value is \"ali\" again: no useless call."]}, "RxJS-4": {"tab": "Subjects", "steps": ["Subject has no value at the start. BehaviorSubject always has one.", "Both send \"Ali\".", "A subscriber that arrives later receives nothing from the Subject.", "With BehaviorSubject, it immediately receives the last value: ideal for the logged-in user.", "ReplaySubject replays the last N values to each new subscriber."]}, "RxJS-5": {"tab": "Memory leaks", "steps": ["Two subscriptions, every second.", "The user leaves the screen: the component is destroyed.", "The first one keeps running for nothing. On each visit, a new one is added: memory leak.", "takeUntilDestroyed (or the async pipe) stops the subscription on its own."]}, "RxJS-6": {"tab": "forkJoin", "steps": ["Three calls go out at the same time.", "Two are finished. forkJoin is still waiting for the last one.", "The last one arrives: forkJoin sends the 3 results together.", "We open the form only once, with all the data."]}, "RxJS-7": {"tab": "catchError and retry", "steps": ["First attempt: failure.", "retry(2) automatically tries again…", "…a second time. Still failing.", "catchError takes over with a fallback value: the screen keeps working."]}, "RxJS-8": {"tab": "Cold or hot", "steps": ["Cold Observable: the first subscriber triggers a request.", "The second subscriber triggers another, identical request. Waste.", "With shareReplay(1), the request is shared.", "The second subscriber receives the result already obtained, with no new call."]}, "RxJS-9": {"tab": "map or tap", "steps": ["The server returns a full invoice.", "tap does a side action (a log) and lets the invoice through as is.", "map transforms: we keep only the total.", "The subscriber receives the total directly."]}, "RxJS-10": {"tab": "Nested subscribes", "steps": ["A subscribe inside a subscribe: hard to read, and the inner one is never cancelled.", "switchMap chains the two calls into a single stream.", "A single subscription, managed by the async pipe: nothing to close by hand."]}, "RxJS-11": {"tab": "Signals or RxJS", "steps": ["Data arrives from the server: it is an asynchronous stream, the domain of RxJS.", "toSignal turns this stream into a signal.", "The filter chosen by the user is simple state: a signal is enough.", "computed combines the two and the screen updates on its own."]}, "SQL / PostgreSQL-1": {"tab": "Joins", "steps": ["Two tables: 3 customers, 3 invoices. Rim has no invoice.", "INNER JOIN: only customers who have an invoice. Rim disappears.", "LEFT JOIN: all customers. Rim appears, with NULL instead of the number."]}, "SQL / PostgreSQL-2": {"tab": "WHERE or HAVING", "steps": ["We start from all invoices.", "WHERE filters rows one by one, before any grouping.", "GROUP BY groups by customer and calculates the sum.", "HAVING filters groups, using the sum. WHERE cannot do that."]}, "SQL / PostgreSQL-3": {"tab": "Indexes", "steps": ["Without an index, PostgreSQL reads the whole table, row by row.", "We create an index: a kind of sorted table of contents for the column.", "The search goes straight to the right row, like the index of a book. In exchange, writes are a bit slower."]}, "SQL / PostgreSQL-4": {"tab": "Slow query", "steps": ["A query is slow.", "EXPLAIN ANALYZE shows how PostgreSQL really runs it.", "We add the missing index.", "We check again: the query has become very fast."]}, "SQL / PostgreSQL-5": {"tab": "ACID", "steps": ["Atomicity: the paid invoice and the payment are saved together, or not at all.", "Consistency: the rules (foreign key, positive amount…) are always respected.", "Isolation: meanwhile, other users do not see the half-done work.", "Durability: after COMMIT, it is saved, even if the server crashes right after."]}, "SQL / PostgreSQL-6": {"tab": "Window functions", "steps": ["All invoices. Each row is kept, with no grouping.", "PARTITION BY makes one group per customer. For Ali, the invoices are ranked from most recent to oldest.", "Same for Sami. Rows stay separate, unlike GROUP BY.", "We keep rang = 1: each customer's latest invoice."]}, "SQL / PostgreSQL-7": {"tab": "DELETE, TRUNCATE, DROP", "steps": ["DELETE removes the selected rows.", "TRUNCATE empties the whole table at once.", "DROP deletes the table itself.", "In invoicing, we keep the history: we change the status instead of deleting."]}, "SQL / PostgreSQL-8": {"tab": "Keys", "steps": ["The primary key uniquely identifies each invoice.", "The foreign key links each line to an invoice that exists.", "PostgreSQL rejects a line that points to a non-existent invoice."]}, "SQL / PostgreSQL-9": {"tab": "Normalization", "steps": ["Before: Ali's address is copied into every invoice.", "Ali moves: every invoice must be changed. If we forget one, the data contradicts itself.", "After: the address is stored only once. A single change is enough."]}, "SQL / PostgreSQL-10": {"tab": "UNION", "steps": ["Two queries, with one value in common: F2.", "UNION stacks the results and removes duplicates: it has to compare, so it is slower.", "UNION ALL stacks everything, without checking: faster."]}, "SQL / PostgreSQL-11": {"tab": "EXISTS", "steps": ["For each customer, one question: do they have at least one unpaid invoice?", "EXISTS goes through their invoices and stops at the first unpaid one.", "Ali is kept. No need to count all his invoices: it is often fast."]}, "SQL / PostgreSQL-12": {"tab": "Views", "steps": ["A view is a query saved under a name.", "Each time we query it, PostgreSQL reruns the query on the table.", "A materialized view keeps the already calculated result: very fast reads.", "But it must be refreshed to see new invoices."]}, "REST, Git, Docker-1": {"tab": "REST API", "steps": ["Each resource has an address. GET /api/factures returns the list as JSON.", "The verb says the action, the address says on what.", "Stateless: each request contains everything needed (including the token). The server remembers nothing between two calls."]}, "REST, Git, Docker-2": {"tab": "HTTP verbs", "steps": ["PUT is idempotent: repeating it gives the same state.", "So is DELETE: the invoice stays deleted.", "POST is not idempotent: a double click creates two invoices. Hence the point of disabling the button.", "PATCH modifies a part. PUT replaces the entire resource."]}, "REST, Git, Docker-3": {"tab": "merge or rebase", "steps": ["main moved forward (B, C) while you were working (X, Y).", "merge joins the two with a merge commit: the real history is kept.", "rebase replays your commits after C: a straight-line history. Avoid it on a branch that is already shared."]}, "REST, Git, Docker-4": {"tab": "Git conflict", "steps": ["Two people changed the same line: Git cannot choose on its own.", "We compare the two versions, and check with the colleague or the requirement which one is right.", "We keep the right version and delete the <<<<, ==== and >>>> lines.", "We test, then git add and commit to finish."]}, "REST, Git, Docker-5": {"tab": "Image and container", "steps": ["The Dockerfile is the recipe: start from Java 21, copy the jar, run it.", "docker build makes the image: a frozen package that contains everything.", "docker run creates a container: the running image, like an object created from a class.", "We can start several containers from the same image."]}, "REST, Git, Docker-6": {"tab": "Docker Compose", "steps": ["A single file describes the three services.", "docker compose up first starts the database…", "…then the API, which depends on the database…", "…then the front end. The whole environment runs with a single command."]}, "REST, Git, Docker-7": {"tab": "Monolith or microservices", "steps": ["Monolith: everything is in a single application. Simple to develop, test and deploy.", "Microservices: each part is a separate application.", "Advantage: we can change and deploy payroll without touching invoices.", "Drawback: network, several databases, monitoring… much more complex. We often start with a well-organized monolith."]}, "REST, Git, Docker-8": {"tab": "Communication", "steps": ["The front end goes through the Gateway, which routes to the right service.", "REST: Factures asks for the customer and waits for the answer.", "Message: Factures publishes \"invoice validated\" and continues without waiting.", "Notifications reads the message when it can. If this service is down, the message waits."]}, "REST, Git, Docker-9": {"tab": "CI/CD", "steps": ["You push your code.", "CI: the server compiles and runs all the tests automatically.", "If a test fails, everything stops and you are notified. Nothing broken reaches production.", "Once the tests are green, the Docker image is built.", "CD: the new version is deployed automatically."]}};
+const UI = {
+ fr:{title:"102 questions d’entretien expliquées — Java, Spring, Angular",h1:"102 questions d’entretien technique, expliquées pas à pas",lead:"Clique sur Suivant : la ligne en jaune s’exécute, et le schéma montre ce qui se passe.",tip:"Astuce : utilise les flèches ← → du clavier. En entretien, explique le schéma avec tes mots, étape par étape.",prev:"Précédent",next:"Suivant",play:"Lecture",pause:"Pause",pdf:"Télécharger le PDF",back:"← Portfolio",schema:"Schéma : ",step:(a,b)=>"Étape "+a+" sur "+b,line:n=>", ligne"+(n>1?"s ":" ")},
+ en:{title:"102 interview questions explained — Java, Spring, Angular",h1:"102 technical interview questions, explained step by step",lead:"Click Next: the yellow line runs, and the diagram shows what happens.",tip:"Tip: use the ← → arrow keys. In an interview, explain the diagram in your own words, step by step.",prev:"Previous",next:"Next",play:"Play",pause:"Pause",pdf:"Download the PDF",back:"← Portfolio",schema:"Diagram: ",step:(a,b)=>"Step "+a+" of "+b,line:n=>", line"+(n>1?"s ":" ")}
+};
+let lang = (new URLSearchParams(location.search).get("lang")==="en") ? "en" : "fr";
+const U = () => UI[lang];
+const TAB = s => (lang==="en" && EN[s.id]) ? EN[s.id].tab : s.tab;
+const TXT = (s,i) => (lang==="en" && EN[s.id]) ? EN[s.id].steps[i] : s.steps[i].txt;
+
+const NS = "http://www.w3.org/2000/svg";
+const $ = id => document.getElementById(id);
+const svg = $("diagram"), codeEl = $("code");
+let cur = 0, step = 0, timer = null, els = {};
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+const RX = /(\/\/.*$|\/\*.*?\*\/)|("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|`[^`]*`)|(@\w+)|\b(class|public|private|final|void|return|new|for|if|export|implements|this|const|instanceof|int|boolean|true|false)\b/g;
+function hl(line){
+  let out = "", last = 0, m;
+  RX.lastIndex = 0;
+  while ((m = RX.exec(line))) {
+    out += esc(line.slice(last, m.index));
+    const cls = m[1] ? "com" : m[2] ? "str" : m[3] ? "ann" : "kw";
+    out += '<span class="tk-' + cls + '">' + esc(m[0]) + "</span>";
+    last = m.index + m[0].length;
+    if (m[0].length === 0) RX.lastIndex++;
+  }
+  return out + esc(line.slice(last));
+}
+function fit(el,max){el.removeAttribute("textLength");el.removeAttribute("lengthAdjust");try{if(el.textContent&&el.getComputedTextLength()>max){el.setAttribute("textLength",max);el.setAttribute("lengthAdjust","spacingAndGlyphs");}}catch(e){}}
+function mk(tag, attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
+
+let curSec = SC[cur].sec;
+function buildSecs(){
+  const nav=$("secs"); nav.innerHTML="";
+  [...new Set(SC.map(s=>s.sec))].forEach(sec=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=sec;
+    b.setAttribute("aria-selected", sec===curSec?"true":"false");
+    b.addEventListener("click",()=>{curSec=sec; buildSecs(); const list=qList(); select(list[0]);});
+    nav.appendChild(b);
+  });
+}
+function qList(){ return SC.map((s,i)=>i).filter(i=>SC[i].sec===curSec).sort((a,b)=>SC[a].q-SC[b].q); }
+function buildQs(){
+  const nav=$("qs"); nav.innerHTML="";
+  qList().forEach(i=>{
+    const b=document.createElement("button"); b.type="button"; b.textContent=SC[i].q+". "+TAB(SC[i]);
+    b.setAttribute("aria-selected", i===cur?"true":"false");
+    b.addEventListener("click",()=>select(i));
+    nav.appendChild(b);
+  });
+}
+function select(i){
+  stop(); cur=i; step=0; curSec=SC[i].sec;
+  buildQs(); build(); render();
+}
+function build(){
+  const s = SC[cur];
+  svg.setAttribute("viewBox","0 0 "+s.vb[0]+" "+s.vb[1]);
+  svg.setAttribute("aria-label",U().schema+TAB(s));
+  svg.innerHTML=""; els={};
+  const defs = mk("defs",{});
+  [["def","mk-def"],["on","mk-on"],["bad","mk-bad"]].forEach(([n,c])=>{
+    const m = mk("marker",{id:"m-"+n,viewBox:"0 0 10 10",refX:"9",refY:"5",markerWidth:"6",markerHeight:"6",orient:"auto-start-reverse"});
+    m.appendChild(mk("path",{d:"M0 0L10 5L0 10z","class":c}));
+    defs.appendChild(m);
+  });
+  svg.appendChild(defs);
+  s.edges.forEach(e=>{
+    const p = mk("path",{d:e.d,"class":"e","marker-end":"url(#m-def)"});
+    svg.appendChild(p); els[e.id]={el:p,def:e,kind:"e"};
+  });
+  (s.texts||[]).forEach(x=>{const t=mk("text",{"class":"tl",x:x.x,y:x.y}); t.textContent=x.t; svg.appendChild(t);});
+  s.nodes.forEach(n=>{
+    const g = mk("g",{"class":"n"+(n.cls?" "+n.cls:"")});
+    g.appendChild(mk("rect",{x:n.x,y:n.y,width:n.w,height:n.h,rx:"8"}));
+    const t = mk("text",{"class":"t",x:n.x+n.w/2,"text-anchor":"middle"});
+    const st = mk("text",{"class":"s",x:n.x+n.w/2,"text-anchor":"middle",y:n.y+n.h/2+13});
+    g.appendChild(t); g.appendChild(st); svg.appendChild(g);
+    els[n.id]={el:g,def:n,kind:"n",t,st};
+  });
+  $("fname").textContent=s.file; $("flang").textContent=s.lang;
+  codeEl.innerHTML = s.code.map((l,i)=>'<div class="ln" data-l="'+(i+1)+'"><span class="no">'+(i+1)+'</span><span class="src">'+(hl(l)||" ")+'</span></div>').join("");
+  const dots=$("dots"); dots.innerHTML=s.steps.map(()=>"<span></span>").join("");
+}
+
+function render(){
+  const s = SC[cur], st = s.steps[step];
+  const lab = {};
+  for (let k=0;k<=step;k++) Object.assign(lab, s.steps[k].lab||{});
+  const on = new Set(st.on||[]), bad = new Set(st.bad||[]);
+  for (const id in els){
+    const o = els[id], d = o.def;
+    const vis = (d.at||0) <= step && step <= (d.until ?? 99);
+    const state = bad.has(id) ? "bad" : on.has(id) ? "on" : "";
+    if (o.kind==="e"){
+      o.el.setAttribute("class","e"+(state?" "+state:"")+(vis?"":" hid"));
+      o.el.setAttribute("marker-end","url(#m-"+(state||"def")+")");
+    } else {
+      o.el.setAttribute("class","n"+(d.cls?" "+d.cls:"")+(state?" "+state:"")+(vis?"":" hid"));
+      const tt = lab[id] ?? d.t, ss = lab[id+".s"] ?? (d.s||"");
+      o.t.textContent = tt; o.st.textContent = ss;
+      fit(o.t, d.w-12); fit(o.st, d.w-12);
+      if (d.top){ o.t.setAttribute("y", d.y+18); o.st.setAttribute("y", d.y+32); }
+      else o.t.setAttribute("y", ss ? d.y+d.h/2-3 : d.y+d.h/2+4);
+    }
+  }
+  const lines = new Set(st.line||[]);
+  let first = null;
+  codeEl.querySelectorAll(".ln").forEach(el=>{
+    const isCur = lines.has(+el.dataset.l);
+    el.classList.toggle("cur", isCur);
+    if (isCur && !first) first = el;
+  });
+  if (first){
+    const top = first.offsetTop - codeEl.clientHeight/3;
+    codeEl.scrollTo({top:Math.max(0,top),behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto":"smooth"});
+  }
+  $("txt").textContent = TXT(s,step);
+  $("stepno").textContent = U().step(step+1,s.steps.length)+(lines.size?U().line(lines.size)+[...lines].join(", "):"");
+  $("prev").disabled = step===0;
+  $("next").disabled = step===s.steps.length-1;
+  [...$("dots").children].forEach((d,i)=>d.className = i===step ? "now" : i<step ? "done" : "");
+}
+
+function go(d){
+  const n = SC[cur].steps.length;
+  const ns = Math.min(n-1, Math.max(0, step+d));
+  if (ns!==step){ step=ns; render(); }
+}
+function stop(){ if(timer){clearInterval(timer);timer=null;} $("play").textContent=U().play; }
+function play(){
+  if (timer){ stop(); return; }
+  if (step===SC[cur].steps.length-1){ step=0; render(); }
+  $("play").textContent=U().pause;
+  timer = setInterval(()=>{
+    if (step>=SC[cur].steps.length-1){ stop(); return; }
+    go(1);
+  }, 3200);
+}
+$("prev").addEventListener("click",()=>{stop();go(-1);});
+$("next").addEventListener("click",()=>{stop();go(1);});
+$("play").addEventListener("click",play);
+document.addEventListener("keydown",e=>{
+  if (e.key==="ArrowRight"){stop();go(1);}
+  else if (e.key==="ArrowLeft"){stop();go(-1);}
+});
+function applyLang(){
+  const u=U(); document.documentElement.lang=lang;
+  document.title=u.title; $("h1").textContent=u.h1; $("lead").textContent=u.lead; $("foot").firstChild.textContent=u.tip;
+  $("prev").textContent=u.prev; $("next").textContent=u.next; $("play").textContent=timer?u.pause:u.play;
+  $("pdf").textContent=u.pdf; $("back").textContent=u.back;
+  document.querySelectorAll("[data-lang]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.lang===lang?"true":"false"));
+}
+document.querySelectorAll("[data-lang]").forEach(b=>b.addEventListener("click",()=>{lang=b.dataset.lang;try{history.replaceState(null,"","?lang="+lang)}catch(e){};applyLang();buildQs();build();render();}));
+cur = qList()[0]; buildSecs(); applyLang(); select(cur);
