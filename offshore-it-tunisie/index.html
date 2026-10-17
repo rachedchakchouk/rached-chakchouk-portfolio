@@ -50,6 +50,16 @@ tr:last-child td{border-bottom:0}
 @media (max-width:720px){table,thead,tbody,tr,td{display:block;min-width:0}thead{display:none}
 tr{border-bottom:1px solid var(--line);padding:12px}td{border:0;padding:3px 0}.tbl{border-radius:18px}}
 .back{display:inline-flex;align-items:center;gap:6px;margin-bottom:14px;padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);text-decoration:none;font-size:13px;font-weight:600}
+.pager{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.pinfo{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.pbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pager button{font:600 13px var(--body);min-width:36px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--fg);cursor:pointer}
+.pager button:hover:not(:disabled){border-color:var(--accent)}
+.pager button[aria-current="page"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .pager button[aria-current="page"]{color:#06101f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pager button[aria-current="page"]{color:#06101f}}
+.pager button:disabled{opacity:.4;cursor:default}
+.pager .dots{color:var(--muted);padding:0 2px}
 .back:hover{border-color:var(--accent);color:var(--accent)}
 </style>
 </head>
@@ -66,11 +76,14 @@ tr{border-bottom:1px solid var(--line);padding:12px}td{border:0;padding:3px 0}.t
 <select id="city" aria-label="Ville"></select>
 <select id="orig" aria-label="Origine"></select>
 <label><input id="jobs" type="checkbox"> Page carrières connue</label>
+<label>Par page <select id="ps" aria-label="Sociétés par page"><option>25</option><option>50</option><option>100</option></select></label>
 <span class="count" id="count"></span>
 </div>
+<nav class="pager" id="pgTop" aria-label="Pagination"></nav>
 <div class="tbl"><table><thead><tr>
 <th data-k="n">Société</th><th data-k="og">Origine</th><th data-k="s">Secteur</th><th data-k="c">Localisation</th><th>Liens</th><th data-k="st">Stack</th>
 </tr></thead><tbody id="tb"></tbody></table></div>
+<nav class="pager" id="pgBot" aria-label="Pagination (bas de page)"></nav>
 </div>
 <p style="max-width:1280px;margin:16px auto 0;color:var(--muted);font-size:12px">Liste compilée par Rached Chakchouk à partir de sources publiques (sites des sociétés, annuaires Clutch / GoodFirms, presse, FIPA). Informations à vérifier avant usage. <a href="/" style="color:var(--accent)">rached-chakchouk.vercel.app</a></p>
 <script src="app.js"></script>

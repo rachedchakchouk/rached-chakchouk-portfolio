@@ -9,19 +9,31 @@ function opts(sel,key,label){const c={};D.forEach(d=>c[d[key]]=(c[d[key]]||0)+1)
 sel.innerHTML='<option value="">'+label+'</option>'+Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<option value="${esc(k)}">${esc(k)} (${v})</option>`).join('')}
 opts($('#city'),'c','Toutes les villes');opts($('#orig'),'og','Toutes les origines');
 $('#stats').innerHTML=`<span><b>${D.length}</b> sociétés</span><span><b>${D.filter(d=>d.li).length}</b> pages LinkedIn</span><span><b>${D.filter(d=>d.j).length}</b> pages carrières</span><span><b>${D.filter(d=>d.w).length}</b> sites web</span>`;
-let sortK='n',dir=1;
+let sortK='n',dir=1,page=1;
+const PS_KEY='offshore_ps';let ps=25;try{ps=+localStorage.getItem(PS_KEY)||25}catch(e){}
+$('#ps').value=String(ps);
 function render(){const q=$('#q').value.toLowerCase().trim(),c=$('#city').value,o=$('#orig').value,j=$('#jobs').checked;
 const r=D.filter(d=>(!c||d.c===c)&&(!o||d.og===o)&&(!j||d.j)&&(!q||[d.n,d.s,d.o,d.l,d.st,d.no].join(' ').toLowerCase().includes(q)))
 .sort((a,b)=>(a[sortK]||'').localeCompare(b[sortK]||'','fr')*dir);
-$('#count').textContent=r.length+' affichées';
+const pages=Math.max(1,Math.ceil(r.length/ps));if(page>pages)page=pages;
+const from=(page-1)*ps,shown=r.slice(from,from+ps);
+$('#count').textContent=r.length+' résultat'+(r.length>1?'s':'');
+pager(r.length,pages,from,shown.length);
 const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
-$('#tb').innerHTML=r.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
+$('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
 return `<tr><td><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</td>
 <td class="og">${esc(d.o||'À vérifier')}</td><td>${esc(d.s)}</td>
 <td><span class="chip${d.c==='À vérifier'?' unk':''}">${esc(d.c)}</span><div class="loc">${esc(d.l)}</div></td>
 <td><div class="links">${ln||'<span class="no">à vérifier</span>'}</div></td><td class="stack">${esc(d.st)}</td></tr>`}).join('');}
-['#q','#city','#orig','#jobs'].forEach(s=>$(s).addEventListener('input',render));
-document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;render()}));
+function pager(total,pages,from,n){
+const nums=[];for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-page)<=1)nums.push(i);else if(nums[nums.length-1]!=='…')nums.push('…');}
+const btn=(lab,p,dis,cur,aria)=>`<button type="button" data-p="${p}"${dis?' disabled':''}${cur?' aria-current="page"':''} aria-label="${aria||('Page '+lab)}">${lab}</button>`;
+const html=total?`<span class="pinfo">${from+1}–${from+n} sur ${total}</span><span class="pbtns">`+btn('‹',page-1,page===1,false,'Page précédente')+nums.map(x=>x==='…'?'<span class="dots">…</span>':btn(x,x,false,x===page)).join('')+btn('›',page+1,page===pages,false,'Page suivante')+'</span>':'<span class="pinfo">Aucune société ne correspond.</span>';
+document.querySelectorAll('.pager').forEach(el=>el.innerHTML=html);}
+document.querySelectorAll('.pager').forEach(el=>el.addEventListener('click',e=>{const b=e.target.closest('button[data-p]');if(!b||b.disabled)return;page=+b.dataset.p;render();if(el.id==='pgBot')$('.bar').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});}));
+$('#ps').addEventListener('change',e=>{ps=+e.target.value;page=1;try{localStorage.setItem(PS_KEY,ps)}catch(_){}render();});
+['#q','#city','#orig','#jobs'].forEach(s=>$(s).addEventListener('input',()=>{page=1;render();}));
+document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;page=1;render()}));
 render();
 
 }).catch(()=>{document.getElementById('tb').innerHTML='<tr><td colspan="6">Impossible de charger la liste.</td></tr>'});
