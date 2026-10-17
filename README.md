@@ -8,7 +8,7 @@
 
 ## About
 
-Personal portfolio presenting my experience building ERP and business applications
+Personal portfolio presenting my experience building business applications (invoicing & stock management, HR management)
 (invoicing, Tunisian taxation, HR & payroll) with **Java, Spring Boot, Angular and PostgreSQL**.
 
 ## Features

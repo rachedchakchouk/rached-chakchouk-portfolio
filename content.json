@@ -2,8 +2,8 @@
  "version": 1,
  "profile": {
   "lead": {
-   "fr": "**3 ans d'expérience** dans le développement d'ERP avec **Spring Boot, Angular et PostgreSQL** : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
-   "en": "**3 years of experience** building ERP systems with **Spring Boot, Angular and PostgreSQL**: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
+   "fr": "**3 ans d'expérience** dans le développement d'applications métier avec **Spring Boot, Angular et PostgreSQL** : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
+   "en": "**3 years of experience** building business applications with **Spring Boot, Angular and PostgreSQL**: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
   },
   "now": {
    "role": {
@@ -12,8 +12,8 @@
    },
    "company": "Axeane",
    "desc": {
-    "fr": "Axeane Novia · ERP SaaS de facturation, conforme à la fiscalité tunisienne",
-    "en": "Axeane Novia · SaaS invoicing ERP, compliant with Tunisian tax rules"
+    "fr": "Axeane Novia · application SaaS de facturation et de gestion de stock, conforme à la fiscalité tunisienne",
+    "en": "Axeane Novia · SaaS invoicing and stock management application, compliant with Tunisian tax rules"
    }
   },
   "stats": [
@@ -46,8 +46,8 @@
      "en": ""
     },
     "label": {
-     "fr": "ERP : facturation, RH et paie",
-     "en": "ERPs: invoicing, HR & payroll"
+     "fr": "applications métier : facturation & stock, GRH",
+     "en": "business applications: invoicing & stock, HR"
     }
    }
   ]
@@ -302,7 +302,7 @@
    },
    "items": [
     {
-     "name": "ERP",
+     "name": "Gestion de stock",
      "key": false
     },
     {
@@ -354,8 +354,8 @@
    },
    "current": true,
    "context": {
-    "fr": "Application Axeane Novia – ERP SaaS de facturation et de gestion commerciale",
-    "en": "Axeane Novia – SaaS ERP for invoicing and sales management"
+    "fr": "Axeane Novia – application SaaS de facturation et de gestion de stock",
+    "en": "Axeane Novia – SaaS invoicing and stock management application"
    },
    "items": {
     "fr": [
@@ -403,8 +403,8 @@
    },
    "current": false,
    "context": {
-    "fr": "TDS-ERP – ERP cloud pour le marché tunisien : conception et développement du module Ressources Humaines et Paie",
-    "en": "TDS-ERP – cloud ERP for the Tunisian market: design and development of the Human Resources and Payroll module"
+    "fr": "TDS – application GRH cloud pour le marché tunisien : conception et développement du module Ressources Humaines et Paie",
+    "en": "TDS – cloud HR management application for the Tunisian market: design and development of the Human Resources and Payroll module"
    },
    "items": {
     "fr": [
@@ -635,8 +635,8 @@
    "mono": "Novia",
    "shots": [],
    "kind": {
-    "fr": "ERP SaaS · Facturation",
-    "en": "SaaS ERP · Invoicing"
+    "fr": "SaaS · Facturation & stock",
+    "en": "SaaS · Invoicing & stock"
    },
    "title": {
     "fr": "Axeane Novia",
@@ -651,8 +651,8 @@
     }
    },
    "desc": {
-    "fr": "ERP SaaS de facturation et de gestion commerciale, conforme à la fiscalité tunisienne.",
-    "en": "SaaS ERP for invoicing and sales management, compliant with Tunisian tax rules."
+    "fr": "Application SaaS de facturation et de gestion de stock, conforme à la fiscalité tunisienne.",
+    "en": "SaaS invoicing and stock management application, compliant with Tunisian tax rules."
    },
    "problem": {
     "fr": "Facturer en respectant les règles fiscales tunisiennes (TVA, timbre fiscal, retenue à la source) et produire des documents et déclarations fiables.",
@@ -703,14 +703,14 @@
     "erp",
     "fullstack"
    ],
-   "mono": "TDS-ERP",
+   "mono": "TDS",
    "kind": {
-    "fr": "ERP cloud · RH & Paie",
-    "en": "Cloud ERP · HR & Payroll"
+    "fr": "Application GRH cloud · RH & Paie",
+    "en": "Cloud HR application · HR & Payroll"
    },
    "title": {
-    "fr": "TDS-ERP – module RH & Paie",
-    "en": "TDS-ERP – HR & Payroll module"
+    "fr": "TDS – application GRH, module RH & Paie",
+    "en": "TDS – HR application, HR & Payroll module"
    },
    "org": {
     "name": "C&A Trade Digital Services",
@@ -721,12 +721,12 @@
     }
    },
    "desc": {
-    "fr": "Module Ressources Humaines et Paie d’un ERP cloud pour le marché tunisien.",
-    "en": "Human Resources and Payroll module of a cloud ERP for the Tunisian market."
+    "fr": "Module Ressources Humaines et Paie d’une application GRH cloud pour le marché tunisien.",
+    "en": "Human Resources and Payroll module of a cloud HR management application for the Tunisian market."
    },
    "problem": {
-    "fr": "Automatiser la gestion des employés et le calcul de la paie dans un ERP multitenant.",
-    "en": "Automate employee management and payroll calculation in a multitenant ERP."
+    "fr": "Automatiser la gestion des employés et le calcul de la paie dans une application GRH multitenant.",
+    "en": "Automate employee management and payroll calculation in a multitenant HR application."
    },
    "role": {
     "fr": "Ingénieur Full Stack : conception et développement du module, front et back.",
@@ -757,7 +757,7 @@
    ],
    "links": [
     {
-     "label": "TDS-ERP",
+     "label": "TDS",
      "url": "https://tradigiservices.com/tds-erp"
     }
    ]
