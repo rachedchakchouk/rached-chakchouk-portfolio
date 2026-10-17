@@ -1,3 +1,6 @@
+(function(){var r=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
+var t=g('theme');if(t==='dark'||t==='light')r.setAttribute('data-theme',t);
+var b=document.getElementById('themeBtn');if(b)b.addEventListener('click',function(){var c=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var n=c==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}});})();
 fetch('data.json').then(r=>r.json()).then(D=>{
 
 const $=s=>document.querySelector(s);

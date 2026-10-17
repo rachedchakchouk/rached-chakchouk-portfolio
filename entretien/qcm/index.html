@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="fr" class="a11y-raise">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QCM de révision — Java, Spring, Angular</title>
+<meta name="description" content="QCM de révision d'entretien technique : 10 questions tirées au hasard parmi 102, tous les sujets couverts (Java, Spring Boot, JPA, SQL, Angular, RxJS, REST/Git/Docker). FR / EN.">
+<link rel="icon" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.top a,.top button{font:600 .85rem var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-decoration:none;cursor:pointer}
+.top a#back{color:var(--accent)}
+.top .sp{flex:1}
+#themeBtn{min-width:38px;text-align:center}
+.top button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root{
+  --bg:#f6f7fb; --panel:#ffffff; --ink:#0b1324; --quiet:#5a667a; --line:#cfd7e3;
+  --accent:#2563c9; --accent-soft:#e6eefb; --bad:#C4413A; --bad-soft:rgba(196,65,58,.12);
+  --code-bg:#f9fafc; --cur:#FFF1C9; --cur-bar:#E3A21A;
+  --kw:#7A3EB1; --str:#1F7A4D; --ann:#B25E09; --com:#8A93A3;
+  --sans:"Geist", "Segoe UI", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --mono:"Geist Mono", ui-monospace, "Cascadia Mono", SFMono-Regular, Menlo, Consolas, monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#070b14; --panel:#0f1522; --ink:#eef2f8; --quiet:#97a3b8; --line:#2a3548;
+    --accent:#6ea8ff; --accent-soft:#14213a; --bad:#F07A72; --bad-soft:rgba(240,122,114,.16);
+    --code-bg:#0b111c; --cur:rgba(227,162,26,.20); --cur-bar:#E3A21A;
+    --kw:#C79BF2; --str:#7FD1A3; --ann:#F0B46A; --com:#7C8698;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#070b14; --panel:#0f1522; --ink:#eef2f8; --quiet:#97a3b8; --line:#2a3548;
+  --accent:#6ea8ff; --accent-soft:#14213a; --bad:#F07A72; --bad-soft:rgba(240,122,114,.16);
+  --code-bg:#0b111c; --cur:rgba(227,162,26,.20); --cur-bar:#E3A21A;
+  --kw:#C79BF2; --str:#7FD1A3; --ann:#F0B46A; --com:#7C8698;
+}
+*,*::before,*::after{box-sizing:inherit}
+:root{--ok:#1f7a4d;--ok-soft:rgba(31,122,77,.12)}
+:root[data-theme="dark"]{--ok:#5fd39a;--ok-soft:rgba(95,211,154,.14)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--ok:#5fd39a;--ok-soft:rgba(95,211,154,.14)}}
+html.a11y-cvd{--ok:#0072b2 !important;--ok-soft:rgba(0,114,178,.14) !important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 110px}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.top a,.top button{font:600 .85rem var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;text-decoration:none;cursor:pointer}
+.top a.back{color:var(--accent)}
+.top .sp{flex:1}
+#themeBtn{min-width:38px}
+.top button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .top button[aria-pressed="true"]{color:#06101f}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .top button[aria-pressed="true"]{color:#06101f}}
+h1{font-size:clamp(1.5rem,4.8vw,2.3rem);line-height:1.12;margin:0 0 8px;font-weight:700;letter-spacing:-.02em}
+h1 .grad{background:linear-gradient(90deg,var(--accent),#2dd4bf);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{color:var(--quiet);margin:0 0 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:20px;box-shadow:0 10px 30px -18px rgba(11,19,36,.25)}
+.meta{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;font-size:.85rem;color:var(--quiet)}
+.chip{font:600 .78rem var(--mono);background:var(--accent-soft);color:var(--accent);border-radius:999px;padding:3px 10px}
+.bar{height:6px;border-radius:3px;background:var(--line);overflow:hidden;margin-bottom:16px}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#2dd4bf);transition:width .3s}
+.q{font-size:1.2rem;font-weight:600;margin:0 0 4px}
+.topic{color:var(--quiet);font-size:.85rem;margin:0 0 14px}
+.opts{display:grid;gap:10px;margin:0;padding:0;list-style:none}
+.opt{width:100%;text-align:left;display:flex;gap:12px;align-items:flex-start;font:500 1rem/1.4 var(--sans);color:var(--ink);background:var(--panel);border:1.5px solid var(--line);border-radius:14px;padding:12px 14px;cursor:pointer;min-height:48px}
+.opt:hover:not(:disabled){border-color:var(--accent)}
+.opt .k{flex:0 0 auto;width:26px;height:26px;border-radius:8px;display:grid;place-items:center;font:600 .85rem var(--mono);background:var(--code-bg);border:1px solid var(--line)}
+.opt .mark{margin-left:auto;font-weight:700}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-soft)}
+.opt.ok .k{background:var(--ok);color:#fff;border-color:var(--ok)}
+.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.opt.no .k{background:var(--bad);color:#fff;border-color:var(--bad)}
+.opt.dim{opacity:.55}
+.fb{margin-top:14px;border-left:4px solid var(--cur-bar);background:var(--code-bg);border-radius:10px;padding:12px 14px}
+.fb strong{display:block;margin-bottom:2px}
+.fb.good strong{color:var(--ok)} .fb.bad strong{color:var(--bad)}
+.fb a{color:var(--accent);font-weight:600}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.btn{font:600 .95rem var(--sans);border-radius:12px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:11px 16px;cursor:pointer;min-height:44px;text-decoration:none;display:inline-flex;align-items:center}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#06101f}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .btn.primary{color:#06101f}}
+.score{font-size:clamp(2.4rem,9vw,3.6rem);font-weight:700;margin:0;letter-spacing:-.02em}
+.secs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin:14px 0}
+.secs div{border:1px solid var(--line);border-radius:12px;padding:8px 12px;display:flex;justify-content:space-between;gap:8px;font-size:.9rem}
+.review{list-style:none;padding:0;margin:14px 0 0;display:grid;gap:10px}
+.review li{border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.review .r{font-weight:700;margin-right:6px}
+.review .r.good{color:var(--ok)} .review .r.bad{color:var(--bad)}
+.review p{margin:4px 0 0;font-size:.92rem;color:var(--quiet)}
+.review a{color:var(--accent);font-weight:600;font-size:.9rem}
+kbd{font:600 .8rem var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px;background:var(--panel)}
+.foot{margin-top:18px;color:var(--quiet);font-size:.85rem}
+button:focus-visible,a:focus-visible{outline:3px solid var(--cur-bar);outline-offset:2px}
+@media (prefers-reduced-motion: reduce){.bar i{transition:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="back" id="back" href="../">← Questions</a><span class="sp"></span>
+    <button type="button" data-lang="fr">FR</button><button type="button" data-lang="en">EN</button>
+    <button type="button" id="themeBtn" aria-label="Thème clair / sombre">◐</button>
+  </div>
+  <h1 id="h1"></h1>
+  <p class="lead" id="lead"></p>
+  <main id="app" class="card" aria-live="polite"></main>
+  <p class="foot" id="foot"></p>
+</div>
+<script src="qcm.js"></script>
+<script src="/assets/a11y.js"></script>
+<script src="/assets/carbon.js"></script>
+</body>
+</html>
