@@ -2,8 +2,8 @@
  "version": 1,
  "profile": {
   "lead": {
-   "fr": "**3 ans d'expérience** dans le développement d'applications métier avec **Spring Boot, Angular et PostgreSQL** : facturation et gestion commerciale, RH et paie. À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
-   "en": "**3 years of experience** building business applications with **Spring Boot, Angular and PostgreSQL**: invoicing and sales management, HR and payroll. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
+   "fr": "**3 ans d'expérience** dans le développement d'applications métier avec **Spring Boot, Angular et PostgreSQL** : application de facturation et de gestion de stock, application GRH (RH et paie). À l'aise avec les règles métier complexes, attaché à des livraisons fiables, sans régression, et habitué à travailler avec l'IA au quotidien.",
+   "en": "**3 years of experience** building business applications with **Spring Boot, Angular and PostgreSQL**: an invoicing and stock management application and an HR management (HR and payroll) application. Comfortable with complex business rules, committed to reliable, regression-free delivery, and used to working with AI every day."
   },
   "now": {
    "role": {
