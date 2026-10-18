@@ -1192,6 +1192,80 @@ body.noscroll { overflow: hidden; }
  ],
  "projects": [
   {
+   "id": "jobradar",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "JobRadar",
+   "shots": [
+    "projects/jobradar-1.webp",
+    "projects/jobradar-2.webp",
+    "projects/jobradar-3.webp",
+    "projects/jobradar-4.webp"
+   ],
+   "kind": {
+    "fr": "Veille d'offres · IA · Mode jeu",
+    "en": "Job watch · AI · Game mode"
+   },
+   "title": {
+    "fr": "JobRadar – veille d'offres d'emploi avec IA",
+    "en": "JobRadar – AI-powered job watch"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application qui collecte chaque matin les offres Java / Spring Boot / Angular, les filtre et les classe par IA face à mon CV, puis prépare un CV adapté et une lettre de motivation. Elle ne postule jamais à ma place.",
+    "en": "App that collects Java / Spring Boot / Angular job offers every morning, filters and ranks them with AI against my CV, then prepares a tailored CV and cover letter. It never applies on my behalf."
+   },
+   "problem": {
+    "fr": "Suivre des dizaines de sites d'emploi en Tunisie et en Europe sans y passer des heures, et ne postuler que là où mon profil a de vraies chances.",
+    "en": "Follow dozens of job sites in Tunisia and Europe without spending hours on it, and apply only where my profile has a real chance."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout : back-end, IA, interface, sécurité et déploiement.",
+    "en": "End-to-end design and development: back-end, AI, interface, security and deployment."
+   },
+   "items": {
+    "fr": [
+     "Veille planifiée (jours et heures réglables) sur Tanitjobs, Keejob, Farojob, Optioncarrière, Emploitunisie et Free-Work, avec un écran radar animé pendant la collecte.",
+     "Filtres stricts sans IA (stack, stage, années d'expérience, entreprises exclues) puis analyse IA (Groq en ligne, Ollama en local) : score, raison, exigences manquantes.",
+     "Dictionnaire FR / EN du vocabulaire des recruteurs pour un score mots-clés, et scanner ATS « CV contre offre ».",
+     "Préparation de candidature : CV adapté en PDF et lettre de motivation, avec un garde-fou « rien d'inventé » qui retire ce qui n'est pas dans le CV maître.",
+     "Mode jeu : briefing du jour, niveaux, objectifs, badges ; thème jeu ou classique, clair ou sombre, français ou anglais.",
+     "Sécurité : compte unique, mot de passe et code à 6 chiffres (TOTP), CSRF, session courte ; CI/CD GitHub Actions et déploiement Render + Neon."
+    ],
+    "en": [
+     "Scheduled job watch (configurable days and times) on Tanitjobs, Keejob, Farojob, Optioncarrière, Emploitunisie and Free-Work, with an animated radar screen during collection.",
+     "Strict rule filters without AI (stack, internships, years of experience, excluded companies), then AI analysis (Groq online, Ollama locally): score, reason, missing requirements.",
+     "FR / EN dictionary of recruiter vocabulary for a keyword score, and an ATS scanner comparing the CV with the offer.",
+     "Application preparation: tailored PDF CV and cover letter, with a “nothing invented” guard that removes anything not in the master CV.",
+     "Game mode: daily briefing, levels, goals, badges; game or classic theme, light or dark, French or English.",
+     "Security: single account, password plus 6-digit code (TOTP), CSRF, short sessions; GitHub Actions CI/CD and Render + Neon deployment."
+    ]
+   },
+   "stack": [
+    "Java 21",
+    "Spring Boot 3",
+    "Spring AI",
+    "PostgreSQL",
+    "Liquibase",
+    "Angular",
+    "TypeScript",
+    "Docker",
+    "GitHub Actions"
+   ],
+   "links": []
+  },
+  {
    "id": "analytics",
    "feat": true,
    "cats": [

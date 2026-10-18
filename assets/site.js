@@ -321,7 +321,7 @@
         p.shots.map(function (s, k) { return '<button type="button" data-zoom="' + esc(s) + '"><img src="' + esc(s) + '" alt="' + esc(p.title.en) + ' – ' + (k + 1) + '" loading="lazy"></button>'; }).join('') + '</div>' : '';
       var links = p.links.map(function (l) { return '<a class="btn" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + ' ↗</a>'; }).join('');
       pmBody.innerHTML = '<div class="pm-kind">' + bi(p.kind) + '</div><h3 class="pm-title" id="pmTitle">' + bi(p.title) + '</h3>' +
-        '<p class="pm-org"><a href="' + esc(p.org.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.org.name) + ' ↗</a> · ' + bi(p.org.when) + '</p>' +
+        '<p class="pm-org">' + (p.org.url ? '<a href="' + esc(p.org.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.org.name) + ' ↗</a>' : esc(p.org.name)) + ' · ' + bi(p.org.when) + '</p>' +
         '<div class="pm-grid"><div class="pm-box"><h4><span data-l="fr">Problème</span><span data-l="en">Problem</span></h4><p>' + bi(p.problem) + '</p></div>' +
         '<div class="pm-box"><h4><span data-l="fr">Mon rôle</span><span data-l="en">My role</span></h4><p>' + bi(p.role) + '</p></div></div>' +
         '<div class="pm-h"><span data-l="fr">Réalisations</span><span data-l="en">What I built</span></div>' +
