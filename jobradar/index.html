@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>JobRadar – veille d’offres d’emploi avec IA (Java, Spring Boot, Angular) · Rached Chakchouk</title>
+<meta name="description" content="JobRadar : application de veille d'offres d'emploi développée par Rached Chakchouk avec Java 21, Spring Boot 3, Spring AI, PostgreSQL et Angular. Collecte planifiée, analyse IA face au CV, CV adapté, score ATS et mode jeu.">
+<link rel="canonical" href="https://rached-chakchouk.vercel.app/jobradar/">
+<link rel="alternate" hreflang="fr" href="https://rached-chakchouk.vercel.app/jobradar/">
+<link rel="alternate" hreflang="en" href="https://rached-chakchouk.vercel.app/jobradar/?lang=en">
+<link rel="alternate" hreflang="x-default" href="https://rached-chakchouk.vercel.app/jobradar/">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rached Chakchouk">
+<meta property="og:title" content="JobRadar – veille d’offres d’emploi avec IA">
+<meta property="og:description" content="Collecte planifiée, analyse IA face au CV, CV adapté, score ATS et mode jeu. Java, Spring Boot, Angular, PostgreSQL.">
+<meta property="og:url" content="https://rached-chakchouk.vercel.app/jobradar/">
+<meta property="og:image" content="https://rached-chakchouk.vercel.app/projects/jobradar-1.webp">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rached-chakchouk.vercel.app/projects/jobradar-1.webp">
+<link rel="icon" href="/favicon-32.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "SoftwareApplication", "@id": "https://rached-chakchouk.vercel.app/jobradar/#app", "name": "JobRadar", "applicationCategory": "BusinessApplication", "operatingSystem": "Web", "description": "Application de veille d'offres d'emploi Java / Spring Boot / Angular : collecte planifiée, filtres, analyse par IA face au CV, CV adapté et lettre de motivation, mode jeu. Ne postule jamais à la place du candidat.", "author": {"@type": "Person", "@id": "https://rached-chakchouk.vercel.app/#person", "name": "Rached Chakchouk", "url": "https://rached-chakchouk.vercel.app/"}, "screenshot": ["https://rached-chakchouk.vercel.app/projects/jobradar-1.webp", "https://rached-chakchouk.vercel.app/projects/jobradar-2.webp", "https://rached-chakchouk.vercel.app/projects/jobradar-3.webp", "https://rached-chakchouk.vercel.app/projects/jobradar-4.webp"], "softwareRequirements": "Java 21, Spring Boot 3, PostgreSQL, Angular", "inLanguage": ["fr", "en"], "dateModified": "2026-10-18"}, {"@type": "BreadcrumbList", "itemListElement": [{"@type": "ListItem", "position": 1, "name": "Rached Chakchouk", "item": "https://rached-chakchouk.vercel.app/"}, {"@type": "ListItem", "position": 2, "name": "JobRadar", "item": "https://rached-chakchouk.vercel.app/jobradar/"}]}]}</script>
+<style>
+:root{--bg:#f6f7fb;--surface:#fff;--fg:#0b1324;--muted:#5a667a;--rule:#e2e7ef;--accent:#2563c9;--accent-2:#0d9488;--chip:#e6eefb;color-scheme:light dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b14;--surface:#0f1522;--fg:#eef2f8;--muted:#97a3b8;--rule:#1e2738;--accent:#6ea8ff;--accent-2:#2dd4bf;--chip:#14213a}}
+:root[data-theme="dark"]{--bg:#070b14;--surface:#0f1522;--fg:#eef2f8;--muted:#97a3b8;--rule:#1e2738;--accent:#6ea8ff;--accent-2:#2dd4bf;--chip:#14213a}
+:root:not([data-lang="en"]) [data-l="en"],:root[data-lang="en"] [data-l="fr"]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Geist","Segoe UI",system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 64px}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.top .sp{flex:1}
+.top a,.top button{font:600 14px "Geist",sans-serif;color:var(--fg);background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:8px 14px;text-decoration:none;cursor:pointer;min-height:40px}
+.top a.back{color:var(--accent)}
+.top button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.kicker{font:500 13px "Geist Mono",monospace;color:var(--accent-2);text-transform:uppercase;letter-spacing:.08em}
+h1{font-size:clamp(32px,6vw,56px);line-height:1.05;letter-spacing:-.03em;margin:8px 0 16px}
+h1 .grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:19px;color:var(--muted);max-width:70ch;margin:0 0 24px}
+.hero-img{width:100%;height:auto;border-radius:18px;border:1px solid var(--rule);box-shadow:0 20px 50px -25px rgba(11,19,36,.4);display:block}
+h2{font-size:28px;letter-spacing:-.02em;margin:48px 0 16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:18px;padding:20px}
+.card h3{margin:0 0 6px;font-size:18px}
+.card p{margin:0;color:var(--muted)}
+.shots{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:16px}
+figure{margin:0}
+figure img{width:100%;height:auto;border-radius:14px;border:1px solid var(--rule);display:block}
+figcaption{font-size:14px;color:var(--muted);margin-top:8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0;margin:0}
+.chips li{font:500 14px "Geist Mono",monospace;background:var(--chip);color:var(--accent);border-radius:999px;padding:5px 12px}
+.note{background:var(--surface);border:1px solid var(--rule);border-left:4px solid var(--accent-2);border-radius:12px;padding:16px 18px;color:var(--fg)}
+.cta{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.cta a{font-weight:600;text-decoration:none;border-radius:999px;padding:12px 18px;border:1px solid var(--rule);color:var(--fg);background:var(--surface)}
+.cta a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+footer{margin-top:56px;color:var(--muted);font-size:14px}
+a:focus-visible,button:focus-visible{outline:3px solid #f5a524;outline-offset:2px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<nav class="top" aria-label="Navigation">
+  <a class="back" href="/"><span data-l="fr">← Portfolio de Rached Chakchouk</span><span data-l="en">← Rached Chakchouk’s portfolio</span></a>
+  <span class="sp"></span>
+  <button type="button" data-lang-btn="fr">FR</button><button type="button" data-lang-btn="en">EN</button>
+  <button type="button" id="themeBtn" aria-label="Thème clair / sombre">◐</button>
+</nav>
+
+<header>
+  <span class="kicker"><span data-l="fr">Projet personnel · Octobre 2026</span><span data-l="en">Personal project · October 2026</span></span>
+  <h1>JobRadar · <span class="grad" data-l="fr">la veille d’offres d’emploi avec IA</span><span class="grad" data-l="en">AI-powered job watch</span></h1>
+  <p class="lead" data-l="fr">Chaque matin, JobRadar collecte les offres <strong>Java / Spring Boot / Angular</strong> en Tunisie et en Europe, écarte celles hors profil, les classe par IA face à mon CV, puis prépare un CV adapté et une lettre de motivation. Il ne postule jamais à ma place.</p>
+  <p class="lead" data-l="en">Every morning, JobRadar collects <strong>Java / Spring Boot / Angular</strong> job offers in Tunisia and Europe, drops the off-profile ones, ranks the rest with AI against my CV, then prepares a tailored CV and cover letter. It never applies on my behalf.</p>
+  <img class="hero-img" src="/projects/jobradar-1.webp" width="1200" height="744" alt="JobRadar : briefing du jour avec les nouvelles offres, les objectifs et les offres prioritaires (thème jeu, sombre)">
+</header>
+
+<section aria-labelledby="f">
+  <h2 id="f"><span data-l="fr">Ce que fait JobRadar</span><span data-l="en">What JobRadar does</span></h2>
+  <div class="grid">
+    <div class="card"><h3><span data-l="fr">Veille planifiée</span><span data-l="en">Scheduled job watch</span></h3><p data-l="fr">Jours et heures réglables ; Tanitjobs, Keejob, Farojob, Optioncarrière, Emploitunisie, Free-Work (France, Luxembourg, Belgique, Portugal).</p><p data-l="en">Configurable days and times; Tanitjobs, Keejob, Farojob, Optioncarrière, Emploitunisie, Free-Work (France, Luxembourg, Belgium, Portugal).</p></div>
+    <div class="card"><h3><span data-l="fr">Filtres puis IA</span><span data-l="en">Rules, then AI</span></h3><p data-l="fr">Règles strictes (stack, stage, années d’expérience, entreprises exclues), puis analyse IA (Groq ou Ollama) : score, raison, exigences manquantes.</p><p data-l="en">Strict rules (stack, internships, years of experience, excluded companies), then AI analysis (Groq or Ollama): score, reason, missing requirements.</p></div>
+    <div class="card"><h3><span data-l="fr">Score ATS</span><span data-l="en">ATS score</span></h3><p data-l="fr">Dictionnaire FR / EN du vocabulaire des recruteurs et scanner « CV contre offre ».</p><p data-l="en">FR / EN dictionary of recruiter vocabulary and a “CV versus offer” scanner.</p></div>
+    <div class="card"><h3><span data-l="fr">Candidature prête</span><span data-l="en">Application ready</span></h3><p data-l="fr">CV adapté en PDF et lettre de motivation ; un garde-fou retire tout ce qui n’est pas dans le CV maître.</p><p data-l="en">Tailored PDF CV and cover letter; a guard removes anything that is not in the master CV.</p></div>
+    <div class="card"><h3><span data-l="fr">Mode jeu</span><span data-l="en">Game mode</span></h3><p data-l="fr">Briefing du jour, niveaux, objectifs et badges ; thème jeu ou classique, clair ou sombre, français ou anglais.</p><p data-l="en">Daily briefing, levels, goals and badges; game or classic theme, light or dark, French or English.</p></div>
+    <div class="card"><h3><span data-l="fr">Sécurité</span><span data-l="en">Security</span></h3><p data-l="fr">Compte unique, mot de passe et code à 6 chiffres (TOTP), protection CSRF, CI/CD GitHub Actions.</p><p data-l="en">Single account, password plus 6-digit code (TOTP), CSRF protection, GitHub Actions CI/CD.</p></div>
+  </div>
+</section>
+
+<section aria-labelledby="s">
+  <h2 id="s"><span data-l="fr">Captures d’écran</span><span data-l="en">Screenshots</span></h2>
+  <div class="shots">
+    <figure><img loading="lazy" src="/projects/jobradar-2.webp" width="1200" height="744" alt="Offre ouverte : analyse de l'IA, mots-clés du dictionnaire et scanner ATS à 100 %"><figcaption><span data-l="fr">Une offre analysée, avec le scanner ATS.</span><span data-l="en">An analysed offer with the ATS scanner.</span></figcaption></figure>
+    <figure><img loading="lazy" src="/projects/jobradar-3.webp" width="1200" height="744" alt="Interface en anglais, thème jeu clair : daily briefing et objectifs du jour"><figcaption><span data-l="fr">Interface en anglais, thème clair.</span><span data-l="en">English interface, light theme.</span></figcaption></figure>
+    <figure><img loading="lazy" src="/projects/jobradar-4.webp" width="1200" height="744" alt="Écran radar animé pendant la veille : cartes de la Tunisie et de l'Europe"><figcaption><span data-l="fr">Le radar pendant la veille, thème classique.</span><span data-l="en">The radar during a job watch, classic theme.</span></figcaption></figure>
+  </div>
+</section>
+
+<section aria-labelledby="t">
+  <h2 id="t"><span data-l="fr">Technologies</span><span data-l="en">Tech stack</span></h2>
+  <ul class="chips"><li>Java 21</li><li>Spring Boot 3</li><li>Spring AI</li><li>Spring Security</li><li>PostgreSQL</li><li>Liquibase</li><li>Angular</li><li>TypeScript</li><li>Docker</li><li>GitHub Actions</li><li>Render</li><li>Neon</li></ul>
+  <p class="note" style="margin-top:20px"><span data-l="fr">JobRadar est un outil personnel : son code et son application restent privés. Il lit, filtre, classe et prépare ; c’est moi qui relis et qui postule.</span><span data-l="en">JobRadar is a personal tool: its code and app stay private. It reads, filters, ranks and prepares; I review and apply myself.</span></p>
+  <div class="cta">
+    <a class="primary" href="/#contact"><span data-l="fr">Me contacter</span><span data-l="en">Get in touch</span></a>
+    <a href="/#projects"><span data-l="fr">Voir mes autres projets</span><span data-l="en">See my other projects</span></a>
+    <a href="/entretien/"><span data-l="fr">102 questions d’entretien</span><span data-l="en">102 interview questions</span></a>
+  </div>
+</section>
+
+<footer>© 2026 Rached Chakchouk · <span data-l="fr">Ingénieur Full Stack Java / Spring Boot / Angular · Ariana, Tunisie</span><span data-l="en">Full Stack Java / Spring Boot / Angular engineer · Ariana, Tunisia</span></footer>
+</div>
+<script src="page.js"></script>
+<script src="/assets/a11y.js"></script>
+<script src="/assets/carbon.js"></script>
+</body>
+</html>

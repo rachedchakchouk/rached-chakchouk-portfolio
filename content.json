@@ -619,7 +619,12 @@
     "Docker",
     "GitHub Actions"
    ],
-   "links": []
+   "links": [
+    {
+     "label": "Page du projet",
+     "url": "/jobradar/"
+    }
+   ]
   },
   {
    "id": "analytics",

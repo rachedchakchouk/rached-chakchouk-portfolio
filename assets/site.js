@@ -83,9 +83,17 @@
     root.setAttribute('lang', l);
     langBtn.textContent = l === 'en' ? 'FR' : 'EN';
     langBtn.setAttribute('aria-label', l === 'en' ? 'Passer en français' : 'Switch to English');
+    // Titre et description de la page dans la langue affichée (onglet, favoris, partage)
+    document.title = l === 'en' ? 'Rached Chakchouk – Full Stack Engineer Java / Spring Boot / Angular · Tunis'
+      : 'Rached Chakchouk – Ingénieur Full Stack Java / Spring Boot / Angular · Tunis';
+    var md = document.querySelector('meta[name="description"]');
+    if (md) md.setAttribute('content', l === 'en'
+      ? 'Rached Chakchouk, Full Stack Java / Spring Boot / Angular engineer in Tunis: 3 years building business applications (invoicing and stock management, HR and payroll), PostgreSQL, Docker, AI. Resume, projects and contact.'
+      : "Rached Chakchouk, ingénieur Full Stack Java / Spring Boot / Angular à Tunis : 3 ans d'expérience en applications métier (facturation et gestion de stock, GRH et paie), PostgreSQL, Docker, IA. CV, projets et contact.");
   }
   var hash = (location.hash || '').replace('#', '');
-  applyLang(hash === 'en' ? 'en' : hash === 'fr' ? 'fr' : (get('lang') || 'fr'));
+  var qlang = (location.search.match(/[?&]lang=(en|fr)\b/) || [])[1];
+  applyLang(hash === 'en' ? 'en' : hash === 'fr' ? 'fr' : qlang || get('lang') || 'fr');
   langBtn.addEventListener('click', function () {
     var l = root.getAttribute('data-lang') === 'en' ? 'fr' : 'en';
     applyLang(l); set('lang', l);
