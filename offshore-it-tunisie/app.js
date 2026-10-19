@@ -1,7 +1,7 @@
 (function(){var r=document.documentElement;function g(k){try{return localStorage.getItem(k)}catch(e){return null}}
 var t=g('theme');if(t==='dark'||t==='light')r.setAttribute('data-theme',t);
 var b=document.getElementById('themeBtn');if(b)b.addEventListener('click',function(){var c=r.getAttribute('data-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');var n=c==='dark'?'light':'dark';r.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}});})();
-fetch('data.json').then(r=>r.json()).then(D=>{
+fetch('data.json',{cache:'no-cache'}).then(r=>r.json()).then(D=>{
 
 const $=s=>document.querySelector(s);
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -21,7 +21,7 @@ $('#count').textContent=r.length+' résultat'+(r.length>1?'s':'');
 pager(r.length,pages,from,shown.length);
 const dom=d=>{for(const u of [d.w,d.j]){if(!u)continue;try{const h=new URL(u).hostname.replace(/^www\./,'');if(!/linkedin\.com$/.test(h))return h}catch(e){}}return ''};
 const ini=d=>`<span class="ini" aria-hidden="true">${esc((d.n||'?').trim().charAt(0).toUpperCase())}</span>`;
-const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
+const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" data-h="${esc(h)}" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
 const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
 $('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
 return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</div></div></td>
@@ -37,9 +37,9 @@ document.querySelectorAll('.pager').forEach(el=>el.addEventListener('click',e=>{
 $('#ps').addEventListener('change',e=>{ps=+e.target.value;page=1;try{localStorage.setItem(PS_KEY,ps)}catch(_){}render();});
 ['#q','#city','#orig','#jobs'].forEach(s=>$(s).addEventListener('input',()=>{page=1;render();}));
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;page=1;render()}));
-const toIni=t=>{const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)};
+const toIni=t=>{if(t.dataset.h&&!t.dataset.alt){t.dataset.alt='1';t.src='https://icons.duckduckgo.com/ip3/'+t.dataset.h+'.ico';return}const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)};
 document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i)toIni(t)},true);
-document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i&&t.naturalWidth<=16)toIni(t)},true);
+document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i&&t.naturalWidth<=16&&!t.dataset.alt)toIni(t)},true);
 render();
 
 }).catch(()=>{document.getElementById('tb').innerHTML='<tr><td colspan="6">Impossible de charger la liste.</td></tr>'});
