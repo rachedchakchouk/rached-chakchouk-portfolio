@@ -39,7 +39,7 @@ $('#ps').addEventListener('change',e=>{ps=+e.target.value;page=1;try{localStorag
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;page=1;render()}));
 const toIni=t=>{if(t.dataset.h&&!t.dataset.alt){t.dataset.alt='1';t.src='https://icons.duckduckgo.com/ip3/'+t.dataset.h+'.ico';return}const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)};
 document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i)toIni(t)},true);
-document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i&&((!t.dataset.alt&&t.naturalWidth<=16)||(t.dataset.alt&&t.naturalWidth===48)))toIni(t)},true);
+document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.naturalHeight&&t.naturalWidth/t.naturalHeight>1.6&&t.parentNode)t.parentNode.classList.add('wide');if(t&&t.tagName==='IMG'&&t.dataset.i&&((!t.dataset.alt&&t.naturalWidth<=16)||(t.dataset.alt&&t.naturalWidth===48)))toIni(t)},true);
 render();
 
 }).catch(()=>{document.getElementById('tb').innerHTML='<tr><td colspan="6">Impossible de charger la liste.</td></tr>'});
