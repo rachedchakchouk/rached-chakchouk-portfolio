@@ -37,7 +37,9 @@ document.querySelectorAll('.pager').forEach(el=>el.addEventListener('click',e=>{
 $('#ps').addEventListener('change',e=>{ps=+e.target.value;page=1;try{localStorage.setItem(PS_KEY,ps)}catch(_){}render();});
 ['#q','#city','#orig','#jobs'].forEach(s=>$(s).addEventListener('input',()=>{page=1;render();}));
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;page=1;render()}));
-document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i){const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)}},true);
+const toIni=t=>{const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)};
+document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i)toIni(t)},true);
+document.addEventListener('load',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i&&t.naturalWidth<=16)toIni(t)},true);
 render();
 
 }).catch(()=>{document.getElementById('tb').innerHTML='<tr><td colspan="6">Impossible de charger la liste.</td></tr>'});
