@@ -88,8 +88,8 @@
       : 'Rached Chakchouk – Ingénieur Full Stack Java / Spring Boot / Angular · Tunis';
     var md = document.querySelector('meta[name="description"]');
     if (md) md.setAttribute('content', l === 'en'
-      ? 'Rached Chakchouk, Full Stack Java / Spring Boot / Angular engineer in Tunis: 3 years building business applications (invoicing and stock management, HR and payroll), PostgreSQL, Docker, AI. Resume, projects and contact.'
-      : "Rached Chakchouk, ingénieur Full Stack Java / Spring Boot / Angular à Tunis : 3 ans d'expérience en applications métier (facturation et gestion de stock, GRH et paie), PostgreSQL, Docker, IA. CV, projets et contact.");
+      ? 'Rached Chakchouk, Full Stack Java / Spring Boot / Angular engineer in Tunis: 4 years building business applications (invoicing and stock management, HR and payroll), PostgreSQL, Docker, AI. Resume, projects and contact.'
+      : "Rached Chakchouk, ingénieur Full Stack Java / Spring Boot / Angular à Tunis : 4 ans d'expérience en applications métier (facturation et gestion de stock, GRH et paie), PostgreSQL, Docker, IA. CV, projets et contact.");
   }
   var hash = (location.hash || '').replace('#', '');
   var qlang = (location.search.match(/[?&]lang=(en|fr)\b/) || [])[1];
