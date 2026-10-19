@@ -24,7 +24,7 @@ const ini=d=>`<span class="ini" aria-hidden="true">${esc((d.n||'?').trim().charA
 const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="${d.ic?esc(d.ic):`https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64`}" data-h="${esc(h)}" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
 const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
 $('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
-return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</div></div></td>
+return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}${d.vf?`<div class="notes vf">✓ ${esc(d.vf)}</div>`:''}</div></div></td>
 <td class="og">${esc(d.o||'À vérifier')}</td><td>${esc(d.s)}</td>
 <td><span class="chips">${d.cs.map(v=>`<span class="chip${v==='À vérifier'?' unk':''}">${esc(v)}</span>`).join('')}</span><div class="loc">${esc(d.l)}</div></td>
 <td><div class="links">${ln||'<span class="no">à vérifier</span>'}</div></td><td class="stack">${esc(d.st)}</td></tr>`}).join('');}
