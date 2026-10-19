@@ -19,9 +19,12 @@ const pages=Math.max(1,Math.ceil(r.length/ps));if(page>pages)page=pages;
 const from=(page-1)*ps,shown=r.slice(from,from+ps);
 $('#count').textContent=r.length+' résultat'+(r.length>1?'s':'');
 pager(r.length,pages,from,shown.length);
+const dom=d=>{for(const u of [d.w,d.j]){if(!u)continue;try{const h=new URL(u).hostname.replace(/^www\./,'');if(!/linkedin\.com$/.test(h))return h}catch(e){}}return ''};
+const ini=d=>`<span class="ini" aria-hidden="true">${esc((d.n||'?').trim().charAt(0).toUpperCase())}</span>`;
+const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
 const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
 $('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
-return `<tr><td><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</td>
+return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</div></div></td>
 <td class="og">${esc(d.o||'À vérifier')}</td><td>${esc(d.s)}</td>
 <td><span class="chip${d.c==='À vérifier'?' unk':''}">${esc(d.c)}</span><div class="loc">${esc(d.l)}</div></td>
 <td><div class="links">${ln||'<span class="no">à vérifier</span>'}</div></td><td class="stack">${esc(d.st)}</td></tr>`}).join('');}
@@ -34,6 +37,7 @@ document.querySelectorAll('.pager').forEach(el=>el.addEventListener('click',e=>{
 $('#ps').addEventListener('change',e=>{ps=+e.target.value;page=1;try{localStorage.setItem(PS_KEY,ps)}catch(_){}render();});
 ['#q','#city','#orig','#jobs'].forEach(s=>$(s).addEventListener('input',()=>{page=1;render();}));
 document.querySelectorAll('th[data-k]').forEach(th=>th.addEventListener('click',()=>{const k=th.dataset.k;dir=sortK===k?-dir:1;sortK=k;page=1;render()}));
+document.addEventListener('error',e=>{const t=e.target;if(t&&t.tagName==='IMG'&&t.dataset.i){const sp=document.createElement('span');sp.className='ini';sp.textContent=t.dataset.i;t.replaceWith(sp)}},true);
 render();
 
 }).catch(()=>{document.getElementById('tb').innerHTML='<tr><td colspan="6">Impossible de charger la liste.</td></tr>'});
