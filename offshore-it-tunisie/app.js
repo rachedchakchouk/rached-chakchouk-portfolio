@@ -5,15 +5,15 @@ fetch('data.json',{cache:'no-cache'}).then(r=>r.json()).then(D=>{
 
 const $=s=>document.querySelector(s);
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-function opts(sel,key,label){const c={};D.forEach(d=>c[d[key]]=(c[d[key]]||0)+1);
+function opts(sel,key,label){const c={};D.forEach(d=>[].concat(d[key]||[]).forEach(v=>c[v]=(c[v]||0)+1));
 sel.innerHTML='<option value="">'+label+'</option>'+Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<option value="${esc(k)}">${esc(k)} (${v})</option>`).join('')}
-opts($('#city'),'c','Toutes les villes');opts($('#orig'),'og','Toutes les origines');
+D.forEach(d=>{if(!d.cs)d.cs=[d.c];if(!d.ogs)d.ogs=[d.og]});opts($('#city'),'cs','Toutes les villes');opts($('#orig'),'ogs','Toutes les origines');
 $('#stats').innerHTML=`<span><b>${D.length}</b> sociétés</span><span><b>${D.filter(d=>d.li).length}</b> pages LinkedIn</span><span><b>${D.filter(d=>d.j).length}</b> pages carrières</span><span><b>${D.filter(d=>d.w).length}</b> sites web</span>`;
 let sortK='n',dir=1,page=1;
 const PS_KEY='offshore_ps';let ps=25;try{ps=+localStorage.getItem(PS_KEY)||25}catch(e){}
 $('#ps').value=String(ps);
 function render(){const q=$('#q').value.toLowerCase().trim(),c=$('#city').value,o=$('#orig').value,j=$('#jobs').checked;
-const r=D.filter(d=>(!c||d.c===c)&&(!o||d.og===o)&&(!j||d.j)&&(!q||[d.n,d.s,d.o,d.l,d.st,d.no].join(' ').toLowerCase().includes(q)))
+const r=D.filter(d=>(!c||d.cs.includes(c))&&(!o||d.ogs.includes(o))&&(!j||d.j)&&(!q||[d.n,d.s,d.o,d.l,d.st,d.no].join(' ').toLowerCase().includes(q)))
 .sort((a,b)=>(a[sortK]||'').localeCompare(b[sortK]||'','fr')*dir);
 const pages=Math.max(1,Math.ceil(r.length/ps));if(page>pages)page=pages;
 const from=(page-1)*ps,shown=r.slice(from,from+ps);
@@ -26,7 +26,7 @@ const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'
 $('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
 return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</div></div></td>
 <td class="og">${esc(d.o||'À vérifier')}</td><td>${esc(d.s)}</td>
-<td><span class="chip${d.c==='À vérifier'?' unk':''}">${esc(d.c)}</span><div class="loc">${esc(d.l)}</div></td>
+<td><span class="chips">${d.cs.map(v=>`<span class="chip${v==='À vérifier'?' unk':''}">${esc(v)}</span>`).join('')}</span><div class="loc">${esc(d.l)}</div></td>
 <td><div class="links">${ln||'<span class="no">à vérifier</span>'}</div></td><td class="stack">${esc(d.st)}</td></tr>`}).join('');}
 function pager(total,pages,from,n){
 const nums=[];for(let i=1;i<=pages;i++){if(i===1||i===pages||Math.abs(i-page)<=1)nums.push(i);else if(nums[nums.length-1]!=='…')nums.push('…');}
