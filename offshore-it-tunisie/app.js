@@ -21,7 +21,7 @@ $('#count').textContent=r.length+' résultat'+(r.length>1?'s':'');
 pager(r.length,pages,from,shown.length);
 const dom=d=>{for(const u of [d.w,d.j]){if(!u)continue;try{const h=new URL(u).hostname.replace(/^www\./,'');if(!/linkedin\.com$/.test(h))return h}catch(e){}}return ''};
 const ini=d=>`<span class="ini" aria-hidden="true">${esc((d.n||'?').trim().charAt(0).toUpperCase())}</span>`;
-const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" data-h="${esc(h)}" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
+const logo=d=>{const h=dom(d);return h?`<span class="lg"><img src="${d.ic?esc(d.ic):`https://www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64`}" data-h="${esc(h)}" alt="" width="28" height="28" loading="lazy" referrerpolicy="no-referrer" data-i="${esc((d.n||'?').trim().charAt(0).toUpperCase())}"></span>`:`<span class="lg">${ini(d)}</span>`};
 const L=(u,t)=>u?`<a href="${esc(u)}" target="_blank" rel="noopener">${t}</a>`:'';
 $('#tb').innerHTML=shown.map(d=>{const ln=[L(d.li,'LinkedIn'),L(d.j,'Carrières'),L(d.w,'Site')].filter(Boolean).join('');
 return `<tr><td><div class="co">${logo(d)}<div><div class="name">${esc(d.n)}</div>${d.no?`<div class="notes">${esc(d.no)}</div>`:''}</div></div></td>
