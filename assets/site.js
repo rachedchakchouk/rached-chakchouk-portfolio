@@ -394,3 +394,11 @@
   var cf = document.getElementById('contactForm');
   if (cf) cf.addEventListener('submit', function () { setTimeout(function () { if (!cf.querySelector('[aria-invalid="true"]')) track({ type: 'event', name: 'contact_submit' }); }, 0); });
 })();
+
+/* Menu mobile */
+(function(){var b=document.getElementById('menuBtn'),n=document.getElementById('navLinks');if(!b||!n)return;
+function set(o){n.classList.toggle('open',o);b.setAttribute('aria-expanded',o?'true':'false')}
+b.addEventListener('click',function(e){e.stopPropagation();set(!n.classList.contains('open'));if(n.classList.contains('open')){var a=n.querySelector('a:not([hidden])');if(a)a.focus()}});
+n.addEventListener('click',function(e){if(e.target.closest('a'))set(false)});
+document.addEventListener('click',function(e){if(n.classList.contains('open')&&!n.contains(e.target))set(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&n.classList.contains('open')){set(false);b.focus()}});})();

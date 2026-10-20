@@ -101,6 +101,7 @@ body{padding-bottom:96px}
 .nost td:nth-child(6){display:none}
 .empty td{text-align:center}
 }
+.vbadge{display:inline-flex;align-items:center;margin-left:8px;padding:1px 8px;border-radius:999px;font:600 11px var(--body);color:var(--accent-2);background:color-mix(in srgb,var(--accent-2) 14%,transparent);border:1px solid color-mix(in srgb,var(--accent-2) 35%,transparent);vertical-align:1px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -108,7 +109,7 @@ body{padding-bottom:96px}
 <header>
 <div class="topbar"><a class="back" href="/">← Retour au portfolio</a><span class="sp"></span><button class="tbtn" id="themeBtn" type="button" aria-label="Thème clair / sombre">◐</button></div>
 <h1>Offshore IT <span class="grad">en Tunisie</span></h1>
-<p class="sub">Sociétés IT offshore et nearshore présentes en Tunisie, avec leur secteur, leur localisation, leur page LinkedIn, leur page carrières et leur site. « À vérifier » indique une information non confirmée en ligne.</p>
+<p class="sub">Sociétés IT offshore et nearshore présentes en Tunisie, avec leur secteur, leur localisation, leur page LinkedIn, leur page carrières et leur site. « À vérifier » indique une information non confirmée en ligne ; le badge « ✓ Vérifiée » signale une fiche comparée au site officiel ou à la page LinkedIn. Le lien « RH » ouvre LinkedIn sur les recruteurs et RH de la société (connexion LinkedIn requise).</p>
 </header>
 <div class="stats" id="stats"></div>
 <div class="bar">
@@ -116,6 +117,7 @@ body{padding-bottom:96px}
 <select id="city" aria-label="Ville"></select>
 <select id="orig" aria-label="Origine"></select>
 <label><input id="jobs" type="checkbox"> Page carrières connue</label>
+<label><input id="ver" type="checkbox"> Vérifiées uniquement</label>
 <label>Par page <select id="ps" aria-label="Sociétés par page"><option>25</option><option>50</option><option>100</option></select></label>
 <select id="sort" aria-label="Trier par"><option value="n:1">Trier : Société A→Z</option><option value="n:-1">Trier : Société Z→A</option><option value="og:1">Trier : Origine</option><option value="s:1">Trier : Secteur</option><option value="c:1">Trier : Localisation</option><option value="" hidden>Trier…</option></select>
 <span class="count" id="count" role="status" aria-live="polite"></span>

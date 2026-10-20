@@ -470,9 +470,25 @@ body.noscroll { overflow: hidden; }
 .v-mobile { display: grid; justify-items: center; gap: 14px; text-align: center; padding: 40px 20px; color: var(--fg); }
 .v-mobile .ic-pdf { width: 56px; height: 56px; }
 .v-mobile p { margin: 0; max-width: 32ch; color: var(--muted); }
-</style>
+
+.skip{position:absolute;left:12px;top:-60px;z-index:100;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;font-weight:600;text-decoration:none;transition:top .15s}
+.skip:focus{top:12px}
+main:focus{outline:none}
+.menu-btn{display:none}
+@media (max-width: 860px){
+  .menu-btn{display:inline-block}
+  .pill{position:relative}
+  nav.links.open{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);left:0;right:0;padding:8px;background:var(--surface,var(--bg));border:1px solid var(--line);border-radius:18px;box-shadow:0 20px 40px -20px rgba(0,0,0,.35);z-index:60}
+  nav.links.open a{padding:12px 16px;font-size:15px}
+}
+@media (max-width: 600px){
+  .tbtn{height:38px}
+  .mini{padding:9px 14px}
+  .co-link{display:inline-block;padding-block:6px}
+}</style>
 </head>
 <body style="margin:0">
+<a class="skip" href="#contenu"><span data-l="fr">Aller au contenu</span><span data-l="en">Skip to content</span></a>
 
 <div class="hero-bg" aria-hidden="true"></div>
 <div class="progress" aria-hidden="true"></div>
@@ -481,7 +497,7 @@ body.noscroll { overflow: hidden; }
   <div class="wrap">
     <div class="pill">
       <a class="brand" href="#top"><span class="mono-badge">RC</span><span class="nm">Rached Chakchouk</span></a>
-      <nav class="links" aria-label="Sections">
+      <nav class="links" id="navLinks" aria-label="Sections">
         <a href="#skills"><span data-l="fr">Compétences</span><span data-l="en">Skills</span></a>
         <a href="#experience"><span data-l="fr">Expérience</span><span data-l="en">Experience</span></a>
         <a href="#projects"><span data-l="fr">Projets</span><span data-l="en">Projects</span></a>
@@ -492,6 +508,7 @@ body.noscroll { overflow: hidden; }
         <a href="/entretien/?lang=en" data-l="en">Interview prep</a>
       </nav>
       <div class="toggles">
+        <button class="tbtn menu-btn" id="menuBtn" type="button" aria-expanded="false" aria-controls="navLinks"><span data-l="fr">Menu</span><span data-l="en">Menu</span></button>
         <button class="tbtn" id="langBtn" type="button" aria-label="Switch language">EN</button>
         <button class="tbtn" id="themeBtn" type="button" aria-label="Toggle dark mode">◐</button>
       </div>
@@ -539,7 +556,7 @@ body.noscroll { overflow: hidden; }
     <div class="tile t-ticker" aria-label="Technologies"><div class="ticker"><span class="tk"><i class="ti i-java" aria-hidden="true"></i>Java</span><span class="tk"><i class="ti i-spring" aria-hidden="true"></i>Spring Boot</span><span class="tk"><i class="ti i-angular" aria-hidden="true"></i>Angular</span><span class="tk"><i class="ti i-ts" aria-hidden="true"></i>TypeScript</span><span class="tk"><i class="ti i-pg" aria-hidden="true"></i>PostgreSQL</span><span class="tk"><i class="ti i-hibernate" aria-hidden="true"></i>Hibernate</span><span class="tk"><i class="ti i-docker" aria-hidden="true"></i>Docker</span><span class="tk"><i class="ti i-git" aria-hidden="true"></i>Git</span><span class="tk"><i class="ti i-gitlab" aria-hidden="true"></i>GitLab</span><span class="tk"><i class="ti i-jenkins" aria-hidden="true"></i>Jenkins</span><span class="tk"><i class="ti i-sonar" aria-hidden="true"></i>SonarQube</span><span class="tk"><i class="ti i-liquibase" aria-hidden="true"></i>Liquibase</span><span class="tk"><i class="ti i-swagger" aria-hidden="true"></i>Swagger</span><span class="tk"><i class="ti i-maven" aria-hidden="true"></i>Maven</span><span class="tk"><i class="ti i-mysql" aria-hidden="true"></i>MySQL</span><span class="tk"><i class="ti i-mongo" aria-hidden="true"></i>MongoDB</span><span class="tk"><i class="ti i-capacitor" aria-hidden="true"></i>Capacitor</span><span class="tk"><i class="ti i-claude" aria-hidden="true"></i>Claude</span><span class="tk"><i class="ti i-copilot" aria-hidden="true"></i>GitHub Copilot</span><span class="tk dup" aria-hidden="true"><i class="ti i-java"></i>Java</span><span class="tk dup" aria-hidden="true"><i class="ti i-spring"></i>Spring Boot</span><span class="tk dup" aria-hidden="true"><i class="ti i-angular"></i>Angular</span><span class="tk dup" aria-hidden="true"><i class="ti i-ts"></i>TypeScript</span><span class="tk dup" aria-hidden="true"><i class="ti i-pg"></i>PostgreSQL</span><span class="tk dup" aria-hidden="true"><i class="ti i-hibernate"></i>Hibernate</span><span class="tk dup" aria-hidden="true"><i class="ti i-docker"></i>Docker</span><span class="tk dup" aria-hidden="true"><i class="ti i-git"></i>Git</span><span class="tk dup" aria-hidden="true"><i class="ti i-gitlab"></i>GitLab</span><span class="tk dup" aria-hidden="true"><i class="ti i-jenkins"></i>Jenkins</span><span class="tk dup" aria-hidden="true"><i class="ti i-sonar"></i>SonarQube</span><span class="tk dup" aria-hidden="true"><i class="ti i-liquibase"></i>Liquibase</span><span class="tk dup" aria-hidden="true"><i class="ti i-swagger"></i>Swagger</span><span class="tk dup" aria-hidden="true"><i class="ti i-maven"></i>Maven</span><span class="tk dup" aria-hidden="true"><i class="ti i-mysql"></i>MySQL</span><span class="tk dup" aria-hidden="true"><i class="ti i-mongo"></i>MongoDB</span><span class="tk dup" aria-hidden="true"><i class="ti i-capacitor"></i>Capacitor</span><span class="tk dup" aria-hidden="true"><i class="ti i-claude"></i>Claude</span><span class="tk dup" aria-hidden="true"><i class="ti i-copilot"></i>GitHub Copilot</span></div></div>
   </div>
 </div>
-<main class="wrap">
+<main class="wrap" id="contenu" tabindex="-1">
 
   <section id="skills">
     <div class="sec-head"><span class="kicker"><span data-l="fr">Stack</span><span data-l="en">Stack</span></span><h2><span data-l="fr">Compétences techniques</span><span data-l="en">Technical skills</span></h2></div>
