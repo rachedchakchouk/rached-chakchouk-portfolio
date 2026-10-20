@@ -4,6 +4,8 @@
   const root = document.documentElement;
   const ls = { get: k => { try { return localStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { localStorage.setItem(k, v); } catch (e) {} } };
   const N = 10;
+  const ICO={"Java":["java"],"Spring Boot":["spring"],"JPA / Hibernate":["hibernate"],"Angular":["angular"],"RxJS":["rxjs"],"SQL / PostgreSQL":["pg"],"REST, Git, Docker":["git","docker"]};
+  const icoHtml=s=>(ICO[s]||[]).map(k=>'<i class="ti i-'+k+'" aria-hidden="true"></i>').join('');
   const ORDER = ["Java", "Spring Boot", "JPA / Hibernate", "SQL / PostgreSQL", "Angular", "RxJS", "REST, Git, Docker"];
   const UI = {
     fr: { h1: 'QCM de révision : <span class="grad">10 questions au hasard</span>', lead: 'Un tirage différent à chaque ouverture de la page, tous les sujets couverts : Java, Spring Boot, JPA, SQL, Angular, RxJS, REST / Git / Docker.', q: (i, n) => `Question ${i} sur ${n}`, good: 'Bonne réponse !', bad: 'Pas tout à fait.', answer: 'La bonne réponse : ', see: 'Voir l’explication animée →', next: 'Question suivante', finish: 'Voir mon score', score: 'Votre score', again: 'Nouveau QCM (10 autres questions)', bySec: 'Par sujet', review: 'Correction', foot: 'Astuce : touches 1 à 4 pour répondre, Entrée pour continuer.', back: '← Questions', msg: s => s >= 9 ? 'Excellent, vous êtes prêt pour l’entretien.' : s >= 7 ? 'Très bien, encore quelques points à revoir.' : s >= 5 ? 'Pas mal : revoyez les explications animées des questions ratées.' : 'Courage : relisez les explications animées, puis retentez un QCM.', seen: (a, b) => `${a} questions sur ${b} déjà vues : les prochains tirages privilégient celles que vous n’avez pas encore faites.`, err: 'Impossible de charger les questions.' },
@@ -59,7 +61,7 @@
     const u = U(), it = quiz[idx], d = L(it), ans = it.choice !== null;
     const correct = okPos(it);
     $('app').innerHTML =
-      `<div class="meta"><span>${u.q(idx + 1, quiz.length)}</span><span class="chip">${esc(DB[it.id].sec)}</span></div>` +
+      `<div class="meta"><span>${u.q(idx + 1, quiz.length)}</span><span class="chip">${icoHtml(DB[it.id].sec)}${esc(DB[it.id].sec)}</span></div>` +
       `<div class="bar" aria-hidden="true"><i style="width:${(idx + (ans ? 1 : 0)) / quiz.length * 100}%"></i></div>` +
       `<p class="topic">${esc(DB[it.id]['title_' + lang])}</p>` +
       `<h2 class="q" id="qtext">${esc(d.q)}</h2>` +
@@ -91,7 +93,7 @@
     $('app').innerHTML =
       `<p class="meta">${u.score}</p><p class="score">${score} / ${quiz.length}</p><p>${u.msg(score)}</p>` +
       `<div class="actions"><button type="button" class="btn primary" id="again">${u.again}</button></div>` +
-      `<h2 class="q" style="margin-top:20px">${u.bySec}</h2><div class="secs">` + ORDER.filter(s => per[s]).map(s => `<div><span>${esc(s)}</span><strong>${per[s][0]}/${per[s][1]}</strong></div>`).join('') + `</div>` +
+      `<h2 class="q" style="margin-top:20px">${u.bySec}</h2><div class="secs">` + ORDER.filter(s => per[s]).map(s => `<div><span>${icoHtml(s)}${esc(s)}</span><strong>${per[s][0]}/${per[s][1]}</strong></div>`).join('') + `</div>` +
       `<h2 class="q">${u.review}</h2><ol class="review">` + quiz.map(it => { const d = L(it), ok = it.choice === okPos(it); return `<li><span class="r ${ok ? 'good' : 'bad'}" aria-label="${ok ? u.good : u.bad}">${ok ? '✓' : '✗'}</span>${esc(d.q)}<p>${esc(u.answer + d.opts[d.ok])}. ${esc(d.why)}</p><a href="${link(it)}">${u.see}</a></li>`; }).join('') + `</ol>` +
       `<p class="foot">${u.seen(Math.min(seen.length, ALL.length), ALL.length)}</p>`;
     $('again').addEventListener('click', () => { quiz = draw(); idx = 0; showQ(); readQ(); window.scrollTo(0, 0); });

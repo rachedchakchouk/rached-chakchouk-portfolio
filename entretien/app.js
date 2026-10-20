@@ -1120,10 +1120,12 @@ function fit(el,max){el.removeAttribute("textLength");el.removeAttribute("length
 function mk(tag, attrs){const e=document.createElementNS(NS,tag);for(const k in attrs)e.setAttribute(k,attrs[k]);return e;}
 
 let curSec = SC[cur].sec;
+const ICO={"Java":["java"],"Spring Boot":["spring"],"JPA / Hibernate":["hibernate"],"Angular":["angular"],"RxJS":["rxjs"],"SQL / PostgreSQL":["pg"],"REST, Git, Docker":["git","docker"]};
+const icoHtml=s=>(ICO[s]||[]).map(k=>'<i class="ti i-'+k+'" aria-hidden="true"></i>').join('');
 function buildSecs(){
   const nav=$("secs"); nav.innerHTML="";
   [...new Set(SC.map(s=>s.sec))].forEach(sec=>{
-    const b=document.createElement("button"); b.type="button"; b.textContent=sec;
+    const b=document.createElement("button"); b.type="button"; b.innerHTML=icoHtml(sec); b.appendChild(document.createTextNode(sec));
     b.setAttribute("aria-selected", sec===curSec?"true":"false");
     b.addEventListener("click",()=>{curSec=sec; buildSecs(); const list=qList(); select(list[0]);});
     nav.appendChild(b);
