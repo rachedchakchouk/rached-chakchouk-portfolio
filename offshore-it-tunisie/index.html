@@ -76,6 +76,31 @@ tr{border-bottom:1px solid var(--line);padding:12px}td{border:0;padding:3px 0}.t
 .pager button:disabled{opacity:.4;cursor:default}
 .pager .dots{color:var(--muted);padding:0 2px}
 .back:hover{border-color:var(--accent);color:var(--accent)}
+
+th[data-k]{cursor:pointer}th{vertical-align:middle}
+th .sort{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font:inherit;text-transform:inherit;letter-spacing:inherit;color:inherit;padding:2px 0;border-radius:4px}
+th .sort:hover{color:var(--fg)}th .sort:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+th[aria-sort] .sort{color:var(--accent)}.ar{font-size:9px}
+.nost th:nth-child(6),.nost td:nth-child(6){display:none}
+.rbtn{font:600 13px var(--body);height:38px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--accent);cursor:pointer}
+.rbtn:hover{border-color:var(--accent)}.rbtn[hidden]{display:none}
+#sort{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.bar input[type=checkbox]{width:18px;height:18px;accent-color:var(--accent);padding:0;margin:0}
+.empty td{padding:36px 16px;text-align:center;color:var(--muted)}.empty p{margin:0 0 12px}
+body{padding-bottom:96px}
+@media (max-width:720px){
+.bar{position:static}
+.bar select{flex:1 1 calc(50% - 4px)}
+#sort{display:block;flex:1 1 100%}
+.bar label{min-height:40px}
+.count{margin-left:0}
+.links a{padding:8px 12px}
+.links{gap:8px;margin-top:4px}
+.og{margin-top:6px}.sec{font-weight:500}
+.nost td:nth-child(6){display:none}
+.empty td{text-align:center}
+}
 </style>
 </head>
 <body>
@@ -92,11 +117,13 @@ tr{border-bottom:1px solid var(--line);padding:12px}td{border:0;padding:3px 0}.t
 <select id="orig" aria-label="Origine"></select>
 <label><input id="jobs" type="checkbox"> Page carrières connue</label>
 <label>Par page <select id="ps" aria-label="Sociétés par page"><option>25</option><option>50</option><option>100</option></select></label>
-<span class="count" id="count"></span>
+<select id="sort" aria-label="Trier par"><option value="n:1">Trier : Société A→Z</option><option value="n:-1">Trier : Société Z→A</option><option value="og:1">Trier : Origine</option><option value="s:1">Trier : Secteur</option><option value="c:1">Trier : Localisation</option><option value="" hidden>Trier…</option></select>
+<span class="count" id="count" role="status" aria-live="polite"></span>
+<button type="button" class="rbtn" id="reset" hidden>Réinitialiser</button>
 </div>
 <nav class="pager" id="pgTop" aria-label="Pagination"></nav>
-<div class="tbl"><table><thead><tr>
-<th data-k="n">Société</th><th data-k="og">Origine</th><th data-k="s">Secteur</th><th data-k="c">Localisation</th><th>Liens</th><th data-k="st">Stack</th>
+<div class="tbl"><table id="tblEl"><thead><tr>
+<th data-k="n" scope="col"><button type="button" class="sort">Société<span class="ar" aria-hidden="true"></span></button></th><th data-k="og" scope="col"><button type="button" class="sort">Origine<span class="ar" aria-hidden="true"></span></button></th><th data-k="s" scope="col"><button type="button" class="sort">Secteur<span class="ar" aria-hidden="true"></span></button></th><th data-k="c" scope="col"><button type="button" class="sort">Localisation<span class="ar" aria-hidden="true"></span></button></th><th scope="col">Liens</th><th data-k="st" scope="col"><button type="button" class="sort">Stack<span class="ar" aria-hidden="true"></span></button></th>
 </tr></thead><tbody id="tb"></tbody></table></div>
 <nav class="pager" id="pgBot" aria-label="Pagination (bas de page)"></nav>
 </div>
