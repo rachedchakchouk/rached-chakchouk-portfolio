@@ -116,6 +116,14 @@ kbd{font:600 .8rem var(--mono);border:1px solid var(--line);border-radius:4px;pa
 button:focus-visible,a:focus-visible{outline:3px solid var(--cur-bar);outline-offset:2px}
 @media (prefers-reduced-motion: reduce){.bar i{transition:none}}
 @media (max-width:720px){.top a,.top button{min-height:38px;padding:9px 14px}}
+.lvls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 14px}
+.lvls-lab{font:600 .8rem var(--mono);color:var(--quiet,var(--muted));text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.lvls button{display:inline-flex;align-items:center;gap:6px;font:600 .85rem var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:38px;cursor:pointer}
+.lvls button .lvl{margin:0}.lvls button small{font:500 .72rem var(--mono);opacity:.7}
+.lvls button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.tags{display:inline-flex;align-items:center;flex-wrap:wrap;gap:6px;justify-content:flex-end}.tags .lvl{margin:0}
+.fb-lvl{display:block;margin-top:8px;font-size:.85rem;opacity:.9}.fb-lvl .lvl{margin-left:4px}
+.review .lvl{margin-right:6px}
 </style>
 </head>
 <body>
@@ -127,6 +135,7 @@ button:focus-visible,a:focus-visible{outline:3px solid var(--cur-bar);outline-of
   </div>
   <h1 id="h1"></h1>
   <p class="lead" id="lead"></p>
+  <div class="lvls" id="lvls" role="group"></div>
   <main id="app" class="card" aria-live="polite"></main>
   <p class="foot" id="foot"></p>
   <p class="foot">© 2026 Rached Chakchouk · <a href="/conditions/" data-fr="Mentions légales et conditions d'utilisation" data-en="Legal notice and terms of use">Mentions légales et conditions d'utilisation</a></p>

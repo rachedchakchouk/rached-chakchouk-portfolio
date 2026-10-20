@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>102 questions d’entretien expliquées — Java, Spring, Angular</title>
-<meta name="description" content="102 questions d'entretien technique Java, Spring Boot, JPA, SQL, Angular, RxJS, REST, Git et Docker, expliquées pas à pas avec un schéma animé. FR / EN.">
+<title>150 questions d’entretien expliquées — Java, Spring, Angular</title>
+<meta name="description" content="150 questions d'entretien technique Java, Spring Boot, JPA, SQL, Angular, RxJS, REST, Git et Docker, expliquées pas à pas avec un schéma animé. FR / EN.">
 <link rel="canonical" href="https://rached-chakchouk.vercel.app/entretien/">
 <link rel="alternate" hreflang="fr" href="https://rached-chakchouk.vercel.app/entretien/">
 <link rel="alternate" hreflang="en" href="https://rached-chakchouk.vercel.app/entretien/?lang=en">
@@ -12,14 +12,14 @@
 <meta name="robots" content="index, follow, max-image-preview:large">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Rached Chakchouk">
-<meta property="og:title" content="102 questions d’entretien Java, Spring Boot, Angular expliquées pas à pas">
+<meta property="og:title" content="150 questions d’entretien Java, Spring Boot, Angular expliquées pas à pas">
 <meta property="og:description" content="Questions d'entretien technique Java, Spring Boot, JPA, SQL, Angular, RxJS, REST, Git et Docker, avec un schéma animé étape par étape. FR / EN.">
 <meta property="og:url" content="https://rached-chakchouk.vercel.app/entretien/">
 <meta property="og:image" content="https://rached-chakchouk.vercel.app/og-image.jpg">
 <meta property="og:locale" content="fr_FR">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="author" content="Rached Chakchouk">
-<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LearningResource", "name": "102 questions d'entretien technique Java, Spring Boot, Angular", "url": "https://rached-chakchouk.vercel.app/entretien/", "learningResourceType": "Interactive resource", "educationalLevel": "Intermediate", "inLanguage": ["fr", "en"], "isAccessibleForFree": true, "author": {"@type": "Person", "@id": "https://rached-chakchouk.vercel.app/#person", "name": "Rached Chakchouk", "url": "https://rached-chakchouk.vercel.app/"}, "about": ["Java", "Spring Boot", "JPA / Hibernate", "SQL / PostgreSQL", "Angular", "RxJS", "REST", "Git", "Docker"], "teaches": "Préparation aux entretiens techniques de développeur Full Stack Java / Angular"}</script>
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "LearningResource", "name": "150 questions d'entretien technique Java, Spring Boot, Angular", "url": "https://rached-chakchouk.vercel.app/entretien/", "learningResourceType": "Interactive resource", "educationalLevel": "Intermediate", "inLanguage": ["fr", "en"], "isAccessibleForFree": true, "author": {"@type": "Person", "@id": "https://rached-chakchouk.vercel.app/#person", "name": "Rached Chakchouk", "url": "https://rached-chakchouk.vercel.app/"}, "about": ["Java", "Spring Boot", "JPA / Hibernate", "SQL / PostgreSQL", "Angular", "RxJS", "REST", "Git", "Docker"], "teaches": "Préparation aux entretiens techniques de développeur Full Stack Java / Angular"}</script>
 <link rel="icon" href="/favicon-32.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -132,6 +132,14 @@ pre{margin:0;font:13px/1.65 var(--mono);overflow:auto;max-height:46vh;padding:8p
 .foot{margin-top:18px;color:var(--quiet);font-size:.85rem}
 kbd{font:600 .8rem var(--mono);border:1px solid var(--line);border-radius:4px;padding:0 4px;background:var(--panel)}
 @media (max-width:720px){.top a,.top button{min-height:38px;padding:9px 14px}.qs button{min-height:38px}}
+pre.wrap .src{white-space:pre-wrap}pre.wrap .ln{align-items:flex-start;white-space:pre-wrap}
+.lvls{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:2px 0 12px}
+.lvls-lab{font:600 .78rem var(--mono);color:var(--quiet);text-transform:uppercase;letter-spacing:.06em;margin-right:2px}
+.lvls button{display:inline-flex;align-items:center;gap:6px;font:600 .85rem var(--sans);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:6px 12px;min-height:36px;cursor:pointer}
+.lvls button .lvl{margin:0}.lvls button small{font:500 .72rem var(--mono);opacity:.7}
+.lvls button[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 2px color-mix(in srgb,var(--accent) 30%,transparent)}
+.ld{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px;background:currentColor}
+.ld.lvl-j{color:#0f8a5f;background:#0f8a5f}.ld.lvl-c{background:#1f62c9}.ld.lvl-s{background:#8a3ffc}
 </style>
 </head>
 <body>
@@ -144,9 +152,10 @@ kbd{font:600 .8rem var(--mono);border:1px solid var(--line);border-radius:4px;pa
     <a id="pdf" href="Questions_entretien_Java_Spring_Angular.pdf" download>Télécharger le PDF</a>
   </div>
   <header>
-    <h1 id="h1">102 questions d’entretien technique, expliquées pas à pas</h1>
+    <h1 id="h1">150 questions d’entretien technique, expliquées pas à pas</h1>
     <p id="lead">Clique sur Suivant : la ligne en jaune s’exécute, et le schéma montre ce qui se passe.</p>
   </header>
+  <div class="lvls" id="lvls" role="group"></div>
   <nav class="tabs" aria-label="Sections" id="secs"></nav>
   <nav class="tabs qs" aria-label="Questions" id="qs"></nav>
   <main class="stage">
