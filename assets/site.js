@@ -15,7 +15,7 @@
   function ico(name) { for (var i = 0; i < ICONS.length; i++) if (String(name).indexOf(ICONS[i][0]) === 0 && String(name).indexOf('JavaScript') !== 0) return '<i class="ti i-' + ICONS[i][1] + '" aria-hidden="true"></i>'; return ''; }
   function chip(n, key) { return '<li' + (key ? ' class="key"' : '') + '>' + ico(n) + e_(n) + '</li>'; }
   /* Logos officiels (LinkedIn / sites des organisations), trouvés par domaine ou par nom */
-  var LOGOS = [[/axeane/i, 'logos/axeane.png', 0], [/tradigi|trade digital/i, 'logos/tradigi.png', 1], [/ditriot/i, 'logos/ditriot.png', 1],
+  var LOGOS = [[/novia/i, 'logos/novia.png', 1], [/axeane/i, 'logos/axeane.png', 0], [/tradigi|trade digital/i, 'logos/tradigi.png', 1], [/ditriot/i, 'logos/ditriot.png', 1],
     [/esprit/i, 'logos/esprit.png', 0], [/fss\.rnu|sciences de sfax|sciences of sfax/i, 'logos/fss.png', 0], [/udemy|ude\.my/i, 'logos/udemy.png', 0]];
   function logoOf() {
     var k = [].slice.call(arguments).map(function (v) { return typeof v === 'object' && v ? (v.fr || '') + ' ' + (v.en || '') : String(v || ''); }).join(' ');
@@ -25,7 +25,7 @@
   window.__logoOf = logoOf;
   function logo(x) {
     var L = x.logoImg ? { src: x.logoImg, wide: true } : logoOf(x.url, x.company);
-    if (L) return '<span class="co-logo' + (L.wide ? ' wide' : '') + '"><img src="' + e_(L.src) + '" alt="' + e_(x.company) + '" loading="lazy"></span>';
+    if (L) return '<span class="co-logo' + (L.wide ? ' wide' : '') + '"><img src="' + e_(L.src) + '" alt="' + e_(x.company) + '"></span>';
     return '<span class="co-logo" aria-hidden="true">' + e_(x.logoText || String(x.company || '?').slice(0, 2).toUpperCase()) + '</span>';
   }
   function job(x) {
@@ -59,7 +59,7 @@
     document.getElementById('eduList').innerHTML = (c.education || []).map(function (d) {
       var sc = d.url ? '<a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B(d.school) + ' <span aria-hidden="true">↗</span></a>' : B(d.school);
       var L = logoOf(d.url, d.school);
-      return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt="" loading="lazy"></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
+      return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt=""></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
     }).join('');
     var certs = c.certifications || [], cp = document.getElementById('certsPanel');
     if (cp) {
@@ -68,7 +68,7 @@
         var iss = e_(d.issuer) + (d.note && (d.note.fr || d.note.en) ? ' · ' + B(d.note) : '');
         var link = d.url ? '<br><a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B({ fr: 'Voir le certificat', en: 'View certificate' }) + ' <span aria-hidden="true">↗</span></a>' : '';
         var L = logoOf(d.url, d.issuer);
-        return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt="" loading="lazy"></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + iss + link + '</p></div><span class="yr">' + B(d.date) + '</span></div>';
+        return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt=""></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + iss + link + '</p></div><span class="yr">' + B(d.date) + '</span></div>';
       }).join('');
     }
     document.getElementById('langList').innerHTML = (c.languages || []).map(function (l) {
@@ -316,14 +316,29 @@
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function bi(o) { return '<span data-l="fr">' + esc(o.fr) + '</span><span data-l="en">' + esc(o.en) + '</span>'; }
   var curFilter = 'all';
-  function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); }
+  function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); fillRow(); }
+  /* Évite un trou en fin de grille : la dernière carte visible s'élargit pour compléter la ligne */
+  function fillRow() {
+    if (!grid) return;
+    var cards = [].slice.call(grid.querySelectorAll('.pcard')).filter(function (c) { return !c.hidden; });
+    cards.forEach(function (c) { c.style.gridColumn = ''; c.classList.remove('fill'); });
+    var cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
+    if (cols < 2 || !cards.length) return;
+    var pos = 0, last = cards[cards.length - 1], lastSpan = 1;
+    cards.forEach(function (c) { var sp = Math.min(cols, c.classList.contains('feat') ? 2 : 1); if (pos % cols + sp > cols) pos += cols - pos % cols; pos += sp; lastSpan = sp; });
+    var rest = pos % cols;
+    if (rest) { last.style.gridColumn = 'span ' + (lastSpan + cols - rest); if (lastSpan + cols - rest >= 3) last.classList.add('fill'); }
+  }
+  window.addEventListener('resize', function () { clearTimeout(fillRow.t); fillRow.t = setTimeout(fillRow, 150); });
   window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.innerHTML = PROJECTS.map(function (p) {
-      var PL = window.__logoOf ? window.__logoOf(p.org.url, p.org.name) : null;
+      var PL = window.__logoOf ? window.__logoOf(p.id, p.org.url, p.org.name) : null;
       var gh = !PL && /github/i.test(p.org.name + ' ' + p.org.url);
       var cover = p.shots && p.shots.length ? '<img src="' + esc(p.shots[0]) + '" alt="" loading="lazy">' :
-        (PL || gh ? '<span class="pc-brand"><span class="pc-logo' + (PL && PL.wide ? ' wide' : '') + '">' + (PL ? '<img src="' + esc(PL.src) + '" alt="" loading="lazy">' : '<i class="ti i-github" aria-hidden="true"></i>') + '</span><span class="pc-mono sm">' + esc(p.mono) + '</span></span>' : '<span class="pc-mono">' + esc(p.mono) + '</span>');
+        (PL || gh ? '<span class="pc-brand"><span class="pc-logo' + (PL && PL.wide ? ' wide' : '') + '">' + (PL ? '<img src="' + esc(PL.src) + '" alt="">' : '<i class="ti i-github" aria-hidden="true"></i>') + '</span><span class="pc-mono sm">' + esc(p.mono) + '</span></span>' : '<span class="pc-mono">' + esc(p.mono) + '</span>');
+      var mods = !(p.shots && p.shots.length) && p.modules && p.modules.fr && p.modules.fr.length ?
+        '<ul class="pc-mods" aria-hidden="true">' + p.modules.fr.map(function (m, k) { return '<li>' + bi({ fr: m, en: (p.modules.en || [])[k] || m }) + '</li>'; }).join('') + '</ul>' : '';
       return '<button class="pcard' + (p.feat ? ' feat' : '') + '" type="button" data-id="' + p.id + '" data-cats="' + p.cats.join(' ') + '">' +
-        '<div class="pc-cover">' + cover + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span></div>' +
+        '<div class="pc-cover' + (mods ? ' mods' : '') + '">' + cover + mods + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span></div>' +
         '<h3 class="pc-title">' + bi(p.title) + '</h3><p class="pc-desc">' + bi(p.desc) + '</p><span class="pc-more"><span data-l="fr">Voir le détail</span><span data-l="en">View details</span> →</span></div></button>';
     }).join(''); applyFilter(); };
   if (grid) {
@@ -344,7 +359,7 @@
         p.shots.map(function (s, k) { return '<button type="button" data-zoom="' + esc(s) + '"><img src="' + esc(s) + '" alt="' + esc(p.title.en) + ' – ' + (k + 1) + '" loading="lazy"></button>'; }).join('') + '</div>' : '';
       var links = p.links.map(function (l) { return '<a class="btn" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + ' ↗</a>'; }).join('');
       pmBody.innerHTML = '<div class="pm-kind">' + bi(p.kind) + '</div><h3 class="pm-title" id="pmTitle">' + bi(p.title) + '</h3>' +
-        '<p class="pm-org">' + (p.org.url ? '<a href="' + esc(p.org.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.org.name) + ' ↗</a>' : esc(p.org.name)) + ' · ' + bi(p.org.when) + '</p>' +
+        '<p class="pm-org">' + (function () { var L = window.__logoOf && window.__logoOf(p.id, p.org.url, p.org.name); return L ? '<span class="pm-logo' + (L.wide ? ' wide' : '') + '"><img src="' + esc(L.src) + '" alt=""></span>' : ''; })() + (p.org.url ? '<a href="' + esc(p.org.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.org.name) + ' ↗</a>' : esc(p.org.name)) + ' · ' + bi(p.org.when) + '</p>' +
         '<div class="pm-grid"><div class="pm-box"><h4><span data-l="fr">Problème</span><span data-l="en">Problem</span></h4><p>' + bi(p.problem) + '</p></div>' +
         '<div class="pm-box"><h4><span data-l="fr">Mon rôle</span><span data-l="en">My role</span></h4><p>' + bi(p.role) + '</p></div></div>' +
         '<div class="pm-h"><span data-l="fr">Réalisations</span><span data-l="en">What I built</span></div>' +

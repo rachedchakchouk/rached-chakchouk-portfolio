@@ -182,7 +182,7 @@ h3 { font-size: 18px; margin: 0; font-weight: 600; line-height: 1.35; letter-spa
 .skill-group:nth-child(1) { grid-column: span 6; }
 .skill-group:nth-child(2) { grid-column: span 6; }
 .skill-group:nth-child(6) { grid-column: span 6; background: linear-gradient(140deg, var(--accent-soft), var(--surface) 70%); }
-.skill-group:nth-child(5) { grid-column: span 6; }
+.skill-group:nth-child(3), .skill-group:nth-child(4), .skill-group:nth-child(5) { grid-column: span 6; }
 .skill-group:nth-child(7), .skill-group:nth-child(8) { grid-column: span 6; }
 .skill-group:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--rule)); transform: translateY(-2px); box-shadow: 0 20px 40px -30px var(--shadow); }
 .skill-group h4 { font: 500 12px var(--mono); text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 0 0 14px; }
@@ -488,9 +488,15 @@ main:focus{outline:none}
 }.edu-logo.img{background:#fff;padding:5px;overflow:hidden}.edu-logo.img img{width:100%;height:100%;object-fit:contain}
 .pc-brand{display:flex;align-items:center;gap:14px}
 .pc-logo{width:64px;height:64px;border-radius:16px;background:#fff;display:grid;place-items:center;padding:8px;box-shadow:0 8px 24px -12px rgba(11,19,36,.35);border:1px solid var(--rule)}
-.pc-logo.wide{width:auto;min-width:96px;padding:8px 14px}.pc-logo img{width:100%;height:100%;object-fit:contain}.pc-logo.wide img{width:auto;max-width:120px}
+.pc-logo.wide{width:auto;min-width:96px;padding:8px 12px}.pc-logo img{width:100%;height:100%;object-fit:contain}.pc-logo.wide img{width:auto;height:46px;max-width:150px}
+.pm-org{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px}.pm-logo{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:8px;background:#fff;border:1px solid var(--rule);padding:3px;overflow:hidden}.pm-logo.wide{width:auto;padding:3px 6px}.pm-logo img{width:100%;height:100%;object-fit:contain}.pm-logo.wide img{width:auto;height:22px}
+@media (min-width:981px){.pcard.fill{flex-direction:row}.pcard.fill .pc-cover{flex:0 0 42%;aspect-ratio:auto;min-height:220px;border-bottom:0;border-right:1px solid var(--rule)}.pcard.fill .pc-body{justify-content:center}}
 .pc-logo .ti{width:40px;height:40px;background-size:34px 34px;margin:0;box-shadow:none}
 .pc-mono.sm{font-size:22px}
+.pc-cover.mods{display:flex;flex-direction:column;justify-content:center;gap:12px;padding:16px 18px}
+.pc-mods{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:440px}
+.pc-mods li{font:500 11.5px var(--mono);color:var(--fg);background:color-mix(in srgb,var(--surface) 82%,transparent);border:1px solid var(--rule);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.pc-cover.mods .pc-logo{width:52px;height:52px;border-radius:14px;padding:6px}.pc-cover.mods .pc-logo.wide{width:auto;padding:6px 10px}.pc-cover.mods .pc-logo.wide img{height:38px}
 </style>
 </head>
 <body style="margin:0">
@@ -1468,10 +1474,32 @@ main:focus{outline:none}
    ],
    "links": [
     {
+     "label": "novia.axeane.com",
+     "url": "https://novia.axeane.com"
+    },
+    {
      "label": "axeane.com",
      "url": "https://axeane.com"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Devis",
+     "Bons de livraison",
+     "Factures",
+     "Avoirs",
+     "Règlements",
+     "Retenue à la source"
+    ],
+    "en": [
+     "Quotes",
+     "Delivery notes",
+     "Invoices",
+     "Credit notes",
+     "Payments",
+     "Withholding tax"
+    ]
+   }
   },
   {
    "id": "tds",
@@ -1533,10 +1561,28 @@ main:focus{outline:none}
    ],
    "links": [
     {
-     "label": "TDS",
+     "label": "tradigiservices.com",
      "url": "https://tradigiservices.com/tds-erp"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Employés",
+     "Contrats",
+     "Congés",
+     "Présence",
+     "Évaluations",
+     "Paie"
+    ],
+    "en": [
+     "Employees",
+     "Contracts",
+     "Leave",
+     "Attendance",
+     "Reviews",
+     "Payroll"
+    ]
+   }
   },
   {
    "id": "pfe",
@@ -1596,7 +1642,21 @@ main:focus{outline:none}
     "Jenkins",
     "SonarQube"
    ],
-   "links": []
+   "links": [],
+   "modules": {
+    "fr": [
+     "Authentification",
+     "Entreprises",
+     "Employés",
+     "API REST"
+    ],
+    "en": [
+     "Authentication",
+     "Companies",
+     "Employees",
+     "REST API"
+    ]
+   }
   },
   {
    "id": "stock",
@@ -1651,7 +1711,21 @@ main:focus{outline:none}
     "ReactJS",
     "SonarQube"
    ],
-   "links": []
+   "links": [],
+   "modules": {
+    "fr": [
+     "Entrées",
+     "Sorties",
+     "Niveaux de stock",
+     "Traçabilité"
+    ],
+    "en": [
+     "Stock in",
+     "Stock out",
+     "Stock levels",
+     "Traceability"
+    ]
+   }
   },
   {
    "id": "timesheet",
@@ -1712,7 +1786,19 @@ main:focus{outline:none}
      "label": "GitHub",
      "url": "https://github.com/rachedchakchouk/Timesheet_DevOps"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Maven",
+     "Jenkins",
+     "Docker"
+    ],
+    "en": [
+     "Maven",
+     "Jenkins",
+     "Docker"
+    ]
+   }
   }
  ],
  "education": [

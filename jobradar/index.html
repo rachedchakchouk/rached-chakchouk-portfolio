@@ -35,6 +35,7 @@ body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 "Geist","Segoe 
 .wrap{max-width:1080px;margin:0 auto;padding:20px 16px 64px}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:28px}
 .top .sp{flex:1}
+@media (max-width:560px){.lg-only{display:none}.top{flex-wrap:nowrap}.top a,.top button{padding:8px 12px}}
 .top a,.top button{font:600 14px "Geist",sans-serif;color:var(--fg);background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:8px 14px;text-decoration:none;cursor:pointer;min-height:40px}
 .top a.back{color:var(--accent)}
 .top button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
@@ -65,7 +66,7 @@ a:focus-visible,button:focus-visible{outline:3px solid #f5a524;outline-offset:2p
 <body>
 <div class="wrap">
 <nav class="top" aria-label="Navigation">
-  <a class="back" href="/"><span data-l="fr">← Portfolio de Rached Chakchouk</span><span data-l="en">← Rached Chakchouk’s portfolio</span></a>
+  <a class="back" href="/">← <span data-l="fr">Portfolio<span class="lg-only"> de Rached Chakchouk</span></span><span data-l="en"><span class="lg-only">Rached Chakchouk’s </span>portfolio</span></a>
   <span class="sp"></span>
   <button type="button" data-lang-btn="fr">FR</button><button type="button" data-lang-btn="en">EN</button>
   <button type="button" id="themeBtn" aria-label="Thème clair / sombre">◐</button>

@@ -778,10 +778,32 @@
    ],
    "links": [
     {
+     "label": "novia.axeane.com",
+     "url": "https://novia.axeane.com"
+    },
+    {
      "label": "axeane.com",
      "url": "https://axeane.com"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Devis",
+     "Bons de livraison",
+     "Factures",
+     "Avoirs",
+     "Règlements",
+     "Retenue à la source"
+    ],
+    "en": [
+     "Quotes",
+     "Delivery notes",
+     "Invoices",
+     "Credit notes",
+     "Payments",
+     "Withholding tax"
+    ]
+   }
   },
   {
    "id": "tds",
@@ -843,10 +865,28 @@
    ],
    "links": [
     {
-     "label": "TDS",
+     "label": "tradigiservices.com",
      "url": "https://tradigiservices.com/tds-erp"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Employés",
+     "Contrats",
+     "Congés",
+     "Présence",
+     "Évaluations",
+     "Paie"
+    ],
+    "en": [
+     "Employees",
+     "Contracts",
+     "Leave",
+     "Attendance",
+     "Reviews",
+     "Payroll"
+    ]
+   }
   },
   {
    "id": "pfe",
@@ -906,7 +946,21 @@
     "Jenkins",
     "SonarQube"
    ],
-   "links": []
+   "links": [],
+   "modules": {
+    "fr": [
+     "Authentification",
+     "Entreprises",
+     "Employés",
+     "API REST"
+    ],
+    "en": [
+     "Authentication",
+     "Companies",
+     "Employees",
+     "REST API"
+    ]
+   }
   },
   {
    "id": "stock",
@@ -961,7 +1015,21 @@
     "ReactJS",
     "SonarQube"
    ],
-   "links": []
+   "links": [],
+   "modules": {
+    "fr": [
+     "Entrées",
+     "Sorties",
+     "Niveaux de stock",
+     "Traçabilité"
+    ],
+    "en": [
+     "Stock in",
+     "Stock out",
+     "Stock levels",
+     "Traceability"
+    ]
+   }
   },
   {
    "id": "timesheet",
@@ -1022,7 +1090,19 @@
      "label": "GitHub",
      "url": "https://github.com/rachedchakchouk/Timesheet_DevOps"
     }
-   ]
+   ],
+   "modules": {
+    "fr": [
+     "Maven",
+     "Jenkins",
+     "Docker"
+    ],
+    "en": [
+     "Maven",
+     "Jenkins",
+     "Docker"
+    ]
+   }
   }
  ],
  "education": [

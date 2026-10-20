@@ -11,6 +11,7 @@
     '.fk-wrap.fk-drag{cursor:grabbing;opacity:.9}.fk-wrap.fk-drag *{cursor:grabbing!important}',
     '.fk-wrap>button:first-child{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important}',
     '.fk-x{position:absolute;top:-8px;right:-8px;width:22px;height:22px;border-radius:50%;border:1px solid rgba(127,140,160,.5);background:#fff;color:#0b1324;font:700 13px/1 system-ui,sans-serif;cursor:pointer;display:grid;place-items:center;padding:0;opacity:0;transition:opacity .15s;box-shadow:0 2px 6px rgba(0,0,0,.25)}',
+    '.fk-x::before{content:"";position:absolute;inset:-6px;border-radius:50%}',
     '.fk-wrap:hover .fk-x,.fk-wrap:focus-within .fk-x{opacity:1}',
     '@media (hover:none){.fk-x{opacity:1;width:26px;height:26px;top:-10px;right:-10px}}',
     '.fk-x:focus-visible{outline:3px solid #f5a524;outline-offset:1px;opacity:1}',
