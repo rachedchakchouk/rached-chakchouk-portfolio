@@ -11,8 +11,8 @@
   var RCOL = { 'A+': '#0f9d58', 'A': '#34a853', 'B': '#7cb342', 'C': '#f9ab00', 'D': '#f57c00', 'E': '#e8590c', 'F': '#d93025' };
   var EN = function () { return (root.getAttribute('data-lang') || root.getAttribute('lang') || 'fr').slice(0, 2) === 'en'; };
   var T = {
-    fr: { btn: 'Empreinte carbone de cette page', title: 'Empreinte carbone', page: 'Cette page', session: 'Votre visite', pages: 'pages', data: 'Données transférées', energy: 'Énergie', co2: 'CO₂e émis', rating: 'Note', eq: 'Équivaut à', led: 'd’une ampoule LED de 10 W', km: 'en voiture thermique', note: 'Estimation selon le modèle Sustainable Web Design v4 (0,3 kWh/Go, 494 g CO₂e/kWh). Calculée dans votre navigateur, rien n’est envoyé.', close: 'Fermer', cached: 'Les fichiers déjà en cache ne comptent pas : revenir coûte presque zéro.' },
-    en: { btn: 'Carbon footprint of this page', title: 'Carbon footprint', page: 'This page', session: 'Your visit', pages: 'pages', data: 'Data transferred', energy: 'Energy', co2: 'CO₂e emitted', rating: 'Rating', eq: 'Same as', led: 'of a 10 W LED bulb', km: 'in a petrol car', note: 'Estimate based on the Sustainable Web Design model v4 (0.3 kWh/GB, 494 g CO₂e/kWh). Computed in your browser, nothing is sent.', close: 'Close', cached: 'Files already cached do not count: coming back costs almost nothing.' }
+    fr: { hide: 'Masquer le bouton flottant', dock: 'Empreinte carbone', dockTitle: 'Voir l’empreinte carbone de la visite', showFab: 'Réafficher le bouton flottant', resetPos: 'Remettre le bouton à sa place', btn: 'Empreinte carbone de cette page', title: 'Empreinte carbone', page: 'Cette page', session: 'Votre visite', pages: 'pages', data: 'Données transférées', energy: 'Énergie', co2: 'CO₂e émis', rating: 'Note', eq: 'Équivaut à', led: 'd’une ampoule LED de 10 W', km: 'en voiture thermique', note: 'Estimation selon le modèle Sustainable Web Design v4 (0,3 kWh/Go, 494 g CO₂e/kWh). Calculée dans votre navigateur, rien n’est envoyé.', close: 'Fermer', cached: 'Les fichiers déjà en cache ne comptent pas : revenir coûte presque zéro.' },
+    en: { hide: 'Hide the floating button', dock: 'Carbon footprint', dockTitle: 'See the carbon footprint of your visit', showFab: 'Show the floating button again', resetPos: 'Move the button back', btn: 'Carbon footprint of this page', title: 'Carbon footprint', page: 'This page', session: 'Your visit', pages: 'pages', data: 'Data transferred', energy: 'Energy', co2: 'CO₂e emitted', rating: 'Rating', eq: 'Same as', led: 'of a 10 W LED bulb', km: 'in a petrol car', note: 'Estimate based on the Sustainable Web Design model v4 (0.3 kWh/GB, 494 g CO₂e/kWh). Computed in your browser, nothing is sent.', close: 'Close', cached: 'Files already cached do not count: coming back costs almost nothing.' }
   };
   function t(k) { return T[EN() ? 'en' : 'fr'][k]; }
 
@@ -33,6 +33,7 @@
     '.co2-scale span{flex:1;text-align:center;font:700 11px system-ui,sans-serif;color:#fff;border-radius:5px;padding:4px 0;opacity:.35}',
     '.co2-scale span.on{opacity:1;transform:scale(1.12);box-shadow:0 2px 8px rgba(0,0,0,.25)}',
     '.co2-card p{margin:10px 0 0;color:#5a667a;font-size:12.5px}',
+    '.co2-act{font:600 13px system-ui,sans-serif;border:1px solid #cfd7e3;background:#f6f7fb;color:#0b1324;border-radius:10px;padding:7px 11px;cursor:pointer;min-height:36px}',
     '@media (max-width:899px){html.a11y-raise .co2-fab{bottom:92px}html.a11y-raise .co2-card{bottom:140px}}'
   ].join('\n');
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
@@ -40,6 +41,9 @@
   var fab = document.createElement('button'); fab.type = 'button'; fab.className = 'co2-fab'; fab.setAttribute('aria-expanded', 'false'); fab.setAttribute('aria-controls', 'co2Card');
   var card = document.createElement('div'); card.className = 'co2-card'; card.id = 'co2Card'; card.setAttribute('role', 'dialog'); card.hidden = true;
   document.body.appendChild(fab); document.body.appendChild(card);
+  var fk = window.FloatKit ? FloatKit.make({ key: 'co2', fab: fab, side: 'right', icon: '🌱',
+    labels: { fr: { hide: T.fr.hide, dock: T.fr.dock, dockTitle: T.fr.dockTitle }, en: { hide: T.en.hide, dock: T.en.dock, dockTitle: T.en.dockTitle } },
+    onOpen: function (a) { openC(true, a); }, onClose: function () { if (!card.hidden) openC(false); } }) : null;
 
   /* ---------- measuring ---------- */
   var seen = {}, bytes = 0;
@@ -87,11 +91,21 @@
       '<h3>' + t('page') + '</h3><dl><dt>' + t('rating') + '</dt><dd>' + r + '</dd><dt>' + t('data') + '</dt><dd>' + fmtB(p.b) + '</dd><dt>' + t('energy') + '</dt><dd>' + fmtE(p.kwh) + '</dd><dt>' + t('co2') + '</dt><dd>' + fmtG(p.g) + '</dd></dl>' +
       '<h3>' + t('session') + ' · ' + n + ' ' + t('pages') + '</h3><dl><dt>' + t('data') + '</dt><dd>' + fmtB(tot.b) + '</dd><dt>' + t('energy') + '</dt><dd>' + fmtE(tot.kwh) + '</dd><dt>' + t('co2') + '</dt><dd>' + fmtG(tot.g) + '</dd>' +
       '<dt>' + t('eq') + '</dt><dd>' + num(ledS, ledS < 10 ? 1 : 0) + ' s ' + '</dd><dt></dt><dd style="font-weight:400">' + t('led') + '</dd><dt></dt><dd>' + num(carM, carM < 10 ? 1 : 0) + ' m ' + t('km') + '</dd></dl>' +
-      '<p>' + t('cached') + '</p><p>' + t('note') + '</p>';
+      '<p>' + t('cached') + '</p><p>' + t('note') + '</p>' +
+      (fk && fk.isHidden() ? '<p><button type="button" class="co2-act" data-showfab>' + t('showFab') + '</button></p>' : '') +
+      (fk && !fk.isHidden() && fk.moved() ? '<p><button type="button" class="co2-act" data-resetpos>' + t('resetPos') + '</button></p>' : '');
   }
-  function openC(o) { card.hidden = !o; fab.setAttribute('aria-expanded', String(o)); if (o) { drawCard(); card.querySelector('[data-close]').focus(); } else fab.focus(); }
+  function openC(o, a) {
+    card.hidden = !o; fab.setAttribute('aria-expanded', String(o));
+    if (o) { drawCard(); if (window.FloatKit) FloatKit.placeNear(card, a || fab); card.querySelector('[data-close]').focus(); }
+    else { (fk && fk.isHidden() ? fk.dockBtn : fab).focus(); }
+  }
   fab.addEventListener('click', function () { openC(card.hidden); });
-  card.addEventListener('click', function (e) { if (e.target.closest('[data-close]')) openC(false); });
+  card.addEventListener('click', function (e) {
+    if (e.target.closest('[data-close]')) openC(false);
+    else if (e.target.closest('[data-showfab]')) { fk.show(); openC(false); fab.focus(); }
+    else if (e.target.closest('[data-resetpos]')) { fk.resetPos(); openC(false); }
+  });
   card.addEventListener('keydown', function (e) { if (e.key === 'Escape') openC(false); });
   new MutationObserver(update).observe(root, { attributes: true, attributeFilter: ['data-lang', 'lang'] });
   window.addEventListener('load', function () { setTimeout(update, 300); });

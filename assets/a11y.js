@@ -8,8 +8,8 @@
   var S = get();
   var EN = function () { return (root.getAttribute('data-lang') || root.getAttribute('lang') || 'fr').slice(0, 2) === 'en'; };
   var T = {
-    fr: { open: 'Accessibilité', title: 'Accessibilité', narr: 'Narrateur', narrHint: 'Cliquez sur un texte pour l’entendre', readPage: 'Lire la page', stop: 'Arrêter', loupe: 'Loupe', loupeHint: 'Agrandit le texte survolé', size: 'Taille du texte', cvd: 'Couleurs adaptées (daltonisme)', contrast: 'Contraste élevé', links: 'Souligner les liens', motion: 'Réduire les animations', reset: 'Réinitialiser', close: 'Fermer', noTts: 'Synthèse vocale indisponible sur ce navigateur' },
-    en: { open: 'Accessibility', title: 'Accessibility', narr: 'Narrator', narrHint: 'Click any text to hear it', readPage: 'Read the page', stop: 'Stop', loupe: 'Magnifier', loupeHint: 'Enlarges the text under the pointer', size: 'Text size', cvd: 'Colour-blind friendly colours', contrast: 'High contrast', links: 'Underline links', motion: 'Reduce motion', reset: 'Reset', close: 'Close', noTts: 'Speech synthesis is not available in this browser' }
+    fr: { hide: 'Masquer le bouton flottant', dock: 'Accessibilité', dockTitle: 'Ouvrir les réglages d’accessibilité', showFab: 'Réafficher le bouton flottant', resetPos: 'Remettre le bouton à sa place', open: 'Accessibilité', title: 'Accessibilité', narr: 'Narrateur', narrHint: 'Cliquez sur un texte pour l’entendre', readPage: 'Lire la page', stop: 'Arrêter', loupe: 'Loupe', loupeHint: 'Agrandit le texte survolé', size: 'Taille du texte', cvd: 'Couleurs adaptées (daltonisme)', contrast: 'Contraste élevé', links: 'Souligner les liens', motion: 'Réduire les animations', reset: 'Réinitialiser', close: 'Fermer', noTts: 'Synthèse vocale indisponible sur ce navigateur' },
+    en: { hide: 'Hide the floating button', dock: 'Accessibility', dockTitle: 'Open accessibility settings', showFab: 'Show the floating button again', resetPos: 'Move the button back', open: 'Accessibility', title: 'Accessibility', narr: 'Narrator', narrHint: 'Click any text to hear it', readPage: 'Read the page', stop: 'Stop', loupe: 'Magnifier', loupeHint: 'Enlarges the text under the pointer', size: 'Text size', cvd: 'Colour-blind friendly colours', contrast: 'High contrast', links: 'Underline links', motion: 'Reduce motion', reset: 'Reset', close: 'Close', noTts: 'Speech synthesis is not available in this browser' }
   };
   function t(k) { return T[EN() ? 'en' : 'fr'][k]; }
 
@@ -52,6 +52,9 @@
   var lens = document.createElement('div'); lens.className = 'a11y-lens'; lens.hidden = true; lens.setAttribute('aria-hidden', 'true');
   document.body.appendChild(fab); document.body.appendChild(panel); document.body.appendChild(lens);
   fab.setAttribute('aria-controls', 'a11yPanel');
+  var fk = window.FloatKit ? FloatKit.make({ key: 'a11y', fab: fab, side: 'left', icon: '♿',
+    labels: { fr: { hide: T.fr.hide, dock: T.fr.dock, dockTitle: T.fr.dockTitle }, en: { hide: T.en.hide, dock: T.en.dock, dockTitle: T.en.dockTitle } },
+    onOpen: function (a) { openP(true, a); }, onClose: function () { if (!panel.hidden) openP(false); } }) : null;
 
   function sw(key, label, hint) {
     return '<label class="a11y-row"><span>' + label + (hint ? '<small>' + hint + '</small>' : '') + '</span><input class="a11y-sw" type="checkbox" role="switch" data-k="' + key + '"' + (S[key] ? ' checked' : '') + '></label>';
@@ -66,7 +69,9 @@
       sw('loupe', t('loupe'), t('loupeHint')) +
       '<div class="a11y-row"><span>' + t('size') + '</span><span class="a11y-btns">' + sizes.map(function (z) { return '<button type="button" data-size="' + z + '" aria-pressed="' + ((S.size || 100) === z) + '">' + z + '%</button>'; }).join('') + '</span></div>' +
       sw('cvd', t('cvd')) + sw('contrast', t('contrast')) + sw('links', t('links')) + sw('motion', t('motion')) +
-      '<div class="a11y-row"><span></span><button type="button" class="a11y-act" data-reset>' + t('reset') + '</button></div>';
+      '<div class="a11y-row"><span></span><button type="button" class="a11y-act" data-reset>' + t('reset') + '</button></div>' +
+      (fk && fk.isHidden() ? '<div class="a11y-row"><span></span><button type="button" class="a11y-act" data-showfab>' + t('showFab') + '</button></div>' : '') +
+      (fk && !fk.isHidden() && fk.moved() ? '<div class="a11y-row"><span></span><button type="button" class="a11y-act" data-resetpos>' + t('resetPos') + '</button></div>' : '');
   }
   function apply() {
     ['narr', 'cvd', 'contrast', 'links', 'motion'].forEach(function (k) { root.classList.toggle('a11y-' + k, !!S[k]); });
@@ -75,9 +80,14 @@
     if (!S.loupe) lens.hidden = true;
     if (!S.narr) stopSpeak();
   }
-  function openP(o) {
+  var anchor = null;
+  function openP(o, a) {
     panel.hidden = !o; fab.setAttribute('aria-expanded', String(o));
-    if (o) { draw(); var f = panel.querySelector('input,button:not([data-close])'); if (f) f.focus(); } else fab.focus();
+    if (o) {
+      anchor = a || fab; draw();
+      if (window.FloatKit) FloatKit.placeNear(panel, anchor);
+      var f = panel.querySelector('input,button:not([data-close])'); if (f) f.focus();
+    } else { (fk && fk.isHidden() ? fk.dockBtn : fab).focus(); }
   }
   fab.addEventListener('click', function () { openP(panel.hidden); });
   panel.addEventListener('keydown', function (e) { if (e.key === 'Escape') openP(false); });
@@ -93,6 +103,8 @@
     else if (b.hasAttribute('data-read')) readPage();
     else if (b.hasAttribute('data-stop')) stopSpeak();
     else if (b.hasAttribute('data-reset')) { S = {}; save(); apply(); draw(); }
+    else if (b.hasAttribute('data-showfab')) { fk.show(); openP(false); fab.focus(); }
+    else if (b.hasAttribute('data-resetpos')) { fk.resetPos(); openP(false); }
   });
 
   /* ---------- narrator ---------- */

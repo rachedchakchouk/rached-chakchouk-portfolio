@@ -14,8 +14,18 @@
   var ICONS = [['Java', 'java'], ['Spring', 'spring'], ['Hibernate', 'hibernate'], ['Swagger', 'swagger'], ['Maven', 'maven'], ['Angular', 'angular'], ['TypeScript', 'ts'], ['HTML', 'html'], ['Bootstrap', 'bootstrap'], ['React', 'react'], ['Capacitor', 'capacitor'], ['PostgreSQL', 'pg'], ['MySQL', 'mysql'], ['SQL Server', 'mssql'], ['MongoDB', 'mongo'], ['Liquibase', 'liquibase'], ['GitLab', 'gitlab'], ['GitHub Copilot', 'copilot'], ['GitHub', 'github'], ['Git', 'git'], ['Jenkins', 'jenkins'], ['Docker', 'docker'], ['SonarQube', 'sonar'], ['IntelliJ', 'intellij'], ['Eclipse', 'eclipse'], ['Visual Studio', 'vs'], ['Claude', 'claude']];
   function ico(name) { for (var i = 0; i < ICONS.length; i++) if (String(name).indexOf(ICONS[i][0]) === 0 && String(name).indexOf('JavaScript') !== 0) return '<i class="ti i-' + ICONS[i][1] + '" aria-hidden="true"></i>'; return ''; }
   function chip(n, key) { return '<li' + (key ? ' class="key"' : '') + '>' + ico(n) + e_(n) + '</li>'; }
+  /* Logos officiels (LinkedIn / sites des organisations), trouvés par domaine ou par nom */
+  var LOGOS = [[/axeane/i, 'logos/axeane.png', 0], [/tradigi|trade digital/i, 'logos/tradigi.png', 1], [/ditriot/i, 'logos/ditriot.png', 1],
+    [/esprit/i, 'logos/esprit.png', 0], [/fss\.rnu|sciences de sfax|sciences of sfax/i, 'logos/fss.png', 0], [/udemy|ude\.my/i, 'logos/udemy.png', 0]];
+  function logoOf() {
+    var k = [].slice.call(arguments).map(function (v) { return typeof v === 'object' && v ? (v.fr || '') + ' ' + (v.en || '') : String(v || ''); }).join(' ');
+    for (var i = 0; i < LOGOS.length; i++) if (LOGOS[i][0].test(k)) return { src: LOGOS[i][1], wide: !!LOGOS[i][2] };
+    return null;
+  }
+  window.__logoOf = logoOf;
   function logo(x) {
-    if (x.logoImg) return '<span class="co-logo wide"><img src="' + e_(x.logoImg) + '" alt="' + e_(x.company) + '" loading="lazy"></span>';
+    var L = x.logoImg ? { src: x.logoImg, wide: true } : logoOf(x.url, x.company);
+    if (L) return '<span class="co-logo' + (L.wide ? ' wide' : '') + '"><img src="' + e_(L.src) + '" alt="' + e_(x.company) + '" loading="lazy"></span>';
     return '<span class="co-logo" aria-hidden="true">' + e_(x.logoText || String(x.company || '?').slice(0, 2).toUpperCase()) + '</span>';
   }
   function job(x) {
@@ -48,7 +58,8 @@
     document.getElementById('internList').innerHTML = (c.internships || []).map(job).join('');
     document.getElementById('eduList').innerHTML = (c.education || []).map(function (d) {
       var sc = d.url ? '<a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B(d.school) + ' <span aria-hidden="true">↗</span></a>' : B(d.school);
-      return '<div><span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span><div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
+      var L = logoOf(d.url, d.school);
+      return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt="" loading="lazy"></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + sc + '</p></div><span class="yr">' + e_(d.years) + '</span></div>';
     }).join('');
     var certs = c.certifications || [], cp = document.getElementById('certsPanel');
     if (cp) {
@@ -56,7 +67,8 @@
       document.getElementById('certList').innerHTML = certs.map(function (d) {
         var iss = e_(d.issuer) + (d.note && (d.note.fr || d.note.en) ? ' · ' + B(d.note) : '');
         var link = d.url ? '<br><a class="co-link sm" href="' + e_(d.url) + '" target="_blank" rel="noopener noreferrer">' + B({ fr: 'Voir le certificat', en: 'View certificate' }) + ' <span aria-hidden="true">↗</span></a>' : '';
-        return '<div><span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span><div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + iss + link + '</p></div><span class="yr">' + B(d.date) + '</span></div>';
+        var L = logoOf(d.url, d.issuer);
+        return '<div>' + (L ? '<span class="edu-logo img"><img src="' + e_(L.src) + '" alt="" loading="lazy"></span>' : '<span class="edu-logo" aria-hidden="true">' + e_(d.logoText || '') + '</span>') + '<div class="edu-txt"><h3>' + B(d.title) + '</h3><p>' + iss + link + '</p></div><span class="yr">' + B(d.date) + '</span></div>';
       }).join('');
     }
     document.getElementById('langList').innerHTML = (c.languages || []).map(function (l) {
@@ -306,7 +318,10 @@
   var curFilter = 'all';
   function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); }
   window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.innerHTML = PROJECTS.map(function (p) {
-      var cover = p.shots && p.shots.length ? '<img src="' + esc(p.shots[0]) + '" alt="" loading="lazy">' : '<span class="pc-mono">' + esc(p.mono) + '</span>';
+      var PL = window.__logoOf ? window.__logoOf(p.org.url, p.org.name) : null;
+      var gh = !PL && /github/i.test(p.org.name + ' ' + p.org.url);
+      var cover = p.shots && p.shots.length ? '<img src="' + esc(p.shots[0]) + '" alt="" loading="lazy">' :
+        (PL || gh ? '<span class="pc-brand"><span class="pc-logo' + (PL && PL.wide ? ' wide' : '') + '">' + (PL ? '<img src="' + esc(PL.src) + '" alt="" loading="lazy">' : '<i class="ti i-github" aria-hidden="true"></i>') + '</span><span class="pc-mono sm">' + esc(p.mono) + '</span></span>' : '<span class="pc-mono">' + esc(p.mono) + '</span>');
       return '<button class="pcard' + (p.feat ? ' feat' : '') + '" type="button" data-id="' + p.id + '" data-cats="' + p.cats.join(' ') + '">' +
         '<div class="pc-cover">' + cover + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span></div>' +
         '<h3 class="pc-title">' + bi(p.title) + '</h3><p class="pc-desc">' + bi(p.desc) + '</p><span class="pc-more"><span data-l="fr">Voir le détail</span><span data-l="en">View details</span> →</span></div></button>';
