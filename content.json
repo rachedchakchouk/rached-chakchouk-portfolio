@@ -634,6 +634,88 @@
    ]
   },
   {
+   "id": "karhabti",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "erp"
+   ],
+   "mono": "Karhabti",
+   "shots": [
+    "projects/karhabti-1.webp",
+    "projects/karhabti-2.webp",
+    "projects/karhabti-3.webp",
+    "projects/karhabti-4.webp",
+    "projects/karhabti-5.webp",
+    "projects/karhabti-6.webp",
+    "projects/karhabti-7.webp",
+    "projects/karhabti-8.webp"
+   ],
+   "kind": {
+    "fr": "Marketplace · Multi-boutiques · Stock",
+    "en": "Marketplace · Multi-store · Inventory"
+   },
+   "title": {
+    "fr": "Karhabti Parts – marketplace de pièces auto",
+    "en": "Karhabti Parts – auto parts marketplace"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Plateforme multi-boutiques pour la pièce de rechange en Tunisie : une marketplace où l’on trouve la pièce compatible avec son véhicule et compare les offres des boutiques, et un back-office où chaque boutique gère ses commandes, ses offres et son stock.",
+    "en": "Multi-store platform for car spare parts in Tunisia: a marketplace to find the part that fits your vehicle and compare shop offers, and a back-office where each shop manages its orders, offers and stock."
+   },
+   "problem": {
+    "fr": "Trouver la bonne pièce pour son véhicule, au meilleur prix, sans faire le tour des boutiques ; et donner aux boutiques un seul outil pour vendre en ligne et suivre leur stock.",
+    "en": "Find the right part for your vehicle at the best price without going from shop to shop, and give shops a single tool to sell online and track their stock."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout : API, marketplace, back-office des boutiques, administration et identité visuelle, avec un développement assisté par IA (Claude).",
+    "en": "End-to-end design and development: API, marketplace, shop back-office, administration and visual identity, with AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Marketplace : choix du véhicule (marque, modèle, motorisation) ou identification par numéro de châssis (VIN), pièces compatibles avec le meilleur prix, comparaison des offres (prix TTC, stock, livraison, retrait) et boutiques les plus proches sur une carte.",
+     "Référentiel de 191 marques et 2 636 modèles (données ouvertes VehiclesDB, CC-BY 4.0) et 500 motorisations courantes ; références OEM et compatibilités pièce ↔ motorisation.",
+     "Panier multi-boutiques : une commande découpée en sous-commandes par boutique, stock réservé à la validation, paiement en ligne (notification signée HMAC) ou à la livraison, livraison ou retrait en boutique.",
+     "Back-office : offres (HT, TVA, TTC), stock multi-dépôts (réservé, disponible, seuils), mouvements avec journal et coût moyen pondéré, commandes, expédition avec transporteur, retours et reversements.",
+     "Organisations multi-boutiques : tableau de bord consolidé, équipe commune avec rôles par boutique (propriétaire, vendeur, magasinier, comptable) et matrice des droits personnalisable.",
+     "Administration : validation (KYC) des boutiques, modération des pièces proposées, remboursements, reversements hebdomadaires et commissions, transporteurs.",
+     "API Spring Boot découpée par module métier, sécurité JWT avec isolation des données par boutique, migrations Flyway, tests et CI GitHub Actions, Docker Compose."
+    ],
+    "en": [
+     "Marketplace: vehicle selection (make, model, engine) or identification by chassis number (VIN), compatible parts with the best price, offer comparison (price incl. VAT, stock, delivery, pickup) and nearest shops on a map.",
+     "Reference data of 191 makes and 2,636 models (VehiclesDB open data, CC-BY 4.0) and 500 common engines; OEM references and part ↔ engine compatibility.",
+     "Multi-store cart: one order split into one sub-order per shop, stock reserved at checkout, online payment (HMAC-signed notification) or cash on delivery, home delivery or in-store pickup.",
+     "Back-office: offers (excl. VAT, VAT, incl. VAT), multi-warehouse stock (reserved, available, thresholds), stock movements with a journal and weighted average cost, orders, shipping with a carrier, returns and payouts.",
+     "Multi-store organisations: consolidated dashboard, shared team with roles per shop (owner, seller, storekeeper, accountant) and a customisable permission matrix.",
+     "Administration: shop validation (KYC), moderation of proposed parts, refunds, weekly payouts and commissions, carriers.",
+     "Spring Boot API split by business module, JWT security with data isolation per shop, Flyway migrations, tests and GitHub Actions CI, Docker Compose."
+    ]
+   },
+   "stack": [
+    "Java 21",
+    "Spring Boot 3",
+    "Spring Security (JWT)",
+    "JPA",
+    "PostgreSQL",
+    "Flyway",
+    "Angular 21",
+    "TypeScript",
+    "Leaflet",
+    "Docker",
+    "GitHub Actions"
+   ],
+   "links": []
+  },
+  {
    "id": "analytics",
    "feat": true,
    "cats": [
@@ -985,6 +1067,81 @@
     "projects/collaboratorbook-7.webp",
     "projects/collaboratorbook-8.webp"
    ]
+  },
+  {
+   "id": "devlauncher",
+   "cats": [
+    "devops",
+    "fullstack"
+   ],
+   "mono": "DevLauncher",
+   "shots": [
+    "projects/devlauncher-1.webp",
+    "projects/devlauncher-2.webp",
+    "projects/devlauncher-3.webp",
+    "projects/devlauncher-4.webp",
+    "projects/devlauncher-5.webp",
+    "projects/devlauncher-6.webp",
+    "projects/devlauncher-7.webp",
+    "projects/devlauncher-8.webp"
+   ],
+   "kind": {
+    "fr": "Application de bureau · Outil de développement",
+    "en": "Desktop app · Developer tool"
+   },
+   "title": {
+    "fr": "DevLauncher – lancer ses projets en un clic",
+    "en": "DevLauncher – launch your projects in one click"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau qui détecte mes projets, vérifie leur environnement (JDK, Node, Maven, Docker, bases de données) et lance dans le bon ordre l’infra Kafka, les microservices Spring Boot et le front Angular, avec les logs de chaque module en direct.",
+    "en": "Desktop app that detects my projects, checks their environment (JDK, Node, Maven, Docker, databases) and starts the Kafka infrastructure, the Spring Boot microservices and the Angular front in the right order, with live logs for each module."
+   },
+   "problem": {
+    "fr": "Démarrer un projet en microservices demandait une dizaine de terminaux, le bon JDK pour chaque service, Docker, Kafka et des bases prêtes : je voulais tout lancer, surveiller et diagnostiquer depuis une seule fenêtre.",
+    "en": "Starting a microservices project took a dozen terminals, the right JDK for each service, Docker, Kafka and ready databases: I wanted to launch, monitor and troubleshoot everything from a single window."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout (processus principal Electron, interface Angular, tests), avec un développement assisté par IA (Claude).",
+    "en": "End-to-end design and development (Electron main process, Angular interface, tests), with AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Détection des projets d’un dossier racine : modules Spring Boot / Maven, fronts Angular et Node, fichiers Docker Compose, avec leurs ports, profils et variables.",
+     "Vérification de l’environnement par module (JDK, Maven, Node, Docker, MySQL / PostgreSQL), installation des outils manquants via winget et choix automatique du bon JDK pour chaque service.",
+     "« Tout lancer » dans l’ordre : infra Docker Compose (ou Kafka local en mode KRaft, sans Docker), Eureka, gateway, microservices puis front, avec attente des healthchecks et de l’enregistrement Eureka.",
+     "Ports modifiables : les autres modules suivent (variables injectées au lancement, fichiers du front réécrits après aperçu), conflits détectés.",
+     "Variables et secrets chiffrés (DPAPI Windows) avec recherche ; test de connexion et création des bases de données.",
+     "Logs en direct par module (couleurs ANSI, filtre), diagnostic Docker automatique, actions HTTP déclarées par projet ; 167 tests Vitest."
+    ],
+    "en": [
+     "Detects the projects in a root folder: Spring Boot / Maven modules, Angular and Node fronts, Docker Compose files, with their ports, profiles and variables.",
+     "Checks each module's environment (JDK, Maven, Node, Docker, MySQL / PostgreSQL), installs missing tools with winget and picks the right JDK for each service.",
+     "“Launch all” in order: Docker Compose infrastructure (or local Kafka in KRaft mode, without Docker), Eureka, gateway, microservices then front, waiting for healthchecks and Eureka registration.",
+     "Editable ports: the other modules follow (variables injected at launch, front files rewritten after a preview), conflicts detected.",
+     "Encrypted variables and secrets (Windows DPAPI) with search; database connection test and creation.",
+     "Live logs per module (ANSI colours, filter), automatic Docker diagnostics, HTTP actions declared per project; 167 Vitest tests."
+    ]
+   },
+   "stack": [
+    "Electron",
+    "Angular 18",
+    "TypeScript",
+    "Node.js",
+    "Vitest",
+    "Docker Compose",
+    "Kafka",
+    "Windows"
+   ],
+   "links": []
   },
   {
    "id": "stock",
