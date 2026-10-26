@@ -1331,89 +1331,6 @@ main:focus{outline:none}
    ]
   },
   {
-   "id": "collaboratorbook",
-   "cats": [
-    "erp",
-    "fullstack",
-    "backend",
-    "devops"
-   ],
-   "mono": "CollaboratorBook",
-   "shots": [
-    "projects/collaboratorbook-1.webp",
-    "projects/collaboratorbook-2.webp",
-    "projects/collaboratorbook-3.webp",
-    "projects/collaboratorbook-4.webp",
-    "projects/collaboratorbook-5.webp",
-    "projects/collaboratorbook-6.webp",
-    "projects/collaboratorbook-7.webp",
-    "projects/collaboratorbook-8.webp"
-   ],
-   "kind": {
-    "fr": "Microservices · RH · Temps réel",
-    "en": "Microservices · HR · Real-time"
-   },
-   "title": {
-    "fr": "CollaboratorBook – réseau social RH en microservices",
-    "en": "CollaboratorBook – HR social network on microservices"
-   },
-   "org": {
-    "name": "Projet personnel",
-    "url": "",
-    "when": {
-     "fr": "PFE 2022 – 2023 · refonte 2026",
-     "en": "Final-year project 2022 – 2023 · rebuilt 2026"
-    }
-   },
-   "desc": {
-    "fr": "Mon projet de fin d’études, repris et modernisé en 2026 : réseau social d’entreprise, outils RH, messagerie chiffrée, tableau de bord en temps réel et gestion de projets façon Jira.",
-    "en": "My final-year project, picked up and modernised in 2026: company social network, HR tools, encrypted messaging, real-time dashboard and Jira-style project management."
-   },
-   "problem": {
-    "fr": "Réunir dans une seule application la communication interne et les processus RH d’une entreprise (employés, congés, contrats, projets), avec une sécurité adaptée à des données personnelles.",
-    "en": "Bring a company’s internal communication and HR processes (employees, leave, contracts, projects) into a single application, with security suited to personal data."
-   },
-   "role": {
-    "fr": "Conception et développement de bout en bout : architecture microservices, back-end, front-end, sécurité et CI/CD, avec un développement assisté par IA (Claude).",
-    "en": "End-to-end design and development: microservices architecture, back-end, front-end, security and CI/CD, with AI-assisted development (Claude)."
-   },
-   "items": {
-    "fr": [
-     "7 microservices Spring Boot 3 (sécurité, RH, entreprises, notifications, messagerie, tableau de bord, projets) derrière Eureka et une API Gateway, en REST (OpenFeign) et par événements Kafka.",
-     "Fil d’actualité, organigramme interactif exportable en PNG, gestion des employés et des congés, contrats générés en PDF à partir de modèles.",
-     "Messagerie façon Messenger : conversations privées et de groupe chiffrées de bout en bout dans le navigateur, présence en ligne, appels audio et vidéo.",
-     "Gestion de projets inspirée de Jira : tableau Kanban à colonnes personnalisables, backlog et sprints, commentaires avec mentions, burndown et vélocité.",
-     "Tableau de bord mis à jour en temps réel (SSE) à partir des événements métier.",
-     "Sécurité : jetons JWT et cookie HttpOnly, double authentification TOTP obligatoire pour les administrateurs, sessions révocables, rôles et droits par entreprise, protection contre la force brute.",
-     "Thème clair et sombre, interface responsive ; Docker Compose, CI GitHub Actions et analyse SonarQube."
-    ],
-    "en": [
-     "7 Spring Boot 3 microservices (security, HR, companies, notifications, messaging, dashboard, projects) behind Eureka and an API Gateway, over REST (OpenFeign) and Kafka events.",
-     "News feed, interactive org chart exportable as PNG, employee and leave management, PDF contracts generated from templates.",
-     "Messenger-style chat: private and group conversations end-to-end encrypted in the browser, online presence, audio and video calls.",
-     "Jira-inspired project management: Kanban board with customisable columns, backlog and sprints, comments with mentions, burndown and velocity.",
-     "Dashboard updated in real time (SSE) from business events.",
-     "Security: JWT tokens and HttpOnly cookie, TOTP two-factor authentication required for administrators, revocable sessions, per-company roles and permissions, brute-force protection.",
-     "Light and dark theme, responsive interface; Docker Compose, GitHub Actions CI and SonarQube analysis."
-    ]
-   },
-   "stack": [
-    "Java 21",
-    "Spring Boot 3",
-    "Spring Cloud",
-    "Kafka",
-    "MySQL",
-    "Liquibase",
-    "Angular 18",
-    "TypeScript",
-    "PrimeNG",
-    "Docker",
-    "GitHub Actions",
-    "SonarQube"
-   ],
-   "links": []
-  },
-  {
    "id": "analytics",
    "feat": true,
    "cats": [
@@ -1687,43 +1604,57 @@ main:focus{outline:none}
     "name": "Ditriot Consulting",
     "url": "https://www.ditriot.com",
     "when": {
-     "fr": "Fév. 2022 – juil. 2023",
-     "en": "Feb 2022 – Jul 2023"
+     "fr": "Fév. 2022 – juil. 2023 · refonte 2026",
+     "en": "Feb 2022 – Jul 2023 · rebuilt 2026"
     }
    },
    "desc": {
-    "fr": "Plateforme collaborative interne pour la communication et les processus RH, en microservices.",
-    "en": "Internal collaborative platform for communication and HR processes, built on microservices."
+    "fr": "CollaboratorBook : plateforme collaborative interne pour la communication et les processus RH, en microservices. Mon projet de fin d’études, que j’ai repris et modernisé en 2026.",
+    "en": "CollaboratorBook: internal collaborative platform for communication and HR processes, built on microservices. My final-year project, which I picked up and modernised in 2026."
    },
    "problem": {
     "fr": "Améliorer la communication interne et la gestion du personnel au sein d’une entreprise.",
     "en": "Improve internal communication and staff management within a company."
    },
    "role": {
-    "fr": "Développeur Full Stack : de l’analyse et l’architecture jusqu’au front et au back.",
-    "en": "Full Stack Developer: from analysis and architecture to front and back end."
+    "fr": "Développeur Full Stack : de l’analyse et l’architecture jusqu’au front et au back. En 2026, refonte complète en projet personnel, avec un développement assisté par IA (Claude).",
+    "en": "Full Stack Developer: from analysis and architecture to front and back end. In 2026, full rebuild as a personal project, with AI-assisted development (Claude)."
    },
    "items": {
     "fr": [
      "Analyse des besoins, spécifications, UML et architecture microservices.",
      "Microservices d’authentification, d’entreprises et d’employés communiquant par API REST.",
      "Front-end Angular, rôles et authentification avec Spring Security.",
-     "CI avec Jenkins et qualité de code avec SonarQube."
+     "CI avec Jenkins et qualité de code avec SonarQube.",
+     "Refonte 2026 : passage à Java 21, Spring Boot 3 et Angular 18 ; 7 microservices (sécurité, RH, entreprises, notifications, messagerie, tableau de bord, projets) derrière Eureka et une API Gateway, en REST (OpenFeign) et par événements Kafka.",
+     "Fil d’actualité, organigramme interactif exportable en PNG, gestion des congés, contrats générés en PDF à partir de modèles.",
+     "Messagerie façon Messenger chiffrée de bout en bout, présence en ligne, appels audio et vidéo.",
+     "Gestion de projets inspirée de Jira : tableau Kanban à colonnes personnalisables, backlog et sprints, burndown et vélocité.",
+     "Tableau de bord en temps réel (SSE), double authentification TOTP, sessions révocables, rôles et droits par entreprise, CI GitHub Actions."
     ],
     "en": [
      "Requirements, specifications, UML and microservices architecture.",
      "Authentication, company and employee microservices communicating over REST APIs.",
      "Angular front-end, roles and authentication with Spring Security.",
-     "CI with Jenkins and code quality with SonarQube."
+     "CI with Jenkins and code quality with SonarQube.",
+     "2026 rebuild: moved to Java 21, Spring Boot 3 and Angular 18; 7 microservices (security, HR, companies, notifications, messaging, dashboard, projects) behind Eureka and an API Gateway, over REST (OpenFeign) and Kafka events.",
+     "News feed, interactive org chart exportable as PNG, leave management, PDF contracts generated from templates.",
+     "Messenger-style chat with end-to-end encryption, online presence, audio and video calls.",
+     "Jira-inspired project management: Kanban board with customisable columns, backlog and sprints, burndown and velocity.",
+     "Real-time dashboard (SSE), TOTP two-factor authentication, revocable sessions, per-company roles and permissions, GitHub Actions CI."
     ]
    },
    "stack": [
-    "Java 8",
-    "Spring Boot 2",
-    "Angular 13/14",
+    "Java 8 → 21",
+    "Spring Boot 2 → 3",
+    "Angular 13 → 18",
+    "Spring Cloud",
+    "Kafka",
     "MySQL",
+    "Liquibase",
     "Docker",
     "Jenkins",
+    "GitHub Actions",
     "SonarQube"
    ],
    "links": [],
@@ -1740,7 +1671,17 @@ main:focus{outline:none}
      "Employees",
      "REST API"
     ]
-   }
+   },
+   "shots": [
+    "projects/collaboratorbook-1.webp",
+    "projects/collaboratorbook-2.webp",
+    "projects/collaboratorbook-3.webp",
+    "projects/collaboratorbook-4.webp",
+    "projects/collaboratorbook-5.webp",
+    "projects/collaboratorbook-6.webp",
+    "projects/collaboratorbook-7.webp",
+    "projects/collaboratorbook-8.webp"
+   ]
   },
   {
    "id": "stock",
