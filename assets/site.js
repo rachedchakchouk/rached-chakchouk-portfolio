@@ -317,17 +317,36 @@
   function bi(o) { return '<span data-l="fr">' + esc(o.fr) + '</span><span data-l="en">' + esc(o.en) + '</span>'; }
   var curFilter = 'all';
   function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); fillRow(); }
-  /* Évite un trou en fin de grille : la dernière carte visible s'élargit pour compléter la ligne */
+  /* Évite les trous dans la grille : dans chaque ligne incomplète, la dernière carte s'élargit pour compléter la ligne.
+     Le placement est simulé comme le fait le navigateur (grid-auto-flow: dense : chaque carte prend la première place libre),
+     les cases restées libres ne peuvent donc accueillir aucune autre carte. */
   function fillRow() {
     if (!grid) return;
     var cards = [].slice.call(grid.querySelectorAll('.pcard')).filter(function (c) { return !c.hidden; });
     cards.forEach(function (c) { c.style.gridColumn = ''; c.classList.remove('fill'); });
     var cols = getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length;
     if (cols < 2 || !cards.length) return;
-    var pos = 0, last = cards[cards.length - 1], lastSpan = 1;
-    cards.forEach(function (c) { var sp = Math.min(cols, c.classList.contains('feat') ? 2 : 1); if (pos % cols + sp > cols) pos += cols - pos % cols; pos += sp; lastSpan = sp; });
-    var rest = pos % cols;
-    if (rest) { last.style.gridColumn = 'span ' + (lastSpan + cols - rest); if (lastSpan + cols - rest >= 3) last.classList.add('fill'); }
+    var rows = [];
+    cards.forEach(function (c) {
+      var sp = Math.min(cols, c.classList.contains('feat') ? 2 : 1);
+      for (var r = 0, placed = false; !placed; r++) {
+        var row = rows[r] = rows[r] || [];
+        for (var x = 0; x + sp <= cols && !placed; x++) {
+          var free = true;
+          for (var k = x; k < x + sp; k++) if (row[k]) free = false;
+          if (free) { for (k = x; k < x + sp; k++) row[k] = c; placed = true; }
+        }
+      }
+    });
+    rows.forEach(function (row) {
+      var end = cols;
+      while (end > 0 && !row[end - 1]) end--;
+      if (!end || end === cols) return;
+      var last = row[end - 1], start = end - 1;
+      while (start > 0 && row[start - 1] === last) start--;
+      last.style.gridColumn = 'span ' + (cols - start);
+      if (cols - start >= 3) last.classList.add('fill');
+    });
   }
   window.addEventListener('resize', function () { clearTimeout(fillRow.t); fillRow.t = setTimeout(fillRow, 150); });
   window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.innerHTML = PROJECTS.map(function (p) {
