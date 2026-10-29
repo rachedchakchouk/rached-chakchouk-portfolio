@@ -794,6 +794,84 @@
    "links": []
   },
   {
+   "id": "eyecontact",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "Eye Contact",
+   "shots": [
+    "projects/eyecontact-1.webp",
+    "projects/eyecontact-2.webp",
+    "projects/eyecontact-3.webp",
+    "projects/eyecontact-4.webp",
+    "projects/eyecontact-5.webp"
+   ],
+   "kind": {
+    "fr": "Rencontres · Mobile · Chat anonyme",
+    "en": "Dating · Mobile · Anonymous chat"
+   },
+   "title": {
+    "fr": "Eye Contact – appli de rencontres née d’un regard",
+    "en": "Eye Contact – a dating app that starts with a glance"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de rencontres tunisienne pour les timides : deux personnes se trouvent dans le même lieu, l’une appuie sur Eye Contact et décrit la tenue de l’autre, un chat anonyme s’ouvre, puis chacune répond en secret par un cœur ou un cœur brisé. Les profils ne se révèlent qu’avec un double cœur.",
+    "en": "A Tunisian dating app for shy people: two people are in the same place, one taps Eye Contact and describes the other's outfit, an anonymous chat opens, then each secretly answers with a heart or a broken heart. Profiles are only revealed on a double heart."
+   },
+   "problem": {
+    "fr": "Oser aborder quelqu’un qu’on a remarqué dans un café ou une salle de sport, sans s’exposer ni exposer l’autre : pas de nom, pas de photo, pas de position exacte tant que l’intérêt n’est pas réciproque.",
+    "en": "Dare to approach someone you noticed in a café or a gym without exposing yourself or them: no name, no photo, no exact location until the interest is mutual."
+   },
+   "role": {
+    "fr": "Idée, analyse de marché et conception de bout en bout : API, appli web et mobile, charte graphique et logos, avec un développement assisté par IA (Claude).",
+    "en": "Idea, market analysis and end-to-end design: API, web and mobile app, brand guidelines and logos, with AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Eye Contact : check-in dans un lieu partenaire, description guidée de sa tenue, puis de celle de la personne remarquée ; le message n’arrive qu’à elle.",
+     "Matching de tenue : haut, bas et couleur exacts, détails pour départager, tolérance d’une couleur voisine ; si plusieurs personnes correspondent, rien n’est envoyé et l’appli demande un détail.",
+     "Règles anti-harcèlement : 1 Eye Contact gratuit par jour (consommé seulement si une personne est trouvée), jamais deux fois vers la même personne, chat anonyme de 30 minutes.",
+     "Cœur ou cœur brisé en secret : double cœur = match et profils révélés ; cœur brisé = conversation close et invisibilité mutuelle définitive.",
+     "Vérification d’identité (CIN ou passeport + selfie) derrière une interface de prestataire KYC, sans jamais stocker la pièce d’identité.",
+     "API Spring Boot en architecture MVC, sécurité JWT, verrous optimiste et pessimiste contre les actions simultanées, migrations Flyway, tests d’intégration Testcontainers.",
+     "Appli Angular (standalone, signals) packagée en mobile avec Capacitor ; charte graphique bilingue français / arabe, thèmes Jour et Soirée."
+    ],
+    "en": [
+     "Eye Contact: check in at a partner venue, describe your own outfit with guided choices, then the outfit of the person you noticed; the message only reaches them.",
+     "Outfit matching: exact top, bottom and colour, details to break ties, tolerance for a neighbouring colour; if several people match, nothing is sent and the app asks for a detail.",
+     "Anti-harassment rules: 1 free Eye Contact per day (only used when someone is found), never twice towards the same person, 30-minute anonymous chat.",
+     "Secret heart or broken heart: a double heart means a match and revealed profiles; a broken heart closes the chat and makes both people permanently invisible to each other.",
+     "Identity check (national ID card or passport + selfie) behind a KYC provider interface, never storing the ID document.",
+     "Spring Boot API with an MVC architecture, JWT security, optimistic and pessimistic locking against simultaneous actions, Flyway migrations, Testcontainers integration tests.",
+     "Angular app (standalone, signals) packaged for mobile with Capacitor; bilingual French / Arabic brand guidelines, day and evening themes."
+    ]
+   },
+   "stack": [
+    "Java 21",
+    "Spring Boot 3",
+    "Spring Security (JWT)",
+    "JPA",
+    "PostgreSQL",
+    "Flyway",
+    "Testcontainers",
+    "Angular 21",
+    "TypeScript",
+    "Capacitor",
+    "Docker"
+   ],
+   "links": []
+  },
+  {
    "id": "analytics",
    "feat": true,
    "cats": [
