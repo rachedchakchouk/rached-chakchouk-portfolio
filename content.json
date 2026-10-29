@@ -634,6 +634,84 @@
    ]
   },
   {
+   "id": "jobops",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "JobOps",
+   "shots": [
+    "projects/jobops-1.webp",
+    "projects/jobops-2.webp",
+    "projects/jobops-3.webp",
+    "projects/jobops-4.webp",
+    "projects/jobops-5.webp",
+    "projects/jobops-6.webp",
+    "projects/jobops-7.webp",
+    "projects/jobops-8.webp"
+   ],
+   "kind": {
+    "fr": "Application de bureau · Web · Assistant IA",
+    "en": "Desktop app · Web · AI assistant"
+   },
+   "title": {
+    "fr": "JobOps – centre opérationnel de recherche d’emploi",
+    "en": "JobOps – job search operations centre"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau (ou web) qui centralise ma recherche d’emploi : briefing du jour, pipeline des candidatures, contacts recruteurs, agenda des entretiens et un assistant IA qui rédige e-mails, lettres et messages LinkedIn à partir de mon profil, sans jamais rien envoyer à ma place.",
+    "en": "Desktop (or web) app that brings my whole job search together: daily briefing, application pipeline, recruiter contacts, interview calendar and an AI assistant that drafts e-mails, cover letters and LinkedIn messages from my profile, without ever sending anything on my behalf."
+   },
+   "problem": {
+    "fr": "Mes candidatures étaient éparpillées entre LinkedIn, les sites d’emploi, ma boîte mail et des notes : je perdais le fil des relances et réécrivais chaque message. Je voulais un seul poste de pilotage, avec mes données sur mon PC.",
+    "en": "My applications were scattered across LinkedIn, job boards, my mailbox and notes: I lost track of follow-ups and rewrote every message. I wanted a single control centre, with my data kept on my own PC."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout (API Spring Boot, interface Angular, shell Electron, packaging Windows, tests de bout en bout), avec un développement assisté par IA (Claude).",
+    "en": "End-to-end design and development (Spring Boot API, Angular interface, Electron shell, Windows packaging, end-to-end tests), with AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Briefing du jour : candidatures actives, taux de réponse, relances dues, 15 prochains jours et rythme d’envoi sur 8 semaines ; pipeline par glisser-déposer qui planifie automatiquement la relance à J+7.",
+     "Agenda à l’américaine (mois, semaine, jour) pour les entretiens, appels et tests techniques, avec création d’un événement d’un clic sur un jour ou un créneau.",
+     "Navigateur intégré à session persistante (LinkedIn, sites d’emploi, Outlook) : une offre affichée devient une candidature analysée par l’IA, et les formulaires de candidature se remplissent depuis le profil.",
+     "Assistant IA au choix — Ollama en local, Groq ou Claude : e-mails de candidature, lettres de motivation, messages LinkedIn et relances, sans rien inventer ; profil rempli automatiquement depuis le CV PDF (PDFBox).",
+     "Tâches IA suivies en arrière-plan (progression dans la barre des tâches, notification Windows) ; réponses d’Ollama lues en flux pour tenir sur un PC sans carte graphique.",
+     "Deux modes de build : installateur Windows (Electron + JRE embarqué via jlink) ou version web servie par le jar Spring Boot ; base H2 locale et plus de 70 vérifications de bout en bout (Playwright)."
+    ],
+    "en": [
+     "Daily briefing: active applications, response rate, follow-ups due, the next 15 days and sending pace over 8 weeks; drag-and-drop pipeline that automatically schedules a follow-up 7 days later.",
+     "US-style calendar (month, week, day) for interviews, calls and technical tests, with one-click event creation on a day or time slot.",
+     "Built-in browser with a persistent session (LinkedIn, job boards, Outlook): the job ad on screen becomes an AI-analysed application, and application forms are filled in from the profile.",
+     "AI assistant of your choice — local Ollama, Groq or Claude: application e-mails, cover letters, LinkedIn messages and follow-ups, with nothing made up; profile filled in automatically from the PDF CV (PDFBox).",
+     "AI tasks tracked in the background (taskbar progress, Windows notification); Ollama answers read as a stream so it runs on a PC without a graphics card.",
+     "Two build modes: Windows installer (Electron + bundled JRE via jlink) or web version served by the Spring Boot jar; local H2 database and over 70 end-to-end checks (Playwright)."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "JPA",
+    "H2",
+    "PDFBox",
+    "Angular 18",
+    "TypeScript",
+    "Electron",
+    "Ollama",
+    "Playwright"
+   ],
+   "links": []
+  },
+  {
    "id": "karhabti",
    "feat": true,
    "cats": [
