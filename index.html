@@ -1423,6 +1423,92 @@ main:focus{outline:none}
    ]
   },
   {
+   "id": "gitdock",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "GitDock",
+   "shots": [
+    "projects/gitdock-1.webp",
+    "projects/gitdock-2.webp",
+    "projects/gitdock-3.webp",
+    "projects/gitdock-4.webp",
+    "projects/gitdock-5.webp",
+    "projects/gitdock-6.webp",
+    "projects/gitdock-7.webp",
+    "projects/gitdock-8.webp",
+    "projects/gitdock-9.webp"
+   ],
+   "kind": {
+    "fr": "Bureau Windows · Git · GitHub · CI/CD",
+    "en": "Windows desktop · Git · GitHub · CI/CD"
+   },
+   "title": {
+    "fr": "GitDock – tous ses dépôts Git et GitHub depuis son PC",
+    "en": "GitDock – all your Git and GitHub repositories from your PC"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau qui détecte les dépôts Git du PC et les gère sans ligne de commande : tableau de bord multi-dépôts, opérations Git guidées (indexation, diff, commit, historique, branches, annulation), GitHub (dépôts, pull requests, issues), création et suivi des pipelines GitHub Actions, sauvegardes et mises à jour planifiées.",
+    "en": "Desktop app that detects the Git repositories on the PC and manages them without the command line: multi-repository dashboard, guided Git operations (staging, diff, commit, history, branches, undo), GitHub (repositories, pull requests, issues), creation and monitoring of GitHub Actions pipelines, scheduled backups and updates."
+   },
+   "problem": {
+    "fr": "Avec une dizaine de projets actifs, il fallait passer d'un terminal à l'autre pour savoir lequel avait des modifications à pousser, une branche en retard, un conflit ou une CI en échec — et écrire à la main les workflows CI/CD de chaque dépôt.",
+    "en": "With a dozen active projects, it took jumping from one terminal to another to know which one had changes to push, a branch behind, a conflict or a failing CI — and writing each repository's CI/CD workflows by hand."
+   },
+   "role": {
+    "fr": "Conception du produit et de l'identité visuelle, puis développement de bout en bout : moteur Spring Boot en architecture MVC, interface Angular, coquille Electron et installateur Windows. Développement assisté par IA (Claude).",
+    "en": "Product and visual identity design, then end-to-end development: Spring Boot engine in MVC architecture, Angular interface, Electron shell and Windows installer. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Tableau de bord qui détecte les dépôts sous les dossiers de projets : branche, commits à pousser ou à récupérer, fichiers modifiés, conflits, remisages, pastille CI ✓ / ✗ / en cours, fetch / pull / push en un clic.",
+     "Opérations Git guidées : index visuel avec diff ligne à ligne, message de commit vérifié en direct par des règles, historique filtrable, revert et reset avec confirmations explicites, branches et remotes, remisages, résolution de conflits.",
+     "CI/CD : détection de la stack (Maven, Gradle, Angular, Node, Electron, Python, Docker), génération du workflow GitHub Actions (tests, artefacts, images Docker sur ghcr.io, release sur tag), écrit, commité et poussé ; suivi des exécutions, relance des échecs, déclenchement manuel.",
+     "GitHub : dépôts rapprochés des dossiers locaux, clone en un clic, création d'un dépôt relié au dossier local, pull requests et issues.",
+     "Automatisations : pull planifié (uniquement si l'arbre est propre) et sauvegarde planifiée (commit + push) par dépôt, nettoyage des branches fusionnées, journal de toutes les opérations avec la commande git et sa sortie.",
+     "Sécurité : moteur sur 127.0.0.1 avec clé d'accès aléatoire par lancement, jeton GitHub chiffré en AES-GCM, git lancé sans interpréteur de commandes, CSP stricte et preload Electron sandboxé ; palette de commandes Ctrl + K, thèmes clair et sombre."
+    ],
+    "en": [
+     "Dashboard that detects the repositories under the project folders: branch, commits to push or pull, modified files, conflicts, stashes, CI badge ✓ / ✗ / running, one-click fetch / pull / push.",
+     "Guided Git operations: visual staging with line-by-line diff, commit message checked live against rules, filterable history, revert and reset with explicit confirmations, branches and remotes, stashes, conflict resolution.",
+     "CI/CD: stack detection (Maven, Gradle, Angular, Node, Electron, Python, Docker), generation of the GitHub Actions workflow (tests, artifacts, Docker images on ghcr.io, release on tag), written, committed and pushed; run monitoring, re-running failures, manual dispatch.",
+     "GitHub: repositories matched with local folders, one-click clone, creation of a repository linked to the local folder, pull requests and issues.",
+     "Automations: scheduled pull (only when the working tree is clean) and scheduled backup (commit + push) per repository, cleanup of merged branches, log of every operation with the git command and its output.",
+     "Security: engine on 127.0.0.1 with a random access key per launch, GitHub token encrypted with AES-GCM, git run without a shell, strict CSP and sandboxed Electron preload; Ctrl + K command palette, light and dark themes."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "JPA",
+    "H2",
+    "Flyway",
+    "Angular 20",
+    "TypeScript",
+    "Tailwind",
+    "Electron",
+    "GitHub API",
+    "GitHub Actions"
+   ],
+   "links": [
+    {
+     "label": "Code source",
+     "url": "https://github.com/rachedchakchouk/gitdock"
+    }
+   ]
+  },
+  {
    "id": "jobradar",
    "feat": true,
    "cats": [
@@ -2168,6 +2254,81 @@ main:focus{outline:none}
    "links": []
   },
   {
+   "id": "open-library-explorer",
+   "cats": [
+    "fullstack"
+   ],
+   "mono": "Open Library",
+   "shots": [
+    "projects/open-library-explorer-1.webp",
+    "projects/open-library-explorer-2.webp",
+    "projects/open-library-explorer-3.webp"
+   ],
+   "kind": {
+    "fr": "Web · Recherche de livres · API publique",
+    "en": "Web · Book search · Public API"
+   },
+   "title": {
+    "fr": "Open Library Explorer – rechercher et explorer des livres",
+    "en": "Open Library Explorer – search and explore books"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Juil. 2025 · mise à jour 2026",
+     "en": "Jul 2025 · updated 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application web Next.js qui interroge l'API publique d'Open Library : recherche de livres pendant la frappe, résultats en grille affichés par lots et page détail de chaque œuvre (couverture, description, sujets).",
+    "en": "Next.js web app built on the public Open Library API: search-as-you-type for books, results in a grid shown in batches and a detail page for each work (cover, description, subjects)."
+   },
+   "problem": {
+    "fr": "Explorer le catalogue d'Open Library depuis une interface simple : une recherche qui réagit pendant la frappe sans envoyer une requête à chaque touche, des résultats lisibles sur ordinateur comme sur mobile et une fiche pour chaque œuvre.",
+    "en": "Browse the Open Library catalogue from a simple interface: a search that reacts while typing without sending a request on every keystroke, results that read well on desktop and mobile, and a page for each work."
+   },
+   "role": {
+    "fr": "Conception et développement de l'application (Next.js, React, Tailwind CSS). En 2026, mise à jour de sécurité des dépendances, assistée par IA (Claude).",
+    "en": "Design and development of the application (Next.js, React, Tailwind CSS). In 2026, security update of the dependencies, AI-assisted (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Recherche lancée pendant la frappe avec un anti-rebond de 500 ms ; la requête est reprise dans l'URL (?q=…), ce qui permet de recharger ou de partager une recherche.",
+     "Résultats en grille responsive (1, 2 puis 3 colonnes) : couverture, titre, auteurs et année de première publication ; affichage par lots de 9 avec « Charger plus » et bouton de retour en haut.",
+     "Page détail de chaque œuvre (route dynamique /book/works/<id>) rendue côté serveur par un Server Component : couverture grand format via next/image, description (sous les deux formes que renvoie l'API) et sujets.",
+     "États gérés : chargement (indicateur animé), erreur réseau, aucun résultat et livre introuvable.",
+     "Thème clair ou sombre selon la préférence du système, styles Tailwind CSS 4.",
+     "Test Jest avec React Testing Library du rendu de la page d'accueil, avec la navigation de Next simulée.",
+     "Maintenance 2026 : correctifs de sécurité (Next.js 15.5 et dépendances vulnérables) et README complété (lancement, tests, structure du projet)."
+    ],
+    "en": [
+     "Search triggered while typing with a 500 ms debounce; the query is kept in the URL (?q=…), so a search can be reloaded or shared.",
+     "Responsive results grid (1, 2 then 3 columns): cover, title, authors and first publication year; batches of 9 with a “Charger plus” (load more) button and a back-to-top button.",
+     "Detail page for each work (dynamic route /book/works/<id>) rendered on the server by a Server Component: large cover through next/image, description (in both forms the API returns) and subjects.",
+     "Handled states: loading (spinner), network error, no results and book not found.",
+     "Light or dark theme following the system preference, Tailwind CSS 4 styling.",
+     "Jest test with React Testing Library of the home page rendering, with Next navigation mocked.",
+     "2026 maintenance: security fixes (Next.js 15.5 and vulnerable dependencies) and an expanded README (running, tests, project structure)."
+    ]
+   },
+   "stack": [
+    "Next.js 15",
+    "React 19",
+    "JavaScript",
+    "Tailwind CSS 4",
+    "Open Library API",
+    "Jest",
+    "ESLint"
+   ],
+   "links": [
+    {
+     "label": "Code source",
+     "url": "https://github.com/rachedchakchouk/open-library-explorer"
+    }
+   ]
+  },
+  {
    "id": "stock",
    "cats": [
     "backend"
@@ -2235,6 +2396,84 @@ main:focus{outline:none}
      "Traceability"
     ]
    }
+  },
+  {
+   "id": "pidev-kindergarten",
+   "cats": [
+    "backend"
+   ],
+   "mono": "PIDEV",
+   "shots": [
+    "projects/pidev-kindergarten-1.webp",
+    "projects/pidev-kindergarten-2.webp",
+    "projects/pidev-kindergarten-3.webp",
+    "projects/pidev-kindergarten-4.webp"
+   ],
+   "kind": {
+    "fr": "API REST · Réseau social · Projet d'équipe",
+    "en": "REST API · Social network · Team project"
+   },
+   "title": {
+    "fr": "Réseau social parents ↔ jardins d'enfants",
+    "en": "Parents ↔ kindergartens social network"
+   },
+   "org": {
+    "name": "ESPRIT — projet PIDEV",
+    "url": "https://www.esprit.tn",
+    "when": {
+     "fr": "Févr. – mars 2021",
+     "en": "Feb – Mar 2021"
+    }
+   },
+   "desc": {
+    "fr": "API REST Spring Boot d'un réseau social qui réunit les parents et les jardins d'enfants autour du suivi de l'enfant : modèle de 24 entités JPA (profils, vie du jardin d'enfants, communication, services) et routes CRUD pour les utilisateurs et les réunions.",
+    "en": "Spring Boot REST API for a social network that brings parents and kindergartens together around the child's follow-up: a 24-entity JPA model (profiles, kindergarten life, communication, services) and CRUD routes for users and meetings."
+   },
+   "problem": {
+    "fr": "Les parents jouent un rôle clé dans le développement de leur enfant et doivent pouvoir suivre ses activités, même lorsqu'il est au jardin d'enfants. La plateforme devait permettre aux jardins d'enfants et aux parents de travailler ensemble et de partager les responsabilités.",
+    "en": "Parents play a key role in their child's development and need to follow the child's activities, even while at kindergarten. The platform had to let kindergartens and parents work together and share responsibilities."
+   },
+   "role": {
+    "fr": "Projet d'équipe d'étudiants (PIDEV, ESPRIT, 2021) : vision du produit, modèle de données et API Spring Boot réalisés en équipe. En 2026, documentation des deux dépôts (vision et back-end).",
+    "en": "Student team project (PIDEV, ESPRIT, 2021): product vision, data model and Spring Boot API built as a team. In 2026, documentation of both repositories (vision and back end)."
+   },
+   "items": {
+    "fr": [
+     "Modèle de 24 entités JPA en quatre domaines : profils (parents, personnel, éducateurs, médecins, chauffeurs de bus…), vie du jardin d'enfants (établissement, enfants, cours, activités, notes, clubs, événements), communication (réunions, rendez-vous, notifications, forum, publications, commentaires, chat) et services (circuits de bus, réclamations, satisfaction).",
+     "10 énumérations stockées en texte (@Enumerated(EnumType.STRING)) : rôles du personnel, types d'événements, de clubs et de rendez-vous, lieux, sujets des notes (psychologie, pédiatrie…), départ et arrivée des trajets de bus.",
+     "API REST de 10 routes CRUD (GET, POST, PUT, DELETE) sur les utilisateurs et les réunions, servie par Tomcat sur le port 8083 sous /SpringMVC/servlet.",
+     "Architecture en couches : contrôleurs @RestController → interfaces de services et implémentations @Service → dépôts Spring Data (CrudRepository) → MySQL, reliés par injection de dépendances.",
+     "Schéma MySQL généré par Hibernate (ddl-auto=update), une table par entité (T_…), base créée au premier démarrage si elle n'existe pas.",
+     "Tests d'intégration JUnit 4 (SpringRunner, @SpringBootTest) des services utilisateurs et réunions : liste, ajout, lecture, mise à jour et suppression."
+    ],
+    "en": [
+     "Model of 24 JPA entities in four domains: profiles (parents, staff, educators, doctors, bus drivers…), kindergarten life (establishment, children, courses, activities, notes, clubs, events), communication (meetings, appointments, notifications, forum, posts, comments, chat) and services (bus routes, claims, satisfaction).",
+     "10 enums stored as text (@Enumerated(EnumType.STRING)): staff roles, event, club and appointment types, places, note subjects (psychology, paediatrics…), start and end points of bus routes.",
+     "REST API with 10 CRUD routes (GET, POST, PUT, DELETE) for users and meetings, served by Tomcat on port 8083 under /SpringMVC/servlet.",
+     "Layered architecture: @RestController controllers → service interfaces and @Service implementations → Spring Data repositories (CrudRepository) → MySQL, wired by dependency injection.",
+     "MySQL schema generated by Hibernate (ddl-auto=update), one table per entity (T_…), database created on first start if missing.",
+     "JUnit 4 integration tests (SpringRunner, @SpringBootTest) for the user and meeting services: list, create, read, update and delete."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2.4",
+    "Spring Data JPA",
+    "Hibernate",
+    "MySQL",
+    "Maven",
+    "JUnit 4"
+   ],
+   "links": [
+    {
+     "label": "Code source",
+     "url": "https://github.com/rachedchakchouk/SocialNetwork-ParentsKindergartens"
+    },
+    {
+     "label": "Vision du projet",
+     "url": "https://github.com/rachedchakchouk/Kindergarden_social_network"
+    }
+   ]
   },
   {
    "id": "timesheet",
