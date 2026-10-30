@@ -441,6 +441,34 @@ body.noscroll { overflow: hidden; }
 .pcard[hidden] { display: none !important; }
 @media (max-width: 980px) { .projects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (max-width: 640px) { .projects { grid-template-columns: minmax(0, 1fr); } .pcard.feat { grid-column: auto; } }
+/* barre au-dessus des projets : total, tri, grille ou liste */
+.pf-tools { display: flex; justify-content: space-between; align-items: center; gap: 10px 16px; flex-wrap: wrap; margin: -4px 0 16px; }
+.pf-count { margin: 0; font: 400 13.5px var(--mono); color: var(--muted); }
+.pf-count strong { font-weight: 600; color: var(--fg); }
+.pf-opts { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.seg { display: inline-flex; align-items: center; gap: 2px; padding: 3px; background: var(--surface); border: 1px solid var(--rule); border-radius: 999px; }
+.seg-l { font: 500 11px var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--muted); padding: 0 6px 0 10px; }
+.seg-b { display: inline-flex; align-items: center; gap: 6px; font: 500 13px var(--body); color: var(--muted); background: none; border: 0; border-radius: 999px; padding: 6px 12px; min-height: 32px; cursor: pointer; transition: background .2s, color .2s; }
+.seg-b:hover { color: var(--fg); }
+.seg-b[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.seg-b svg { width: 14px; height: 14px; fill: currentColor; flex: none; }
+.pc-when { display: none; }
+.projects.as-list { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+.projects.as-list .pcard { grid-column: auto; align-items: stretch; }
+.projects.as-list .pcard:hover { transform: none; }
+.projects.as-list .pc-cover, .projects.as-list .pc-desc { display: none; }
+.projects.as-list .pc-body { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "title more" "top more"; align-items: center; gap: 4px 18px; padding: 14px 20px; }
+.projects.as-list .pc-title { grid-area: title; font-size: 17px; }
+.projects.as-list .pc-top { grid-area: top; justify-content: flex-start; flex-wrap: wrap; gap: 2px 10px; }
+.projects.as-list .pc-top > * + *::before { content: "·"; margin-right: 10px; color: var(--muted); }
+.projects.as-list .pc-when { display: inline; font: 400 12px var(--mono); color: var(--muted); }
+.projects.as-list .pc-more { grid-area: more; margin: 0; white-space: nowrap; }
+@media (max-width: 640px) {
+  .pf-tools { align-items: flex-start; }
+  .seg-b { padding: 6px 10px; }
+  .projects.as-list .pc-body { grid-template-columns: minmax(0, 1fr); grid-template-areas: "title" "top"; padding: 12px 16px; }
+  .projects.as-list .pc-more { display: none; }
+}
 
 .pmodal { position: fixed; inset: 0; z-index: 60; display: grid; place-items: center; padding: 16px; background: color-mix(in srgb, var(--bg) 60%, rgba(0,0,0,.6)); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
 .pm-card { position: relative; width: min(860px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--surface); border: 1px solid var(--rule); border-radius: 22px; padding: 30px; box-shadow: 0 40px 80px -30px rgba(0,0,0,.5); overscroll-behavior: contain; }
@@ -463,6 +491,35 @@ body.noscroll { overflow: hidden; }
 .pm-links { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
 .lightbox { position: fixed; inset: 0; z-index: 70; display: grid; place-items: center; background: rgba(0,0,0,.85); padding: 16px; cursor: zoom-out; }
 .lightbox img { max-width: 100%; max-height: 100%; border-radius: 10px; }
+/* album des captures : précédente / suivante, compteur, vignettes */
+.lightbox.album { grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto minmax(0, 1fr) auto; grid-template-areas: "top top top" "prev stage next" "strip strip strip"; place-items: stretch; gap: 12px; padding: 14px 16px; cursor: default; background: rgba(8,10,14,.95); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+/* boutons flottants secondaires masqués pendant l'album (le bouton d'accessibilité reste disponible) */
+body.album-open #toTop, body.album-open .fk-wrap:has(.co2-fab), body.album-open .co2-fab { display: none !important; }
+.lb-top { grid-area: top; display: flex; align-items: center; gap: 12px; color: #fff; }
+.lb-title { flex: 1; min-width: 0; font: 600 15px var(--body); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lb-count { font: 500 13px var(--mono); opacity: .85; white-space: nowrap; }
+.lb-stage { grid-area: stage; margin: 0; min-width: 0; min-height: 0; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: pan-y pinch-zoom; cursor: zoom-out; }
+.lb-stage img { width: auto; height: auto; max-width: 100%; max-height: 100%; object-fit: contain; cursor: default; user-select: none; -webkit-user-drag: none; box-shadow: 0 30px 60px -30px rgba(0,0,0,.8); }
+.lb-btn { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border-radius: 50%; border: 1px solid rgba(255,255,255,.28); background: rgba(255,255,255,.12); color: #fff; font: 400 26px/1 var(--body); cursor: pointer; transition: background .2s; }
+.lb-btn:hover { background: rgba(255,255,255,.26); }
+.lightbox.album :focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.lb-close { font-size: 22px; }
+.lb-prev { grid-area: prev; align-self: center; }
+.lb-next { grid-area: next; align-self: center; }
+.lb-strip { grid-area: strip; position: relative; display: flex; gap: 8px; overflow-x: auto; margin: 0 56px; padding: 3px 2px; scrollbar-width: thin; }
+.lb-strip button { flex: 0 0 auto; width: 76px; aspect-ratio: 16 / 10; padding: 0; border: 2px solid transparent; border-radius: 8px; overflow: hidden; background: rgba(255,255,255,.08); opacity: .5; cursor: pointer; transition: opacity .2s, border-color .2s; }
+.lb-strip button:first-child { margin-left: auto; }
+.lb-strip button:last-child { margin-right: auto; }
+.lb-strip button:hover { opacity: .85; }
+.lb-strip button[aria-current="true"] { opacity: 1; border-color: #fff; }
+.lb-strip img { display: block; width: 100%; height: 100%; max-height: none; object-fit: cover; object-position: top; border-radius: 0; }
+@media (max-width: 640px) {
+  .lightbox.album { grid-template-columns: minmax(0, 1fr); grid-template-areas: "top" "stage" "strip"; padding: 12px; }
+  .lb-prev, .lb-next { position: absolute; top: 50%; transform: translateY(-50%); width: 40px; height: 40px; z-index: 1; background: rgba(0,0,0,.45); }
+  .lb-prev { left: 8px; }
+  .lb-next { right: 8px; }
+  .lb-strip button { width: 58px; }
+}
 @media (max-width: 640px) { .pm-card { padding: 22px; } .pm-grid { grid-template-columns: 1fr; } }
 
 .v-pages { display: block; padding: 0; }
@@ -598,6 +655,21 @@ main:focus{outline:none}
         <button class="fchip" type="button" data-filter="devops" aria-pressed="false">DevOps</button>
       </div>
       <a class="btn" href="https://github.com/rachedchakchouk" target="_blank" rel="noopener noreferrer"><i class="ti i-github" aria-hidden="true"></i>GitHub ↗</a>
+    </div>
+    <div class="pf-tools">
+      <p class="pf-count" id="projCount" aria-live="polite"></p>
+      <div class="pf-opts">
+        <div class="seg" role="group" aria-label="Trier les projets / Sort projects">
+          <span class="seg-l" aria-hidden="true"><span data-l="fr">Trier</span><span data-l="en">Sort</span></span>
+          <button class="seg-b" type="button" data-sort="featured" aria-pressed="true"><span data-l="fr">Mis en avant</span><span data-l="en">Featured</span></button>
+          <button class="seg-b" type="button" data-sort="recent" aria-pressed="false"><span data-l="fr">Plus récents</span><span data-l="en">Most recent</span></button>
+          <button class="seg-b" type="button" data-sort="name" aria-pressed="false"><span data-l="fr">Nom (A → Z)</span><span data-l="en">Name (A → Z)</span></button>
+        </div>
+        <div class="seg" role="group" aria-label="Affichage des projets / Project view">
+          <button class="seg-b" type="button" data-view="grid" aria-pressed="true"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="1.5" width="5.5" height="5.5" rx="1.3"/><rect x="9" y="1.5" width="5.5" height="5.5" rx="1.3"/><rect x="1.5" y="9" width="5.5" height="5.5" rx="1.3"/><rect x="9" y="9" width="5.5" height="5.5" rx="1.3"/></svg><span data-l="fr">Grille</span><span data-l="en">Grid</span></button>
+          <button class="seg-b" type="button" data-view="list" aria-pressed="false"><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2" width="13" height="2.6" rx="1.2"/><rect x="1.5" y="6.7" width="13" height="2.6" rx="1.2"/><rect x="1.5" y="11.4" width="13" height="2.6" rx="1.2"/></svg><span data-l="fr">Liste</span><span data-l="en">List</span></button>
+        </div>
+      </div>
     </div>
     <div class="projects" id="projectGrid"></div>
   </section>

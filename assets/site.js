@@ -316,7 +316,44 @@
   function esc(t) { return String(t).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function bi(o) { return '<span data-l="fr">' + esc(o.fr) + '</span><span data-l="en">' + esc(o.en) + '</span>'; }
   var curFilter = 'all';
-  function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); fillRow(); }
+  function applyFilter() { grid.querySelectorAll('.pcard').forEach(function (card) { card.hidden = !(curFilter === 'all' || card.getAttribute('data-cats').split(' ').indexOf(curFilter) > -1); }); fillRow(); showCount(); }
+  /* Tri et affichage choisis par le visiteur, mémorisés dans son navigateur.
+     « Mis en avant » garde l'ordre du contenu ; « Plus récents » lit la date la plus récente citée dans org.when. */
+  var SORTS = ['featured', 'recent', 'name'], VIEWS = ['grid', 'list'];
+  var curSort = SORTS.indexOf(get('projSort')) > -1 ? get('projSort') : 'featured';
+  var curView = VIEWS.indexOf(get('projView')) > -1 ? get('projView') : 'grid';
+  var countEl = document.getElementById('projCount');
+  function showCount() {
+    if (!countEl || !grid) return;
+    var cards = grid.querySelectorAll('.pcard'), total = cards.length, shown = 0;
+    cards.forEach(function (c) { if (!c.hidden) shown++; });
+    var s = function (n, mot) { return '<strong>' + n + '</strong> ' + mot + (n > 1 ? 's' : ''); };
+    countEl.innerHTML = shown === total
+      ? '<span data-l="fr">' + s(total, 'projet') + '</span><span data-l="en">' + s(total, 'project') + '</span>'
+      : '<span data-l="fr">' + s(shown, 'projet') + ' affiché' + (shown > 1 ? 's' : '') + ' sur ' + total + '</span>' +
+        '<span data-l="en"><strong>' + shown + '</strong> of ' + total + ' projects shown</span>';
+  }
+  var MOIS = { jan: 1, janv: 1, feb: 2, fev: 2, 'fév': 2, 'févr': 2, mar: 3, mars: 3, apr: 4, avr: 4, may: 5, mai: 5, jun: 6, juin: 6, jul: 7, juil: 7,
+    aug: 8, 'août': 8, aout: 8, sep: 9, sept: 9, oct: 10, nov: 11, dec: 12, 'déc': 12 };
+  function recency(p) {
+    var w = (p.org && p.org.when) || {}, best = -1, mois = 0;
+    String(w.en || w.fr || '').toLowerCase().split(/[^a-z0-9à-ÿ]+/).forEach(function (t) {
+      if (/^(19|20)\d\d$/.test(t)) { best = Math.max(best, +t * 12 + mois); mois = 0; }
+      else if (Object.prototype.hasOwnProperty.call(MOIS, t)) mois = MOIS[t];
+      else if (t === 'present' || t === 'today' || t === 'aujourd') { var d = new Date(); best = Math.max(best, d.getFullYear() * 12 + d.getMonth() + 1.5); }
+    });
+    return best;
+  }
+  function sortProjects(list) {
+    list = list.slice();
+    if (curSort === 'recent') list.sort(function (a, b) { return recency(b) - recency(a); });
+    else if (curSort === 'name') {
+      var l = root.getAttribute('data-lang') === 'en' ? 'en' : 'fr';
+      var nom = function (p) { return String((p.title && (p.title[l] || p.title.fr)) || p.mono || ''); };
+      list.sort(function (a, b) { return nom(a).localeCompare(nom(b), l, { sensitivity: 'base' }); });
+    }
+    return list;
+  }
   /* Évite les trous dans la grille : dans chaque ligne incomplète, la dernière carte s'élargit pour compléter la ligne.
      Le placement est simulé comme le fait le navigateur (grid-auto-flow: dense : chaque carte prend la première place libre),
      les cases restées libres ne peuvent donc accueillir aucune autre carte. */
@@ -349,15 +386,16 @@
     });
   }
   window.addEventListener('resize', function () { clearTimeout(fillRow.t); fillRow.t = setTimeout(fillRow, 150); });
-  window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.innerHTML = PROJECTS.map(function (p) {
+  window.__renderProjects = function () { if (!grid) return; PROJECTS = CONTENT.projects || []; grid.classList.toggle('as-list', curView === 'list'); grid.innerHTML = sortProjects(PROJECTS).map(function (p) {
       var PL = window.__logoOf ? window.__logoOf(p.id, p.org.url, p.org.name) : null;
+      var w = p.org.when || {}, when = w.fr || w.en ? '<span class="pc-when">' + bi({ fr: w.fr || w.en, en: w.en || w.fr }) + '</span>' : '';
       var gh = !PL && /github/i.test(p.org.name + ' ' + p.org.url);
       var cover = p.shots && p.shots.length ? '<img src="' + esc(p.shots[0]) + '" alt="" loading="lazy">' :
         (PL || gh ? '<span class="pc-brand"><span class="pc-logo' + (PL && PL.wide ? ' wide' : '') + '">' + (PL ? '<img src="' + esc(PL.src) + '" alt="">' : '<i class="ti i-github" aria-hidden="true"></i>') + '</span><span class="pc-mono sm">' + esc(p.mono) + '</span></span>' : '<span class="pc-mono">' + esc(p.mono) + '</span>');
       var mods = !(p.shots && p.shots.length) && p.modules && p.modules.fr && p.modules.fr.length ?
         '<ul class="pc-mods" aria-hidden="true">' + p.modules.fr.map(function (m, k) { return '<li>' + bi({ fr: m, en: (p.modules.en || [])[k] || m }) + '</li>'; }).join('') + '</ul>' : '';
       return '<button class="pcard' + (p.feat ? ' feat' : '') + '" type="button" data-id="' + p.id + '" data-cats="' + p.cats.join(' ') + '">' +
-        '<div class="pc-cover' + (mods ? ' mods' : '') + '">' + cover + mods + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span></div>' +
+        '<div class="pc-cover' + (mods ? ' mods' : '') + '">' + cover + mods + '</div><div class="pc-body"><div class="pc-top"><span class="pc-kind">' + bi(p.kind) + '</span><span class="pc-org">' + esc(p.org.name) + '</span>' + when + '</div>' +
         '<h3 class="pc-title">' + bi(p.title) + '</h3><p class="pc-desc">' + bi(p.desc) + '</p><span class="pc-more"><span data-l="fr">Voir le détail</span><span data-l="en">View details</span> →</span></div></button>';
     }).join(''); applyFilter(); };
   if (grid) {
@@ -370,12 +408,23 @@
         applyFilter();
       });
     });
-    var pm = document.getElementById('projModal'), pmBody = document.getElementById('pmBody'), pmLast = null;
+    var sortBtns = document.querySelectorAll('[data-sort]'), viewBtns = document.querySelectorAll('[data-view]');
+    function pressTools() {
+      sortBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-sort') === curSort ? 'true' : 'false'); });
+      viewBtns.forEach(function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-view') === curView ? 'true' : 'false'); });
+    }
+    sortBtns.forEach(function (b) { b.addEventListener('click', function () { curSort = b.getAttribute('data-sort'); set('projSort', curSort); pressTools(); window.__renderProjects(); }); });
+    viewBtns.forEach(function (b) { b.addEventListener('click', function () { curView = b.getAttribute('data-view'); set('projView', curView); pressTools(); window.__renderProjects(); }); });
+    // le tri par nom suit la langue affichée
+    langBtn.addEventListener('click', function () { if (curSort === 'name') window.__renderProjects(); });
+    pressTools();
+    var pm = document.getElementById('projModal'), pmBody = document.getElementById('pmBody'), pmLast = null, pmCur = null;
     function openProject(id) {
       var p = PROJECTS.filter(function (x) { return x.id === id; })[0]; if (!p) return; p.items = p.items || { fr: [], en: [] }; p.stack = p.stack || []; p.links = p.links || []; p.org = p.org || { name: '', url: '', when: {} };
+      pmCur = p;
       var li = function (arr) { return arr.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join(''); };
-      var gallery = p.shots && p.shots.length ? '<div class="pm-h"><span data-l="fr">Captures d’écran</span><span data-l="en">Screenshots</span></div><div class="pm-gallery">' +
-        p.shots.map(function (s, k) { return '<button type="button" data-zoom="' + esc(s) + '"><img src="' + esc(s) + '" alt="' + esc(p.title.en) + ' – ' + (k + 1) + '" loading="lazy"></button>'; }).join('') + '</div>' : '';
+      var gallery = p.shots && p.shots.length ? '<div class="pm-h"><span data-l="fr">Captures d’écran</span><span data-l="en">Screenshots</span> · ' + p.shots.length + '</div><div class="pm-gallery">' +
+        p.shots.map(function (s, k) { return '<button type="button" data-zoom="' + esc(s) + '" data-k="' + k + '"><img src="' + esc(s) + '" alt="' + esc(p.title.en) + ' – ' + (k + 1) + '" loading="lazy"></button>'; }).join('') + '</div>' : '';
       var links = p.links.map(function (l) { return '<a class="btn" href="' + esc(l.url) + '" target="_blank" rel="noopener noreferrer">' + esc(l.label) + ' ↗</a>'; }).join('');
       pmBody.innerHTML = '<div class="pm-kind">' + bi(p.kind) + '</div><h3 class="pm-title" id="pmTitle">' + bi(p.title) + '</h3>' +
         '<p class="pm-org">' + (function () { var L = window.__logoOf && window.__logoOf(p.id, p.org.url, p.org.name); return L ? '<span class="pm-logo' + (L.wide ? ' wide' : '') + '"><img src="' + esc(L.src) + '" alt=""></span>' : ''; })() + (p.org.url ? '<a href="' + esc(p.org.url) + '" target="_blank" rel="noopener noreferrer">' + esc(p.org.name) + ' ↗</a>' : esc(p.org.name)) + '<span class="pm-when">' + bi(p.org.when) + '</span></p>' +
@@ -394,14 +443,70 @@
     pm.addEventListener('click', function (e) {
       if (e.target === pm) return closeProject();
       var z = e.target.closest('[data-zoom]');
-      if (z) {
-        var lb = document.createElement('div'); lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-label', 'Image');
-        lb.innerHTML = '<img src="' + z.getAttribute('data-zoom') + '" alt="">'; lb.tabIndex = -1;
-        lb.addEventListener('click', function () { lb.remove(); z.focus(); });
-        lb.addEventListener('keydown', function (ev) { if (ev.key === 'Escape') { ev.stopPropagation(); lb.remove(); z.focus(); } });
-        document.body.appendChild(lb); lb.focus();
-      }
+      if (z && pmCur) openAlbum(pmCur, +z.getAttribute('data-k') || 0);
     });
+    /* Album des captures d'un projet : précédente / suivante (boutons, flèches ← →, Début / Fin, glisser du doigt),
+       compteur, bande de vignettes ; Échap, la croix ou un clic à côté de l'image referment l'album. */
+    function openAlbum(p, k) {
+      var shots = p.shots || [], n = shots.length; if (!n) return;
+      var en = root.getAttribute('data-lang') === 'en', title = (p.title && (en ? p.title.en || p.title.fr : p.title.fr)) || '';
+      var lb = document.createElement('div'); lb.className = 'lightbox album'; lb.tabIndex = -1;
+      lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true');
+      lb.setAttribute('aria-label', (en ? 'Screenshots – ' : 'Captures d’écran – ') + title);
+      lb.innerHTML = '<div class="lb-top"><span class="lb-title">' + esc(title) + '</span><span class="lb-count" aria-live="polite"></span>' +
+        '<button type="button" class="lb-btn lb-close" aria-label="' + (en ? 'Close' : 'Fermer') + '">×</button></div>' +
+        (n > 1 ? '<button type="button" class="lb-btn lb-prev" aria-label="' + (en ? 'Previous screenshot' : 'Capture précédente') + '">‹</button>' : '') +
+        '<figure class="lb-stage"><img alt=""></figure>' +
+        (n > 1 ? '<button type="button" class="lb-btn lb-next" aria-label="' + (en ? 'Next screenshot' : 'Capture suivante') + '">›</button>' +
+          '<div class="lb-strip">' + shots.map(function (s, j) { return '<button type="button" data-k="' + j + '" aria-label="' + (en ? 'Screenshot ' : 'Capture ') + (j + 1) + '"><img src="' + esc(s) + '" alt="" loading="lazy"></button>'; }).join('') + '</div>' : '');
+      var img = lb.querySelector('.lb-stage img'), stage = lb.querySelector('.lb-stage'), count = lb.querySelector('.lb-count'), thumbs = lb.querySelectorAll('.lb-strip button');
+      function show(j) {
+        k = (j + n) % n;
+        img.src = shots[k]; img.alt = title + ' – ' + (k + 1) + ' / ' + n;
+        count.textContent = (k + 1) + ' / ' + n;
+        thumbs.forEach(function (b, x) {
+          if (x !== k) return b.removeAttribute('aria-current');
+          b.setAttribute('aria-current', 'true');
+          var st = b.parentNode, l = b.offsetLeft;
+          if (l < st.scrollLeft || l + b.offsetWidth > st.scrollLeft + st.clientWidth) st.scrollLeft = l - (st.clientWidth - b.offsetWidth) / 2;
+        });
+        if (n > 1) [k + 1, k - 1].forEach(function (x) { (new Image()).src = shots[(x + n) % n]; });
+      }
+      function close() { lb.remove(); document.body.classList.remove('album-open'); var t = pmBody.querySelector('[data-zoom][data-k="' + k + '"]'); if (t) t.focus(); }
+      var swiped = false, x0 = null, y0 = 0;
+      lb.addEventListener('click', function (ev) {
+        if (swiped) { swiped = false; return; }
+        var b = ev.target.closest('button');
+        if (b) {
+          if (b.classList.contains('lb-close')) close();
+          else if (b.classList.contains('lb-prev')) show(k - 1);
+          else if (b.classList.contains('lb-next')) show(k + 1);
+          else if (b.hasAttribute('data-k')) show(+b.getAttribute('data-k'));
+          return;
+        }
+        if (ev.target === lb || ev.target === stage) close();
+      });
+      lb.addEventListener('keydown', function (ev) {
+        var key = ev.key;
+        if (key === 'Escape') { ev.stopPropagation(); close(); }
+        else if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'Home' || key === 'End') {
+          ev.preventDefault();
+          show(key === 'ArrowLeft' ? k - 1 : key === 'ArrowRight' ? k + 1 : key === 'Home' ? 0 : n - 1);
+        } else if (key === 'Tab') {
+          var f = lb.querySelectorAll('button'), first = f[0], last = f[f.length - 1];
+          if (ev.shiftKey && (document.activeElement === first || document.activeElement === lb)) { ev.preventDefault(); last.focus(); }
+          else if (!ev.shiftKey && document.activeElement === last) { ev.preventDefault(); first.focus(); }
+        }
+      });
+      stage.addEventListener('pointerdown', function (ev) { x0 = ev.clientX; y0 = ev.clientY; });
+      stage.addEventListener('pointerup', function (ev) {
+        if (x0 === null) return;
+        var dx = ev.clientX - x0, dy = ev.clientY - y0; x0 = null;
+        if (n > 1 && Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) { swiped = true; show(dx < 0 ? k + 1 : k - 1); setTimeout(function () { swiped = false; }, 400); }
+      });
+      stage.addEventListener('pointercancel', function () { x0 = null; });
+      document.body.appendChild(lb); document.body.classList.add('album-open'); show(k); lb.focus();
+    }
     document.addEventListener('keydown', function (e) {
       if (pm.hidden || document.querySelector('.lightbox')) return;
       if (e.key === 'Escape') closeProject();
