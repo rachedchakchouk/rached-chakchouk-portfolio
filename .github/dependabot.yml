@@ -1,0 +1,25 @@
+# Mises à jour automatiques des dépendances (Dependabot).
+# Une seule PR groupée par semaine pour les mises à jour mineures/correctives,
+# une PR groupée séparée pour les correctifs de sécurité.
+version: 2
+updates:
+  # Fonctions Netlify (@netlify/blobs)
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "06:00"
+      timezone: "Africa/Tunis"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
+    labels: ["dépendances"]
+    groups:
+      securite:
+        applies-to: security-updates
+        patterns: ["*"]
+      mineures-et-correctifs:
+        applies-to: version-updates
+        update-types: ["minor", "patch"]
+        patterns: ["*"]
