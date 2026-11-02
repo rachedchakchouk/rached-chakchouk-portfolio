@@ -1581,6 +1581,92 @@ main:focus{outline:none}
    ]
   },
   {
+   "id": "portier",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "Portier",
+   "shots": [
+    "projects/portier-1.webp",
+    "projects/portier-2.webp",
+    "projects/portier-3.webp",
+    "projects/portier-4.webp",
+    "projects/portier-5.webp",
+    "projects/portier-6.webp",
+    "projects/portier-7.webp",
+    "projects/portier-8.webp",
+    "projects/portier-9.webp"
+   ],
+   "kind": {
+    "fr": "Bureau · CLI · Serveur web · Windows, Linux, macOS",
+    "en": "Desktop · CLI · Web server · Windows, Linux, macOS"
+   },
+   "title": {
+    "fr": "Portier – le gardien des ports de votre machine",
+    "en": "Portier – the gatekeeper of your machine's ports"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Oct. 2026",
+     "en": "Oct 2026"
+    }
+   },
+   "desc": {
+    "fr": "Gestionnaire des ports réseau d'un PC ou d'un serveur : quel programme écoute sur quel port, ce qui est exposé au réseau, conflits avec les ports réservés par ses projets, libération d'un port en un clic avec des garde-fous, surveillance et historique. Une application de bureau, une ligne de commande et un mode serveur web, sur un moteur commun pour Windows, Linux et macOS.",
+    "en": "Network port manager for a PC or a server: which program listens on which port, what is exposed to the network, conflicts with the ports reserved by your projects, one-click port release with safeguards, monitoring and history. A desktop app, a command line and a web server mode, on a shared engine for Windows, Linux and macOS."
+   },
+   "problem": {
+    "fr": "« Port 8080 already in use », un ng serve resté ouvert, une base qui ne démarre pas : retrouver le coupable demande des netstat, tasklist ou lsof différents selon le système, et l'arrêter à l'aveugle risque de tuer un processus du système ou de couper sa propre session SSH sur un serveur.",
+    "en": "“Port 8080 already in use”, an ng serve left running, a database that won't start: finding the culprit takes different netstat, tasklist or lsof commands on each system, and killing it blindly risks taking down a system process or cutting your own SSH session on a server."
+   },
+   "role": {
+    "fr": "Conception du produit, de l'architecture et de l'identité visuelle (logo à l'arche et à la herse), puis développement de bout en bout : moteur multi-plateforme, application Electron, ligne de commande, serveur web sécurisé, interface Angular, empaquetage et intégration continue sur trois systèmes. Développement assisté par IA (Claude).",
+    "en": "Product, architecture and visual identity design (arch-and-portcullis logo), then end-to-end development: cross-platform engine, Electron app, command line, secured web server, Angular interface, packaging and continuous integration on three systems. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Moteur multi-plateforme : Windows (netstat indépendant de la langue, PowerShell CIM), Linux (/proc lu directement), macOS (lsof, ps) ; reconnaissance des programmes (« Spring Boot — jirani-back », « Serveur Angular — numida/web », PostgreSQL, conteneurs Docker) ; lignes de commande expurgées des mots de passe et jetons.",
+     "Libération sûre d'un port : demande revérifiée juste avant l'arrêt (réutilisation des PID), arrêt propre puis forcé avec les processus enfants, processus du système, sshd et parents protégés, conteneur Docker arrêté par docker stop, relance en administrateur proposée si les droits manquent.",
+     "Projets et surveillance : ports réservés par projet avec le type de programme attendu, détection des conflits, notifications à l'ouverture ou la fermeture d'un port, historique filtrable, export CSV / JSON, recherche de ports libres vérifiée par une vraie tentative d'écoute.",
+     "Interface Angular 22 en signals sans zone.js : tableau virtualisé fluide avec des milliers de ports, panneau des ports de dev dessiné comme un commutateur, palette de commandes Ctrl + K, thèmes clair et sombre, mode démonstration.",
+     "Trois façons de l'utiliser : application Electron verrouillée (isolation, sandbox, CSP, fusibles, zone de notification), ligne de commande portier pour les serveurs (list, who, free, find-free, test, watch, projects) et mode serveur web protégé par jeton et CSRF, avec TLS exigé par défaut dès qu'il écoute sur le réseau.",
+     "Qualité : contrat d'API partagé et validé, tests unitaires et d'intégration réels (ports ouverts, processus arrêtés) sous Windows, Linux et macOS en CI, tests de bout en bout Playwright, installateurs Windows / Linux / macOS et exécutables autonomes pour serveurs."
+    ],
+    "en": [
+     "Cross-platform engine: Windows (language-independent netstat, PowerShell CIM), Linux (/proc read directly), macOS (lsof, ps); program recognition (“Spring Boot — jirani-back”, “Angular server — numida/web”, PostgreSQL, Docker containers); command lines scrubbed of passwords and tokens.",
+     "Safe port release: request re-checked right before stopping (PID reuse), graceful then forced stop including child processes, system processes, sshd and parents protected, Docker container stopped with docker stop, relaunch as administrator offered when rights are missing.",
+     "Projects and monitoring: ports reserved per project with the expected kind of program, conflict detection, notifications when a port opens or closes, filterable history, CSV / JSON export, free-port search verified by an actual bind attempt.",
+     "Angular 22 interface with signals and no zone.js: virtualised table that stays smooth with thousands of ports, dev-ports panel drawn like a network switch, Ctrl + K command palette, light and dark themes, demo mode.",
+     "Three ways to use it: locked-down Electron app (isolation, sandbox, CSP, fuses, tray), portier command line for servers (list, who, free, find-free, test, watch, projects) and a web server mode protected by token and CSRF, with TLS required by default as soon as it listens on the network.",
+     "Quality: shared and validated API contract, unit tests and real integration tests (ports opened, processes stopped) on Windows, Linux and macOS in CI, Playwright end-to-end tests, Windows / Linux / macOS installers and standalone executables for servers."
+    ]
+   },
+   "stack": [
+    "TypeScript",
+    "Node.js",
+    "Electron 45",
+    "Angular 22",
+    "Signals",
+    "Angular CDK",
+    "esbuild",
+    "Vitest",
+    "Playwright",
+    "electron-builder",
+    "GitHub Actions"
+   ],
+   "links": [
+    {
+     "label": "Code source",
+     "url": "https://github.com/rachedchakchouk/Portier"
+    }
+   ]
+  },
+  {
    "id": "jobradar",
    "feat": true,
    "cats": [
