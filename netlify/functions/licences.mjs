@@ -59,7 +59,7 @@ const clePrivee = () => crypto.createPrivateKey(env('LICENCE_CLE_PRIVEE').replac
 const signer = (octets) => crypto.sign(null, octets, clePrivee()).toString('base64url');
 
 function fabriquerCle(enr) {
-  const charge = Buffer.from(JSON.stringify({ id: enr.id, client: enr.client, debut: enr.debut, fin: enr.fin, v: 1 }), 'utf8').toString('base64url');
+  const charge = Buffer.from(JSON.stringify({ id: enr.id, client: enr.client, debut: enr.debut, fin: enr.fin, v: 1, ...(enr.aVie ? { aVie: true } : {}) }), 'utf8').toString('base64url');
   return PREFIXE_CLE + charge + '.' + signer(Buffer.from(charge, 'base64url'));
 }
 
@@ -101,9 +101,11 @@ export default async function handler(requete) {
       const corps = await requete.json();
       if (!corps.client || !String(corps.client).trim()) return erreur(400, 'Le nom du client est obligatoire.');
       const debut = /^\d{4}-\d{2}-\d{2}$/.test(corps.debut || '') ? corps.debut : aujourdhui();
-      const fin = /^\d{4}-\d{2}-\d{2}$/.test(corps.fin || '') ? corps.fin : plusMois(debut, Number(corps.dureeMois) > 0 ? Number(corps.dureeMois) : 12);
+      // dureeMois = 0 (ou aVie = true) : clé à vie, sans expiration ni vérification en ligne (clé maître du propriétaire)
+      const aVie = corps.aVie === true || Number(corps.dureeMois) === 0;
+      const fin = aVie ? '9999-12-31' : /^\d{4}-\d{2}-\d{2}$/.test(corps.fin || '') ? corps.fin : plusMois(debut, Number(corps.dureeMois) > 0 ? Number(corps.dureeMois) : 12);
       const enr = await modifierRegistre((cles) => {
-        const e = { id: nouvelId(cles), client: String(corps.client).trim(), debut, fin, codeMachine: null, revoquee: false, note: corps.note ? String(corps.note).trim() : null, creeLe: new Date().toISOString(), derniereVerification: null, derniereVersion: null, cle: null };
+        const e = { id: nouvelId(cles), client: String(corps.client).trim(), debut, fin, aVie, codeMachine: null, revoquee: false, note: corps.note ? String(corps.note).trim() : null, creeLe: new Date().toISOString(), derniereVerification: null, derniereVersion: null, cle: null };
         e.cle = fabriquerCle(e);
         cles.push(e);
         return e;
