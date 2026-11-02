@@ -6,41 +6,39 @@
   "redirects": [
     {
       "source": "/dashboard",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
-      "permanent": false
-    },
-    {
-      "source": "/dashboard/",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
-      "permanent": false
-    },
-    {
-      "source": "/dashboard/:path+",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "destination": "/dashboard/",
       "permanent": false
     },
     {
       "source": "/dashborad",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "destination": "/dashboard/",
       "permanent": false
     },
     {
       "source": "/dashborad/",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "destination": "/dashboard/",
       "permanent": false
     },
     {
       "source": "/admin",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "destination": "/dashboard/",
       "permanent": false
     },
     {
       "source": "/admin/",
-      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "destination": "/dashboard/",
       "permanent": false
     }
   ],
   "rewrites": [
+    {
+      "source": "/api/admin/:path*",
+      "destination": "https://rached-chakchouk.netlify.app/api/admin/:path*"
+    },
+    {
+      "source": "/api/stats",
+      "destination": "https://rached-chakchouk.netlify.app/api/stats"
+    },
     {
       "source": "/media/:name",
       "destination": "/api/media?name=:name"
@@ -98,6 +96,19 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    },
+    {
+      "source": "/dashboard/(.*)",
+      "headers": [
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
         }
       ]
     }

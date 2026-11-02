@@ -86,8 +86,13 @@ export async function sendMail(to, subject, text) {
   return r && r.ok ? { ok: true } : { ok: false, reason: 'mail_failed', status: r ? r.status : 0 };
 }
 
+// The dashboard is also served on the main address (Vercel), which proxies /api/admin/* here.
+const TRUSTED_HOSTS = ['rached-chakchouk.vercel.app'];
 export function sameOrigin(req) {
   const o = req.headers.get('origin');
   if (!o) return true;
-  try { return new URL(o).host === new URL(req.url).host; } catch { return false; }
+  try {
+    const h = new URL(o).host;
+    return h === new URL(req.url).host || TRUSTED_HOSTS.includes(h);
+  } catch { return false; }
 }
