@@ -32,6 +32,10 @@
   ],
   "rewrites": [
     {
+      "source": "/api/licences-dddb99be0d/:path*",
+      "destination": "https://rached-chakchouk.netlify.app/api/licences-dddb99be0d/:path*"
+    },
+    {
       "source": "/api/admin/:path*",
       "destination": "https://rached-chakchouk.netlify.app/api/admin/:path*"
     },
