@@ -444,6 +444,48 @@
   },
   {
    "role": {
+    "fr": "Développeur Full Stack (freelance) – Java & Angular",
+    "en": "Freelance Full Stack Developer – Java & Angular"
+   },
+   "company": "DITRIOT CONSULTING",
+   "url": "https://www.ditriot.com",
+   "logoText": "",
+   "logoImg": "logos/ditriot.png",
+   "when": {
+    "fr": "Août 2022 – juil. 2023",
+    "en": "Aug 2022 – Jul 2023"
+   },
+   "current": false,
+   "context": {
+    "fr": "Suite du développement de la plateforme RH interne en microservices, issue de mon projet de fin d'études",
+    "en": "Continued development of the internal HR platform built on microservices, started during my final-year project"
+   },
+   "items": {
+    "fr": [
+     "Évolution de la plateforme après le projet de fin d'études : nouvelles fonctionnalités et améliorations des microservices et du front-end Angular.",
+     "Développement back-end Spring Boot / Spring Data JPA, API REST entre les microservices.",
+     "Authentification et gestion des rôles avec Spring Security.",
+     "Maintenance et qualité : intégration continue avec Jenkins, suivi de la qualité avec SonarQube, versioning Git."
+    ],
+    "en": [
+     "Evolved the platform after the final-year project: new features and enhancements across the microservices and the Angular front-end.",
+     "Back-end development with Spring Boot / Spring Data JPA, REST APIs between microservices.",
+     "Authentication and role management with Spring Security.",
+     "Maintenance and quality: continuous integration with Jenkins, code quality monitoring with SonarQube, version control with Git."
+    ]
+   },
+   "stack": [
+    "Java 8",
+    "Spring Boot 2",
+    "Angular 13 / 14",
+    "MySQL",
+    "Docker",
+    "Jenkins",
+    "SonarQube"
+   ]
+  },
+  {
+   "role": {
     "fr": "Chef de projet technique",
     "en": "Technical Project Manager"
    },
@@ -486,8 +528,8 @@
    "logoText": "",
    "logoImg": "logos/ditriot.png",
    "when": {
-    "fr": "Fév. 2022 – juil. 2023",
-    "en": "Feb 2022 – Jul 2023"
+    "fr": "Fév. – juil. 2022",
+    "en": "Feb – Jul 2022"
    },
    "current": false,
    "context": {
