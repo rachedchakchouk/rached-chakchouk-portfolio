@@ -1688,7 +1688,6 @@
      "Page détail de chaque œuvre (route dynamique /book/works/<id>) rendue côté serveur par un Server Component : couverture grand format via next/image, description (sous les deux formes que renvoie l'API) et sujets.",
      "États gérés : chargement (indicateur animé), erreur réseau, aucun résultat et livre introuvable.",
      "Thème clair ou sombre selon la préférence du système, styles Tailwind CSS 4.",
-     "Test Jest avec React Testing Library du rendu de la page d'accueil, avec la navigation de Next simulée.",
      "Maintenance 2026 : correctifs de sécurité (Next.js 15.5 et dépendances vulnérables) et README complété (lancement, tests, structure du projet)."
     ],
     "en": [
@@ -1697,7 +1696,6 @@
      "Detail page for each work (dynamic route /book/works/<id>) rendered on the server by a Server Component: large cover through next/image, description (in both forms the API returns) and subjects.",
      "Handled states: loading (spinner), network error, no results and book not found.",
      "Light or dark theme following the system preference, Tailwind CSS 4 styling.",
-     "Jest test with React Testing Library of the home page rendering, with Next navigation mocked.",
      "2026 maintenance: security fixes (Next.js 15.5 and vulnerable dependencies) and an expanded README (running, tests, project structure)."
     ]
    },
@@ -1707,7 +1705,6 @@
     "JavaScript",
     "Tailwind CSS 4",
     "Open Library API",
-    "Jest",
     "ESLint"
    ],
    "links": [
