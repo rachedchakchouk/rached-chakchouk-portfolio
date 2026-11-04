@@ -82,7 +82,18 @@
     document.querySelectorAll('a.btn-pdf').forEach(function (a) { a.href = a.getAttribute('data-l') === 'en' ? '/media/cv-en.pdf' : '/media/cv-fr.pdf'; });
     fetch('/api/content', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
       // content published before the certifications section existed keeps the built-in certifications
-      if (d && d.version) { if (!Array.isArray(d.certifications)) d.certifications = CONTENT.certifications || []; CONTENT = d; renderContent(); }
+      if (d && d.version) {
+        if (!Array.isArray(d.certifications)) d.certifications = CONTENT.certifications || [];
+        // projets ajoutés au site après la dernière publication depuis le tableau de bord (liste explicite, pour ne
+        // jamais faire réapparaître un projet supprimé depuis le tableau de bord) : affichés en tête s'ils manquent
+        var NEW_PROJECTS = ['atelier', 'diskdock'];
+        if (Array.isArray(d.projects) && Array.isArray(CONTENT.projects)) {
+          var known = {}; d.projects.forEach(function (p) { known[p.id] = true; });
+          var added = CONTENT.projects.filter(function (p) { return NEW_PROJECTS.indexOf(p.id) >= 0 && !known[p.id]; });
+          if (added.length) d.projects = added.concat(d.projects);
+        }
+        CONTENT = d; renderContent();
+      }
     }).catch(function () {});
   }
 

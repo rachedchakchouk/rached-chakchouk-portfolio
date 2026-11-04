@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Activité GitHub – Rached Chakchouk</title>
+<meta name="description" content="Activité GitHub de Rached Chakchouk : dépôts, commits, push, contributions et langages, mis à jour automatiquement.">
+<link rel="canonical" href="https://rached-chakchouk.vercel.app/github/">
+<link rel="alternate" hreflang="fr" href="https://rached-chakchouk.vercel.app/github/">
+<link rel="alternate" hreflang="en" href="https://rached-chakchouk.vercel.app/github/?lang=en">
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Rached Chakchouk">
+<meta property="og:title" content="Activité GitHub – Rached Chakchouk">
+<meta property="og:description" content="Dépôts, commits, push, contributions et langages, mis à jour automatiquement depuis GitHub.">
+<meta property="og:url" content="https://rached-chakchouk.vercel.app/github/">
+<meta property="og:image" content="https://rached-chakchouk.vercel.app/og-image.jpg">
+<meta name="author" content="Rached Chakchouk">
+<link rel="icon" href="/favicon-32.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{--bg:#f6f7fb;--panel:#ffffff;--fg:#0b1324;--muted:#5a667a;--line:#e2e7ef;--accent:#2563c9;--accent-2:#0d9488;--chip:#e6eefb;--l0:#ebeff5;
+--display:"Geist","Segoe UI",system-ui,sans-serif;--body:"Geist","Segoe UI",system-ui,sans-serif;--mono:"Geist Mono",ui-monospace,"Cascadia Mono",monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#070b14;--panel:#0f1522;--fg:#eef2f8;--muted:#97a3b8;--line:#1e2738;--accent:#6ea8ff;--accent-2:#2dd4bf;--chip:#14213a;--l0:#161e2d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#070b14;--panel:#0f1522;--fg:#eef2f8;--muted:#97a3b8;--line:#1e2738;--accent:#6ea8ff;--accent-2:#2dd4bf;--chip:#14213a;--l0:#161e2d;color-scheme:dark}
+:root:not([data-lang="en"]) [data-l="en"],:root[data-lang="en"] [data-l="fr"]{display:none!important}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--body);font-size:14px;padding:24px max(16px,env(safe-area-inset-left,0px)) 56px}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+#app{display:flex;flex-direction:column;gap:18px}
+.topbar{display:flex;align-items:center;gap:8px}.topbar .sp{flex:1}
+.back{color:var(--accent);text-decoration:none;font-weight:500}.back:hover{text-decoration:underline}
+.tbtn{font:600 13px var(--body);min-width:38px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel);color:var(--fg);cursor:pointer}
+.tbtn:hover{border-color:var(--accent)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+h1{font-family:var(--display);font-weight:700;font-size:clamp(26px,4.4vw,40px);margin:0;letter-spacing:-.02em}
+h1 .grad{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:15px;margin:0 0 12px;font-weight:600}
+.sub{color:var(--muted);margin:6px 0 0;max-width:72ch;line-height:1.55}
+.meta{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px}
+.kpis{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(170px,1fr))}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.kpi .l{font-size:12px;color:var(--muted)}
+.kpi .v{font:700 28px var(--display);letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi .s{font-size:12px;color:var(--muted)}
+.cal{overflow-x:auto}
+.cal svg{display:block;min-width:720px;width:100%;height:auto}
+.cal rect{rx:2;ry:2}
+.legend{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted);margin-top:8px;justify-content:flex-end}
+.legend i{width:11px;height:11px;border-radius:2px;display:inline-block}
+.bars svg{display:block;width:100%;height:170px}
+.grid2{display:grid;gap:18px;grid-template-columns:1.5fr 1fr}
+@media (max-width:860px){.grid2{grid-template-columns:1fr}}
+.repo{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--line)}
+.repo:last-child{border-bottom:0}
+.repo a{color:var(--fg);font-weight:600;text-decoration:none}.repo a:hover{color:var(--accent)}
+.repo .d{color:var(--muted);font-size:12.5px;margin-top:2px;line-height:1.45}
+.repo .r{margin-left:auto;text-align:right;font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.chip{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--chip);color:var(--fg);margin-left:6px;font-weight:500}
+.lang{margin-bottom:10px}.lang .row{display:flex;justify-content:space-between;font-size:13px}
+.lang .bar{height:7px;border-radius:4px;background:var(--l0);margin-top:4px;overflow:hidden}
+.lang .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+.state{padding:40px;text-align:center;color:var(--muted)}
+.note{font-size:12px;color:var(--muted);line-height:1.5}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="/"><span data-l="fr">← Retour au portfolio</span><span data-l="en">← Back to portfolio</span></a>
+    <span class="sp"></span>
+    <button class="tbtn" id="langBtn" type="button">EN</button>
+    <button class="tbtn" id="themeBtn" type="button" aria-label="Thème clair / sombre">◐</button>
+  </div>
+  <header>
+    <h1><span data-l="fr">Activité <span class="grad">GitHub</span></span><span data-l="en"><span class="grad">GitHub</span> activity</span></h1>
+    <p class="sub" data-l="fr">Ce que je construis, en chiffres : dépôts, commits, push et langages, lus directement sur GitHub et mis à jour automatiquement toutes les heures.</p>
+    <p class="sub" data-l="en">What I build, in numbers: repositories, commits, pushes and languages, read straight from GitHub and refreshed automatically every hour.</p>
+    <p class="meta" id="meta"></p>
+  </header>
+  <main id="app" aria-live="polite"><div class="state"><span data-l="fr">Chargement des statistiques…</span><span data-l="en">Loading statistics…</span></div></main>
+</div>
+<script src="app.js"></script>
+<script src="/assets/totop.js"></script>
+<script src="/assets/a11y.js"></script>
+<script src="/assets/carbon.js"></script>
+</body>
+</html>
