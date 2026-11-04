@@ -768,6 +768,94 @@
    ]
   },
   {
+   "id": "omori",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "erp"
+   ],
+   "mono": "Omori",
+   "shots": [
+    "projects/omori-1.webp",
+    "projects/omori-2.webp",
+    "projects/omori-3.webp",
+    "projects/omori-4.webp",
+    "projects/omori-5.webp",
+    "projects/omori-6.webp",
+    "projects/omori-7.webp",
+    "projects/omori-8.webp",
+    "projects/omori-9.webp"
+   ],
+   "kind": {
+    "fr": "Bureau Windows · Web · Android · Gestion locative",
+    "en": "Windows desktop · Web · Android · Rental management"
+   },
+   "title": {
+    "fr": "Omori – gestion de biens en location (logements et véhicules), en 3 versions",
+    "en": "Omori – rental property management (homes and vehicles), in 3 versions"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Nov. 2026",
+     "en": "Nov 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de gestion d'un parc loué à la journée — logements type Airbnb et véhicules — déclinée en trois versions à partir d'un seul code : bureau Windows avec serveur embarqué et abonnement par clé, web (PWA) et Android autonome sans serveur. Planning, réservations et encaissements, charges et échéances, ménages, travaux, inventaire, finances, photos, Google Agenda.",
+    "en": "Management app for a fleet rented by the day — Airbnb-style homes and vehicles — delivered in three versions from a single codebase: Windows desktop with an embedded server and key-based subscription, web (PWA) and standalone Android with no server. Planning, bookings and payments, recurring charges, cleanings, repairs, inventory, finances, photos, Google Calendar."
+   },
+   "problem": {
+    "fr": "Gérer plusieurs logements et voitures en location, c'est jongler entre un calendrier, des carnets de dépenses, des rappels de vidange, d'assurance et de factures STEG/SONEDE, des ménages à caler entre deux locataires et des loyers ou leasings à payer — sans vue d'ensemble, et avec des outils qui exigent un serveur ou un abonnement cloud.",
+    "en": "Managing several rental homes and cars means juggling a calendar, expense notebooks, reminders for oil changes, insurance and utility bills, cleanings to fit between two tenants and rents or leases to pay — with no overview, and with tools that require a server or a cloud subscription."
+   },
+   "role": {
+    "fr": "Conception du produit, du modèle métier et de l'identité visuelle, puis développement de bout en bout : contrat d'API unique implémenté trois fois (serveur Spring Boot, moteur local TypeScript embarqué dans le front, mock Node), interface Angular, coquille Electron avec installateur, projet Android Capacitor, service de licences serverless et back-office. Développement assisté par IA (Claude).",
+    "en": "Product, domain model and visual identity design, then end-to-end development: a single API contract implemented three times (Spring Boot server, TypeScript local engine embedded in the front end, Node mock), Angular interface, Electron shell with installer, Capacitor Android project, serverless licence service and back-office. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Planning par bien avec recherche d'un bien libre (dates, voyageurs, chambres, lits), réservations avec sources (direct, Airbnb, Booking), encaissements et reste à payer, refus des chevauchements.",
+     "Charges et échéances par bien — vidange au kilométrage, visite technique, assurance, vignette, leasing, loyer avec augmentation annuelle configurable, STEG, SONEDE, internet — avec bouton « Payer / Fait » qui crée la dépense et la prochaine occurrence ; alertes sur le tableau de bord.",
+     "Ménage obligatoire entre deux locataires créé automatiquement au départ, coûts ménage et pressing convertis en dépenses ; travaux et réparations ; inventaire général et par bien ; finances par bien, catégorie et mois avec export CSV.",
+     "Fiches riches : photos (réduites dans le navigateur, galerie, photo principale), coordonnées GPS avec itinéraire, concierge, consignes pour le locataire, contrat de location des véhicules, clients avec pièce d'identité et nationalité ; filtres métier et recherche sur chaque écran.",
+     "Trois versions, un seul front : le même contrat d'API est servi par Spring Boot (bureau, web) ou par un moteur local embarqué (Android autonome, PWA statique) avec export / import JSON pour changer d'appareil ; synchronisation Google Agenda.",
+     "Version bureau Windows : installateur NSIS avec JRE embarqué, port automatique, instance unique, clés d'abonnement signées Ed25519 valables un an (ou à vie), liées à l'ordinateur par empreinte MAC, vérifiées en ligne et tolérées 30 jours hors ligne ; service de licences Netlify Functions + Blobs et back-office Electron pour créer, couper, libérer ou prolonger les clés."
+    ],
+    "en": [
+     "Per-asset planning with a free-asset search (dates, guests, bedrooms, beds), bookings with sources (direct, Airbnb, Booking), payments and balance due, overlapping bookings rejected.",
+     "Recurring charges per asset — mileage-based oil change, inspection, insurance, road tax, leasing, rent with configurable yearly increase, utilities, internet — with a 'Pay / Done' button that records the expense and creates the next occurrence; dashboard alerts.",
+     "Mandatory cleaning between two tenants created automatically at check-out, cleaning and laundry costs turned into expenses; repairs; global and per-asset inventory; finances per asset, category and month with CSV export.",
+     "Rich records: photos (resized in the browser, gallery, main photo), GPS coordinates with directions, caretaker, instructions for the tenant, vehicle rental contract flag, customers with ID document and nationality; business filters and search on every screen.",
+     "Three versions, one front end: the same API contract is served by Spring Boot (desktop, web) or by an embedded local engine (standalone Android, static PWA) with JSON export / import to switch devices; Google Calendar sync.",
+     "Windows desktop: NSIS installer with embedded JRE, automatic port, single instance, Ed25519-signed subscription keys valid one year (or lifetime), bound to the computer by MAC fingerprint, verified online and tolerated 30 days offline; Netlify Functions + Blobs licence service and Electron back-office to create, revoke, release or extend keys."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3.5",
+    "JPA",
+    "H2",
+    "Angular 22",
+    "TypeScript",
+    "PWA",
+    "Capacitor",
+    "Electron",
+    "electron-builder",
+    "Netlify Functions",
+    "Ed25519",
+    "Google Calendar API"
+   ],
+   "links": [
+    {
+     "label": "Code source",
+     "url": "https://github.com/rachedchakchouk/Omori"
+    }
+   ]
+  },
+  {
    "id": "gitdock",
    "feat": true,
    "cats": [
