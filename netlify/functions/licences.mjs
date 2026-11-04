@@ -73,6 +73,36 @@ const plusMois = (iso, n) => { const d = new Date(iso + 'T00:00:00Z'); const j =
 const nouvelId = (cles) => { const annee = new Date().getFullYear(); const n = cles.filter((c) => c.id.startsWith(`LIC-${annee}-`)).length + 1; return `LIC-${annee}-${String(n).padStart(4, '0')}`; };
 const publique = ({ cle, ...reste }) => reste; // la clé complète n'est renvoyée qu'à la création et sur demande explicite
 
+// ------------------------------------------------------------------ protection de l'administration
+// Comparaison à temps constant du jeton + verrouillage après 5 échecs (par adresse, 15 min)
+// et 30 échecs au total par heure (essais répartis sur plusieurs adresses).
+function jetonAdminValide(donne) {
+  const attendu = env('LICENCE_ADMIN_TOKEN');
+  if (!attendu || typeof donne !== 'string' || !donne) return false;
+  const a = crypto.createHash('sha256').update(attendu).digest();
+  const b = crypto.createHash('sha256').update(donne).digest();
+  return crypto.timingSafeEqual(a, b);
+}
+const ipDe = (requete) => (requete.headers.get('x-nf-client-connection-ip') || requete.headers.get('x-forwarded-for') || '').split(',')[0].trim();
+const cleIp = (requete) => 'admin-echec/' + crypto.createHash('sha256').update('omori|' + ipDe(requete)).digest('hex').slice(0, 24);
+async function lireCompteur(cle) {
+  const c = await getStore('licences-securite').get(cle, { type: 'json' }).catch(() => null);
+  return c && c.jusque > Date.now() ? c : null;
+}
+async function adminVerrouille(requete) {
+  const [ip, tous] = await Promise.all([lireCompteur(cleIp(requete)), lireCompteur('admin-echec/tous')]);
+  const jusque = Math.max(ip && ip.n >= 5 ? ip.jusque : 0, tous && tous.n >= 30 ? tous.jusque : 0);
+  return jusque ? Math.ceil((jusque - Date.now()) / 60000) : 0;
+}
+async function echecAdmin(requete) {
+  const store = getStore('licences-securite');
+  for (const [cle, duree] of [[cleIp(requete), 15 * 60000], ['admin-echec/tous', 60 * 60000]]) {
+    const c = (await lireCompteur(cle)) || { n: 0, jusque: Date.now() + duree };
+    c.n++;
+    await store.setJSON(cle, c).catch(() => {});
+  }
+}
+
 // ------------------------------------------------------------------ routeur
 export default async function handler(requete) {
   if (requete.method === 'OPTIONS') return json(204, {});
@@ -86,8 +116,13 @@ export default async function handler(requete) {
     if (requete.method === 'POST' && action === 'verifier') return await verifier(await requete.json());
 
     // --- administration
-    const jeton = requete.headers.get('x-admin-token');
-    if (!env('LICENCE_ADMIN_TOKEN') || jeton !== env('LICENCE_ADMIN_TOKEN')) return erreur(401, 'Accès administrateur refusé.');
+    const verrou = await adminVerrouille(requete);
+    if (verrou) return erreur(429, `Trop d'essais refusés : réessayez dans ${verrou} min.`);
+    if (!jetonAdminValide(requete.headers.get('x-admin-token'))) {
+      await echecAdmin(requete);
+      await new Promise((ok) => setTimeout(ok, 500));
+      return erreur(401, 'Accès administrateur refusé.');
+    }
     if (action !== 'cles') return erreur(404, 'Route inconnue.');
     const id = segments[1];
     const sousAction = segments[2];
@@ -145,7 +180,8 @@ export default async function handler(requete) {
     return erreur(404, 'Route inconnue.');
   } catch (e) {
     console.error(e);
-    return erreur(500, 'Erreur du service de licences : ' + e.message);
+    if (e instanceof SyntaxError) return erreur(400, 'Corps de requête JSON invalide.');
+    return erreur(500, 'Erreur interne du service de licences.');
   }
 }
 
@@ -153,6 +189,14 @@ export default async function handler(requete) {
 async function verifier(corps) {
   const { id, codeMachine, version, horodatage } = corps || {};
   if (!id || !codeMachine || !horodatage) return erreur(400, 'Requête incomplète.');
+  // Validation stricte : empêche de remplir le registre avec des valeurs arbitraires
+  if (typeof id !== 'string' || id.length > 40) return erreur(400, 'Identifiant de clé invalide.');
+  if (typeof codeMachine !== 'string' || codeMachine.length > 200 || /[\u0000-\u001f<>]/.test(codeMachine)) return erreur(400, 'Code machine invalide.');
+  if ((typeof horodatage !== 'string' && typeof horodatage !== 'number') || String(horodatage).length > 40) return erreur(400, 'Horodatage invalide.');
+  if (version != null && (typeof version !== 'string' || version.length > 40)) return erreur(400, 'Version invalide.');
+  // Clé inconnue : réponse signée sans écrire dans le registre
+  const { cles: existantes } = await lireRegistre();
+  if (!existantes.some((c) => c.id === id)) return json(200, reponseSignee({ id, codeMachine, etat: 'INCONNUE', fin: null, horodatage }));
   let etat = 'INCONNUE';
   let fin = null;
   await modifierRegistre((cles) => {

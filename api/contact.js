@@ -3,9 +3,12 @@ import { MAIN, withTimeout } from './_main.js';
 // POST /api/contact on the mirror -> forwards the message to the main site's Netlify form "contact",
 // so it arrives in Netlify -> Forms and by e-mail exactly like on the main site.
 export async function POST(req) {
+  // Browsers always send Origin on a POST: requests without it (scripts, bots) are refused.
   const origin = req.headers.get('origin');
-  try { if (origin && new URL(origin).host !== new URL(req.url).host) return new Response(null, { status: 403 }); }
+  try { if (!origin || new URL(origin).host !== new URL(req.url).host) return new Response(null, { status: 403 }); }
   catch { return new Response(null, { status: 403 }); }
+  const type = (req.headers.get('content-type') || '').split(';')[0].trim();
+  if (type !== 'application/x-www-form-urlencoded') return new Response(null, { status: 415 });
   const raw = await req.text();
   if (raw.length > 6000) return new Response(null, { status: 413 });
   const f = new URLSearchParams(raw);

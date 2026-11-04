@@ -1,5 +1,5 @@
 import { makeToken, visitorHash, bump, peek } from '../lib/analytics.mjs';
-import { secStore, loadState, saveState, signingKey, checkPassword, sameOrigin } from '../lib/auth.mjs';
+import { secStore, loadState, saveState, signingKey, checkPassword, sameOrigin, GLOBAL_FAIL_MAX, GLOBAL_FAIL_WINDOW } from '../lib/auth.mjs';
 
 // POST /api/admin/login {password} -> {token, exp, mustChange}.
 // Accepts the current admin password, or the one-time temporary password sent by e-mail
@@ -21,9 +21,10 @@ export default async (req, context) => {
   const sec = secStore();
   const who = await visitorHash(context.ip || '', 'login', Netlify.env.get('ANALYTICS_SALT') || 'rc-portfolio', 'auth');
   const key = 'login-fail/' + who;
-  const lock = await peek(sec, key);
-  if (lock && lock.n >= MAX_FAILS) {
-    const retry = Math.ceil((lock.until - Date.now()) / 1000);
+  const lock = await peek(sec, key), all = await peek(sec, 'login-fail/all');
+  if ((lock && lock.n >= MAX_FAILS) || (all && all.n >= GLOBAL_FAIL_MAX)) {
+    const until = Math.max(lock && lock.n >= MAX_FAILS ? lock.until : 0, all && all.n >= GLOBAL_FAIL_MAX ? all.until : 0);
+    const retry = Math.ceil((until - Date.now()) / 1000);
     return json({ error: 'locked', retryAfter: retry }, 429, { 'retry-after': String(retry) });
   }
   const state = await loadState(sec);
@@ -31,6 +32,7 @@ export default async (req, context) => {
   if (!kind) {
     await new Promise(r => setTimeout(r, 700));
     const rec = await bump(sec, key, LOCK_MS);
+    await bump(sec, 'login-fail/all', GLOBAL_FAIL_WINDOW);
     return json({ error: 'unauthorized', remaining: Math.max(0, MAX_FAILS - rec.n) }, 401);
   }
   await sec.delete(key).catch(() => {});

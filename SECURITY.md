@@ -16,7 +16,9 @@ admin API for editing content and files). It stores no personal data from visito
 - Clickjacking protection (`frame-ancestors 'self'`, `X-Frame-Options: SAMEORIGIN`)
 - Admin login: the password (environment variable) is sent once to `/api/admin/login`, which returns a
   signed session token valid for 2 hours (HMAC-SHA256); the password is never stored in the browser.
-  5 failed attempts lock logins for 15 minutes.
+  5 failed attempts lock logins for 15 minutes, and 60 failed attempts in an hour (all visitors together)
+  lock them for the rest of the hour, against brute force spread over many addresses.
+  Session tokens can be signed with a dedicated random secret (`SESSION_SECRET`), separate from the password.
 - Password change from the dashboard (current password required, 10+ characters, 3 character types);
   the new password is stored only as a salted scrypt hash, and every change signs out all other sessions.
 - Forgotten password: a one-time temporary password (valid 15 minutes) is e-mailed to the fixed admin
@@ -28,8 +30,13 @@ admin API for editing content and files). It stores no personal data from visito
   edited content sanitized and always rendered escaped
 - `X-Content-Type-Options: nosniff`, strict `Referrer-Policy`, restrictive `Permissions-Policy`
 - External links opened with `rel="noopener noreferrer"`
-- Contact form: front-end validation, length limits and an anti-spam honeypot field;
+- Licence service (Omori): admin token compared in constant time, 5 refused attempts per address lock it
+  for 15 minutes (30 per hour overall), strict input checks, internal errors never returned to the caller
+- Contact form: front-end validation, length limits and an anti-spam honeypot field; the relay on the main
+  address only accepts browser requests from the site itself (Origin required);
   no secret or API key is stored in the code
+
+- Automated checks: CodeQL code scanning (every push and weekly) and Dependabot for npm packages and GitHub Actions
 
 ## Reporting a vulnerability
 

@@ -33,10 +33,14 @@ export async function loadState(store = secStore()) {
 }
 export const saveState = (state, store = secStore()) => store.setJSON(KEY, state);
 
-// Key used to sign session tokens: master env secret + generation counter.
+// Key used to sign session tokens: dedicated random secret (SESSION_SECRET, 32+ chars) when set,
+// otherwise the master env password (legacy) + generation counter. A dedicated secret means a
+// captured token cannot be used to brute-force the admin password offline.
 export function signingKey(state) {
-  const env = Netlify.env.get('DASHBOARD_PASSWORD');
-  return env ? env + '|g' + (state.gen || 0) : null;
+  if (!Netlify.env.get('DASHBOARD_PASSWORD')) return null;
+  const dedicated = Netlify.env.get('SESSION_SECRET');
+  const base = dedicated && dedicated.length >= 32 ? 's|' + dedicated : Netlify.env.get('DASHBOARD_PASSWORD');
+  return base + '|g' + (state.gen || 0);
 }
 // Convenience for protected endpoints.
 export async function adminKey() {
@@ -85,6 +89,10 @@ export async function sendMail(to, subject, text) {
   }).catch(() => null);
   return r && r.ok ? { ok: true } : { ok: false, reason: 'mail_failed', status: r ? r.status : 0 };
 }
+
+// Global cap on failed admin logins (all visitors together): stops distributed brute force
+// coming from many IP addresses, which the per-visitor lock alone cannot stop.
+export const GLOBAL_FAIL_MAX = 60, GLOBAL_FAIL_WINDOW = 60 * 60 * 1000;
 
 // The dashboard is also served on the main address (Vercel), which proxies /api/admin/* here.
 const TRUSTED_HOSTS = ['rached-chakchouk.vercel.app'];
