@@ -599,6 +599,7 @@ main:focus{outline:none}
         <a class="btn primary mag" href="#contact"><span data-l="fr">Me contacter</span><span data-l="en">Get in touch</span> →</a>
         <a class="btn" href="https://linkedin.com/in/rached-chakchouk" target="_blank" rel="noopener noreferrer"><i class="ti i-linkedin" aria-hidden="true"></i>LinkedIn ↗</a>
         <a class="btn" href="https://github.com/rachedchakchouk" target="_blank" rel="noopener noreferrer"><i class="ti i-github" aria-hidden="true"></i>GitHub ↗</a>
+        <a class="btn" href="/github/"><span data-l="fr">Mon activité GitHub</span><span data-l="en">My GitHub activity</span> →</a>
         <a class="btn" href="/offshore-it-tunisie/"><span data-l="fr">Annuaire Offshore IT Tunisie</span><span data-l="en">Tunisia Offshore IT directory</span> →</a>
         <a class="btn" data-l="fr" href="/entretien/">🎯 150 questions d'entretien →</a>
         <a class="btn" data-l="en" href="/entretien/?lang=en">🎯 150 interview questions →</a>
@@ -655,6 +656,7 @@ main:focus{outline:none}
         <button class="fchip" type="button" data-filter="devops" aria-pressed="false">DevOps</button>
       </div>
       <a class="btn" href="https://github.com/rachedchakchouk" target="_blank" rel="noopener noreferrer"><i class="ti i-github" aria-hidden="true"></i>GitHub ↗</a>
+      <a class="btn" href="/github/"><span data-l="fr">Statistiques GitHub</span><span data-l="en">GitHub statistics</span> →</a>
     </div>
     <div class="pf-tools">
       <p class="pf-count" id="projCount" aria-live="polite"></p>
@@ -1365,6 +1367,153 @@ main:focus{outline:none}
   }
  ],
  "projects": [
+  {
+   "id": "atelier",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend",
+    "devops"
+   ],
+   "mono": "Atelier",
+   "shots": [
+    "projects/atelier-1.webp",
+    "projects/atelier-2.webp",
+    "projects/atelier-3.webp",
+    "projects/atelier-4.webp",
+    "projects/atelier-5.webp"
+   ],
+   "kind": {
+    "fr": "Bureau Windows · Projets · Ports · Git · CI/CD",
+    "en": "Windows desktop · Projects · Ports · Git · CI/CD"
+   },
+   "title": {
+    "fr": "Atelier – lanceur de projets, ports et Git réunis",
+    "en": "Atelier – project launcher, ports and Git in one app"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Nov. 2026",
+     "en": "Nov 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau qui fusionne trois de mes outils en un seul atelier de développement : DevLauncher (lancer ses projets), Portier (surveiller et libérer les ports) et GitDock (gérer ses dépôts Git et GitHub). Une seule fenêtre, une seule barre latérale, une palette de commandes et un thème communs, et un tableau de bord Git avec ses indicateurs clés.",
+    "en": "Desktop app that merges three of my tools into a single development workshop: DevLauncher (launch your projects), Portier (watch and free ports) and GitDock (manage Git and GitHub repositories). One window, one sidebar, a shared command palette and theme, and a Git dashboard with its key indicators."
+   },
+   "problem": {
+    "fr": "Trois applications ouvertes en même temps pour une seule journée de travail : lancer un projet dans l'une, voir quel programme bloque son port dans l'autre, pousser ses commits dans la troisième — chacune avec son installateur, ses réglages et son thème.",
+    "en": "Three apps open at once for a single working day: start a project in one, see which program blocks its port in another, push commits in the third — each with its own installer, settings and theme."
+   },
+   "role": {
+    "fr": "Architecture de la fusion et développement de bout en bout : processus principal Electron unique, moteurs TypeScript et Spring Boot réunis, interface Angular 22 commune, reprise automatique des anciennes données, pipeline Jenkins avec SonarQube et installateur Windows. Développement assisté par IA (Claude).",
+    "en": "Merge architecture and end-to-end development: a single Electron main process, TypeScript and Spring Boot engines brought together, a shared Angular 22 interface, automatic migration of the old data, a Jenkins pipeline with SonarQube and a Windows installer. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Trois espaces dans une navigation unique : Projets (lanceur), Ports (vue d'ensemble, connexions, réservations, surveillance, outils) et Git (dépôts, GitHub, automatisations, journal).",
+     "Tableau de bord Git : commits et « mes commits », push et pull, lignes ajoutées et supprimées, jours actifs, série en cours et record, commits à pousser ou à récupérer, frise par jour, heures de travail, classement des dépôts — sur 7 jours, 30 jours, 90 jours ou un an.",
+     "Moteur Git Spring Boot lancé en arrière-plan avec un Java embarqué, sur 127.0.0.1 avec une clé aléatoire : la fenêtre ne voit jamais ni le port ni la clé, ses appels passent par un relais du processus principal.",
+     "Sécurité commune : interface servie par un protocole privé (jamais file://), fenêtre isolée, CSP stricte, chaque canal IPC vérifie que l'appel vient de la fenêtre de l'application.",
+     "Premier lancement : reprise automatique des projets, réglages, réservations de ports et dépôts suivis des trois anciennes applications, sans rien modifier.",
+     "Qualité : plus de 600 tests Vitest, tests JUnit du moteur Git, tests de bout en bout Electron (Playwright), pipeline Jenkins (tests en parallèle, couverture, SonarQube et porte qualité, installateur NSIS archivé)."
+    ],
+    "en": [
+     "Three spaces in a single navigation: Projects (launcher), Ports (overview, connections, reservations, monitoring, tools) and Git (repositories, GitHub, automations, log).",
+     "Git dashboard: commits and “my commits”, pushes and pulls, lines added and deleted, active days, current and longest streak, commits to push or pull, daily timeline, working hours, repository ranking — over 7 days, 30 days, 90 days or a year.",
+     "Spring Boot Git engine started in the background with an embedded Java, on 127.0.0.1 with a random key: the window never sees the port or the key, its calls go through a relay in the main process.",
+     "Shared security: interface served by a private protocol (never file://), isolated window, strict CSP, every IPC channel checks that the call comes from the app window.",
+     "First launch: automatic migration of the projects, settings, port reservations and tracked repositories of the three former apps, without changing them.",
+     "Quality: more than 600 Vitest tests, JUnit tests for the Git engine, Electron end-to-end tests (Playwright), Jenkins pipeline (parallel tests, coverage, SonarQube and quality gate, archived NSIS installer)."
+    ]
+   },
+   "stack": [
+    "Electron",
+    "Angular 22",
+    "TypeScript",
+    "Node.js",
+    "Java 17",
+    "Spring Boot 3",
+    "H2",
+    "Tailwind",
+    "Vitest",
+    "JUnit 5",
+    "Playwright",
+    "Jenkins",
+    "SonarQube"
+   ],
+   "links": []
+  },
+  {
+   "id": "diskdock",
+   "feat": false,
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "DiskDock",
+   "shots": [
+    "projects/diskdock-1.webp",
+    "projects/diskdock-2.webp",
+    "projects/diskdock-3.webp",
+    "projects/diskdock-4.webp"
+   ],
+   "kind": {
+    "fr": "Bureau Windows · Nettoyage du disque",
+    "en": "Windows desktop · Disk cleanup"
+   },
+   "title": {
+    "fr": "DiskDock – faire de la place sur son PC sans rien supprimer à l'aveugle",
+    "en": "DiskDock – free up space on your PC without deleting blindly"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Nov. 2026",
+     "en": "Nov 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau de nettoyage du disque : carte de l'espace (treemap), doublons au contenu identique, dossiers et caches de développement, fichiers temporaires Windows et caches des navigateurs, avec un historique de l'espace libéré.",
+    "en": "Desktop disk cleanup app: space map (treemap), duplicates with identical content, development folders and caches, Windows temporary files and browser caches, with a history of the space freed."
+   },
+   "problem": {
+    "fr": "Disque à 94 % : anciennes versions de projets copiées en double, node_modules et builds oubliés, installeurs déjà utilisés, vidéos téléchargées — impossible de savoir quoi supprimer sans risque.",
+    "en": "Disk at 94%: old project versions copied twice, forgotten node_modules and builds, installers already used, downloaded videos — no way to know what was safe to delete."
+   },
+   "role": {
+    "fr": "Conception et développement de bout en bout : moteur Spring Boot en architecture MVC, interface Angular, coquille Electron et installateur Windows. Développement assisté par IA (Claude).",
+    "en": "End-to-end design and development: Spring Boot engine in MVC architecture, Angular interface, Electron shell and Windows installer. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Carte de l'espace d'un disque ou d'un dossier en treemap, avec fil d'Ariane, répartition par type de fichier et plus gros fichiers.",
+     "Doublons détectés en trois passes (taille, empreinte rapide, SHA-256), copie à garder proposée, fichiers OneDrive en ligne ignorés pour ne pas les télécharger.",
+     "Nettoyage développeur : node_modules, target, build, .angular, caches npm, Maven, Gradle et IDE, et anciennes versions d'un même projet en gardant la plus récente.",
+     "Temporaires Windows, caches de Chrome, Edge, Firefox et des applications Electron, corbeille, installeurs anciens et archives déjà extraites.",
+     "Sécurité : seul ce que l'analyse a proposé peut être supprimé, dossiers système et dossiers personnels protégés, corbeille ou suppression définitive au choix, confirmation systématique."
+    ],
+    "en": [
+     "Space map of a drive or folder as a treemap, with breadcrumb, breakdown by file type and largest files.",
+     "Duplicates found in three passes (size, quick fingerprint, SHA-256), suggested copy to keep, online-only OneDrive files skipped so they are not downloaded.",
+     "Developer cleanup: node_modules, target, build, .angular, npm, Maven, Gradle and IDE caches, and older versions of the same project, keeping the most recent.",
+     "Windows temporary files, Chrome, Edge, Firefox and Electron app caches, recycle bin, old installers and already-extracted archives.",
+     "Safety: only what the scan proposed can be deleted, system and personal folders protected, recycle bin or permanent deletion, confirmation every time."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "Angular 20",
+    "TypeScript",
+    "Tailwind",
+    "Electron"
+   ],
+   "links": []
+  },
   {
    "id": "numida",
    "feat": true,
