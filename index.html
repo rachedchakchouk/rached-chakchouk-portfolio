@@ -1625,6 +1625,82 @@ main:focus{outline:none}
    ]
   },
   {
+   "id": "gitdrive",
+   "feat": true,
+   "cats": [
+    "fullstack",
+    "backend"
+   ],
+   "mono": "GitDrive",
+   "shots": [
+    "projects/gitdrive-1.webp",
+    "projects/gitdrive-2.webp",
+    "projects/gitdrive-3.webp",
+    "projects/gitdrive-4.webp",
+    "projects/gitdrive-5.webp"
+   ],
+   "kind": {
+    "fr": "Bureau Windows · Chiffrement · Git · GitHub",
+    "en": "Windows desktop · Encryption · Git · GitHub"
+   },
+   "title": {
+    "fr": "GitDrive – un drive personnel chiffré sur un dépôt GitHub privé",
+    "en": "GitDrive – an encrypted personal drive on a private GitHub repository"
+   },
+   "org": {
+    "name": "Projet personnel",
+    "url": "",
+    "when": {
+     "fr": "Nov. 2026",
+     "en": "Nov 2026"
+    }
+   },
+   "desc": {
+    "fr": "Application de bureau qui transforme un dépôt GitHub privé en drive personnel : un dossier synchronisé sur le PC comme Google Drive, un explorateur intégré, l'historique de chaque fichier et le partage par lien — avec un chiffrement de bout en bout qui fait que GitHub ne voit que des blocs illisibles, sans noms ni arborescence.",
+    "en": "Desktop app that turns a private GitHub repository into a personal drive: a folder synced on the PC like Google Drive, a built-in file explorer, per-file version history and link sharing — with end-to-end encryption so GitHub only sees unreadable blobs, with no names or folder structure."
+   },
+   "problem": {
+    "fr": "Un dépôt GitHub privé offre gratuitement un stockage versionné et accessible partout, mais il n'est pas fait pour servir de drive : rien ne synchronise un dossier, les fichiers y sont en clair et les noms révèlent leur contenu, et partager un fichier d'un dépôt privé n'est pas prévu.",
+    "en": "A private GitHub repository gives free, versioned storage reachable from anywhere, but it is not built to act as a drive: nothing syncs a folder, files sit there in plain text with names that reveal their content, and sharing a file from a private repository is not supported."
+   },
+   "role": {
+    "fr": "Conception du produit, du modèle de sécurité et de l'identité visuelle, puis développement de bout en bout : moteur Spring Boot (chiffrement, Git, synchronisation, partages), interface Angular, coquille Electron durcie et installateur Windows. Développement assisté par IA (Claude).",
+    "en": "Product, security model and visual identity design, then end-to-end development: Spring Boot engine (encryption, Git, sync, sharing), Angular interface, hardened Electron shell and Windows installer. AI-assisted development (Claude)."
+   },
+   "items": {
+    "fr": [
+     "Assistant de démarrage : vérification du jeton GitHub (avec conseil d'un jeton à droits limités au seul dépôt), création automatique du dépôt privé ou connexion à un dépôt existant depuis un deuxième PC.",
+     "Dossier synchronisé dans les deux sens : surveillance des fichiers, récupération périodique, gestion des suppressions et des conflits (la copie locale est conservée sous un nom « conflit » au lieu d'être écrasée).",
+     "Explorateur intégré : glisser-déposer, dossiers, recherche, aperçu des images, PDF, textes, Markdown, audio et vidéo, historique de chaque fichier avec restauration d'une ancienne version, corbeille.",
+     "Chiffrement AES-256-GCM du contenu, des noms et de l'arborescence ; clé aléatoire protégée par la phrase secrète (Argon2id) et par une clé de récupération, changement de phrase secrète sans rien rechiffrer ; tailles masquées par remplissage et protection contre l'échange ou le retour en arrière d'un fichier.",
+     "Partage par lien chiffré : le fichier est déposé chiffré dans un dépôt public de partages et la clé reste dans le lien, après le « # », jamais envoyée à un serveur ; expiration automatique et révocation.",
+     "Sécurité de l'application : verrouillage automatique (inactivité, verrouillage de Windows, mise en veille), délai croissant après une mauvaise phrase secrète, jeton GitHub chiffré et protégé par Windows (DPAPI), moteur local sur 127.0.0.1 avec clé par lancement, CSP stricte, Electron isolé et verrouillé (fuses)."
+    ],
+    "en": [
+     "Setup wizard: GitHub token check (recommending a token limited to the single repository), automatic creation of the private repository, or joining an existing one from a second PC.",
+     "Two-way synced folder: file watching, periodic pull, handling of deletions and conflicts (the local copy is kept under a “conflict” name instead of being overwritten).",
+     "Built-in explorer: drag and drop, folders, search, preview of images, PDFs, text, Markdown, audio and video, per-file history with restore of an older version, trash.",
+     "AES-256-GCM encryption of contents, names and folder structure; random key protected by the passphrase (Argon2id) and by a recovery key, passphrase change without re-encrypting anything; sizes hidden by padding and protection against swapping or rolling back a file.",
+     "Encrypted link sharing: the file is uploaded encrypted to a public shares repository and the key stays in the link, after the “#”, never sent to a server; automatic expiry and revocation.",
+     "App security: auto-lock (inactivity, Windows lock, sleep), increasing delay after a wrong passphrase, GitHub token encrypted and protected by Windows (DPAPI), local engine on 127.0.0.1 with a per-launch key, strict CSP, isolated and locked-down Electron (fuses)."
+    ]
+   },
+   "stack": [
+    "Java 17",
+    "Spring Boot 3",
+    "JGit",
+    "Bouncy Castle",
+    "AES-256-GCM",
+    "Argon2id",
+    "Angular 22",
+    "TypeScript",
+    "Electron",
+    "GitHub API",
+    "GitHub Pages"
+   ],
+   "links": []
+  },
+  {
    "id": "gitdock",
    "feat": true,
    "cats": [
