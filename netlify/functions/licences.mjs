@@ -7,10 +7,13 @@
  * Variables d'environnement Netlify (Site configuration → Environment variables) :
  *   LICENCE_CLE_PRIVEE   clé privée Ed25519 (PEM, produite par omori/desktop/scripts/generer-cles.mjs)
  *   LICENCE_ADMIN_TOKEN  jeton exigé (en-tête X-Admin-Token) pour les opérations d'administration (Omori Backoffice)
+ *   LICENCE_EXIGER_CLE   « 1 » : /verifier exige la clé complète (champ « cle ») en plus de l'identifiant. À activer
+ *                        dès que toutes les versions d'Omori en circulation envoient « cle » : sans elle, connaître un
+ *                        identifiant (LIC-AAAA-NNNN, facile à deviner) suffit pour lier une clé libre à une autre machine.
  *
  * L'adresse publique est sur Vercel (vercel.json réécrit /api/licences-<secret>/* vers ce site Netlify).
  * Routes (préfixe = chemin secret, voir `config.path` en bas du fichier) :
- *   POST   <préfixe>/verifier                  { id, codeMachine, version, horodatage } → { reponse, signature }  (appelé par l'application)
+ *   POST   <préfixe>/verifier                  { id, cle?, codeMachine, version, horodatage } → { reponse, signature }  (appelé par l'application)
  *   GET    <préfixe>/cles                      liste (admin)
  *   POST   <préfixe>/cles                      { client, debut?, dureeMois?, note? } → nouvelle clé signée (admin)
  *   POST   <préfixe>/cles/{id}/revoquer        coupe l'accès (admin)
@@ -28,30 +31,36 @@ const erreur = (statut, message) => json(statut, { statut, message });
 
 // ------------------------------------------------------------------ registre (Netlify Blobs)
 import { getStore } from '@netlify/blobs';
+import { hit, count } from '../lib/analytics.mjs';
+
+// cohérence forte : une écriture (liaison d'une machine, échec admin) est vue immédiatement par la requête suivante
+const registreStore = () => getStore({ name: 'licences', consistency: 'strong' });
+const securiteStore = () => getStore({ name: 'licences-securite', consistency: 'strong' });
 
 const env = (k) => (typeof Netlify !== 'undefined' && Netlify.env ? Netlify.env.get(k) : process.env[k]);
 
+async function lireRegistreAvecEtag() {
+  const res = await registreStore().getWithMetadata('registre', { type: 'text' });
+  if (!res || !res.data) return { cles: [], etag: null };
+  const contenu = JSON.parse(res.data); // registre illisible : on s'arrête plutôt que de l'écraser
+  return { cles: Array.isArray(contenu.cles) ? contenu.cles : [], etag: res.etag || null };
+}
 async function lireRegistre() {
-  const texte = await getStore('licences').get('registre', { type: 'text' }).catch(() => null);
-  if (!texte) return { cles: [] };
-  try {
-    const contenu = JSON.parse(texte);
-    return { cles: Array.isArray(contenu.cles) ? contenu.cles : [] };
-  } catch {
-    return { cles: [] };
-  }
+  try { return await lireRegistreAvecEtag(); } catch { return { cles: [], etag: null }; }
 }
 
-async function ecrireRegistre(registre) {
-  await getStore('licences').set('registre', JSON.stringify({ misAJour: new Date().toISOString(), cles: registre.cles }));
-}
-
-/** Lit, modifie, écrit. */
+/** Lit, modifie, écrit — écriture conditionnelle (ETag) : si une autre requête a modifié le registre entre-temps,
+ *  on relit et on recommence, au lieu d'écraser sa modification (ex. deux machines activant la même clé en même temps). */
 async function modifierRegistre(fn, _message) {
-  const registre = await lireRegistre();
-  const resultat = fn(registre.cles);
-  await ecrireRegistre(registre);
-  return resultat;
+  for (let essai = 0; essai < 5; essai++) {
+    const registre = await lireRegistreAvecEtag();
+    const resultat = fn(registre.cles);
+    const corps = JSON.stringify({ misAJour: new Date().toISOString(), cles: registre.cles });
+    const { modified } = await registreStore().set('registre', corps, registre.etag ? { onlyIfMatch: registre.etag } : { onlyIfNew: true });
+    if (modified) return resultat;
+    await new Promise((ok) => setTimeout(ok, 50 + Math.random() * 150));
+  }
+  throw new Error('Registre modifié en parallèle : réessayez.');
 }
 
 // ------------------------------------------------------------------ signature
@@ -85,23 +94,23 @@ function jetonAdminValide(donne) {
 }
 const ipDe = (requete) => (requete.headers.get('x-nf-client-connection-ip') || requete.headers.get('x-forwarded-for') || '').split(',')[0].trim();
 const cleIp = (requete) => 'admin-echec/' + crypto.createHash('sha256').update('omori|' + ipDe(requete)).digest('hex').slice(0, 24);
-async function lireCompteur(cle) {
-  const c = await getStore('licences-securite').get(cle, { type: 'json' }).catch(() => null);
-  return c && c.jusque > Date.now() ? c : null;
-}
+// compteurs « un enregistrement par échec » (voir lib/analytics.mjs) : des requêtes parallèles ne peuvent pas
+// s'écraser mutuellement et contourner le verrouillage
 async function adminVerrouille(requete) {
-  const [ip, tous] = await Promise.all([lireCompteur(cleIp(requete)), lireCompteur('admin-echec/tous')]);
-  const jusque = Math.max(ip && ip.n >= 5 ? ip.jusque : 0, tous && tous.n >= 30 ? tous.jusque : 0);
+  const store = securiteStore();
+  const [ip, tous] = await Promise.all([count(store, cleIp(requete)), count(store, 'admin-echec/tous')]);
+  const jusque = Math.max(ip && ip.n >= 5 ? ip.until : 0, tous && tous.n >= 30 ? tous.until : 0);
   return jusque ? Math.ceil((jusque - Date.now()) / 60000) : 0;
 }
 async function echecAdmin(requete) {
-  const store = getStore('licences-securite');
-  for (const [cle, duree] of [[cleIp(requete), 15 * 60000], ['admin-echec/tous', 60 * 60000]]) {
-    const c = (await lireCompteur(cle)) || { n: 0, jusque: Date.now() + duree };
-    c.n++;
-    await store.setJSON(cle, c).catch(() => {});
-  }
+  const store = securiteStore();
+  await hit(store, cleIp(requete), 15 * 60000).catch(() => {});
+  await hit(store, 'admin-echec/tous', 60 * 60000).catch(() => {});
 }
+const egal = (a, b) => {
+  const x = crypto.createHash('sha256').update(String(a)).digest(), y = crypto.createHash('sha256').update(String(b)).digest();
+  return crypto.timingSafeEqual(x, y);
+};
 
 // ------------------------------------------------------------------ routeur
 export default async function handler(requete) {
@@ -187,16 +196,20 @@ export default async function handler(requete) {
 
 /** Vérification appelée par l'application : lie la machine à la première vérification, refuse les autres machines. */
 async function verifier(corps) {
-  const { id, codeMachine, version, horodatage } = corps || {};
+  const { id, cle, codeMachine, version, horodatage } = corps || {};
   if (!id || !codeMachine || !horodatage) return erreur(400, 'Requête incomplète.');
   // Validation stricte : empêche de remplir le registre avec des valeurs arbitraires
   if (typeof id !== 'string' || id.length > 40) return erreur(400, 'Identifiant de clé invalide.');
   if (typeof codeMachine !== 'string' || codeMachine.length > 200 || /[\u0000-\u001f<>]/.test(codeMachine)) return erreur(400, 'Code machine invalide.');
   if ((typeof horodatage !== 'string' && typeof horodatage !== 'number') || String(horodatage).length > 40) return erreur(400, 'Horodatage invalide.');
   if (version != null && (typeof version !== 'string' || version.length > 40)) return erreur(400, 'Version invalide.');
+  if (cle != null && (typeof cle !== 'string' || cle.length > 2000)) return erreur(400, 'Clé invalide.');
+  if (cle == null && env('LICENCE_EXIGER_CLE') === '1') return erreur(400, 'Clé de licence manquante : mettez Omori à jour.');
   // Clé inconnue : réponse signée sans écrire dans le registre
+  // Clé fournie mais différente de celle du registre : traitée comme inconnue (rien n'est écrit ni révélé)
   const { cles: existantes } = await lireRegistre();
-  if (!existantes.some((c) => c.id === id)) return json(200, reponseSignee({ id, codeMachine, etat: 'INCONNUE', fin: null, horodatage }));
+  const connue = existantes.find((c) => c.id === id);
+  if (!connue || (cle != null && !egal(cle, connue.cle || ''))) return json(200, reponseSignee({ id, codeMachine, etat: 'INCONNUE', fin: null, horodatage }));
   let etat = 'INCONNUE';
   let fin = null;
   await modifierRegistre((cles) => {

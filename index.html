@@ -704,8 +704,7 @@ main:focus{outline:none}
         <p data-l="en">Hiring for a Java / Angular / Spring Boot role? Send me an e-mail or connect on LinkedIn.</p>
       </div>
 
-    <form class="cform" id="contactForm" name="contact" method="POST" action="/merci/" data-netlify="true" netlify-honeypot="_gotcha" novalidate>
-      <input type="hidden" name="form-name" value="contact">
+    <form class="cform" id="contactForm" name="contact" method="POST" action="/api/contact" novalidate>
       <div class="frow">
         <label for="cf-name"><span data-l="fr">Nom</span><span data-l="en">Name</span>
           <input id="cf-name" name="name" type="text" autocomplete="name" required maxlength="100">

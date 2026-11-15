@@ -1,4 +1,5 @@
-import { makeToken, visitorHash, bump, peek } from '../lib/analytics.mjs';
+import { makeToken, visitorHash, hit, count, clearHits } from '../lib/analytics.mjs';
+import { requireRecaptcha } from '../lib/recaptcha.mjs';
 import { secStore, loadState, saveState, signingKey, checkPassword, sameOrigin, GLOBAL_FAIL_MAX, GLOBAL_FAIL_WINDOW } from '../lib/auth.mjs';
 
 // POST /api/admin/login {password} -> {token, exp, mustChange}.
@@ -15,13 +16,18 @@ export default async (req, context) => {
   if (!sameOrigin(req)) return json({ error: 'forbidden' }, 403);
   if (!Netlify.env.get('DASHBOARD_PASSWORD')) return json({ error: 'not_configured' }, 503);
   const raw = await req.text();
-  if (raw.length > 1024) return json({ error: 'bad_request' }, 400);
+  if (raw.length > 8192) return json({ error: 'bad_request' }, 400);
   let body; try { body = JSON.parse(raw); } catch { return json({ error: 'bad_request' }, 400); }
+
+  // reCAPTCHA first: scripted attempts are refused before they count towards the lock,
+  // so nobody can lock the real admin out by sending wrong passwords from a script
+  const refused = await requireRecaptcha(body.recaptcha, 'login', context.ip || '', json);
+  if (refused) return refused;
 
   const sec = secStore();
   const who = await visitorHash(context.ip || '', 'login', Netlify.env.get('ANALYTICS_SALT') || 'rc-portfolio', 'auth');
   const key = 'login-fail/' + who;
-  const lock = await peek(sec, key), all = await peek(sec, 'login-fail/all');
+  const lock = await count(sec, key), all = await count(sec, 'login-fail/all');
   if ((lock && lock.n >= MAX_FAILS) || (all && all.n >= GLOBAL_FAIL_MAX)) {
     const until = Math.max(lock && lock.n >= MAX_FAILS ? lock.until : 0, all && all.n >= GLOBAL_FAIL_MAX ? all.until : 0);
     const retry = Math.ceil((until - Date.now()) / 1000);
@@ -31,11 +37,11 @@ export default async (req, context) => {
   const kind = await checkPassword(body.password, state);
   if (!kind) {
     await new Promise(r => setTimeout(r, 700));
-    const rec = await bump(sec, key, LOCK_MS);
-    await bump(sec, 'login-fail/all', GLOBAL_FAIL_WINDOW);
+    const rec = await hit(sec, key, LOCK_MS);
+    await hit(sec, 'login-fail/all', GLOBAL_FAIL_WINDOW);
     return json({ error: 'unauthorized', remaining: Math.max(0, MAX_FAILS - rec.n) }, 401);
   }
-  await sec.delete(key).catch(() => {});
+  await clearHits(sec, key);
   if (kind === 'temp') { delete state.temp; await saveState(state, sec); } // single use
   return json(await makeToken(signingKey(state), kind === 'temp' ? 't' : 'm'));
 };

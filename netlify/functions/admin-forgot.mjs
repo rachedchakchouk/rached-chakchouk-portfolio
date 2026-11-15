@@ -1,4 +1,5 @@
-import { visitorHash, bump, peek } from '../lib/analytics.mjs';
+import { visitorHash, hit, count } from '../lib/analytics.mjs';
+import { requireRecaptcha } from '../lib/recaptcha.mjs';
 import { secStore, loadState, saveState, hashPassword, makeTempPassword, sendMail, adminEmail, maskEmail, sameOrigin, TEMP_TTL } from '../lib/auth.mjs';
 
 // POST /api/admin/forgot -> e-mails a one-time temporary password (valid 15 min) to the
@@ -15,16 +16,21 @@ export default async (req, context) => {
   if (!Netlify.env.get('DASHBOARD_PASSWORD')) return json({ error: 'not_configured' }, 503);
   if (!Netlify.env.get('RESEND_API_KEY')) return json({ error: 'mail_not_configured' }, 503);
 
+  let body = {};
+  try { const raw = await req.text(); if (raw.length > 8192) return json({ error: 'bad_request' }, 400); body = raw ? JSON.parse(raw) : {}; } catch { return json({ error: 'bad_request' }, 400); }
+  const refused = await requireRecaptcha(body && body.recaptcha, 'forgot', context.ip || '', json);
+  if (refused) return refused;
+
   const sec = secStore();
   const who = await visitorHash(context.ip || '', 'forgot', Netlify.env.get('ANALYTICS_SALT') || 'rc-portfolio', 'auth');
-  const mine = await peek(sec, 'forgot/' + who), all = await peek(sec, 'forgot/all');
+  const mine = await count(sec, 'forgot/' + who), all = await count(sec, 'forgot/all');
   if ((mine && mine.n >= 3) || (all && all.n >= 6)) {
     const until = Math.max(mine && mine.n >= 3 ? mine.until : 0, all && all.n >= 6 ? all.until : 0);
     const retry = Math.ceil((until - Date.now()) / 1000);
     return json({ error: 'too_many', retryAfter: retry }, 429, { 'retry-after': String(retry) });
   }
-  await bump(sec, 'forgot/' + who, HOUR);
-  await bump(sec, 'forgot/all', 24 * HOUR);
+  await hit(sec, 'forgot/' + who, HOUR);
+  await hit(sec, 'forgot/all', 24 * HOUR);
 
   const temp = makeTempPassword();
   const to = adminEmail();

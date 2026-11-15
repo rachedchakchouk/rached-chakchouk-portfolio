@@ -26,7 +26,8 @@ export async function verifyHash(pw, stored) {
   return want.length === got.length && timingSafeEqual(want, got);
 }
 
-export const secStore = () => getStore('security');
+// strong consistency: a hit or a password change is seen immediately by the next request
+export const secStore = () => getStore({ name: 'security', consistency: 'strong' });
 export async function loadState(store = secStore()) {
   const s = await store.get(KEY, { type: 'json' }).catch(() => null);
   return s && typeof s === 'object' ? { gen: 0, ...s } : { gen: 0 };
@@ -78,14 +79,14 @@ export const adminEmail = () => Netlify.env.get('ADMIN_EMAIL') || DEFAULT_ADMIN_
 export const maskEmail = (e) => e.replace(/^(.)[^@]*(@.*)$/, '$1•••$2');
 
 // E-mail through Resend (https://resend.com) — needs RESEND_API_KEY in Netlify env.
-export async function sendMail(to, subject, text) {
+export async function sendMail(to, subject, text, replyTo) {
   const key = Netlify.env.get('RESEND_API_KEY');
   if (!key) return { ok: false, reason: 'mail_not_configured' };
   const from = Netlify.env.get('MAIL_FROM') || 'Portfolio Rached <onboarding@resend.dev>';
   const r = await fetch('https://api.resend.com/emails', {
     method: 'POST',
     headers: { authorization: 'Bearer ' + key, 'content-type': 'application/json' },
-    body: JSON.stringify({ from, to: [to], subject, text })
+    body: JSON.stringify({ from, to: [to], subject: String(subject).replace(/[\r\n]+/g, ' ').slice(0, 200), text, ...(replyTo ? { reply_to: replyTo } : {}) })
   }).catch(() => null);
   return r && r.ok ? { ok: true } : { ok: false, reason: 'mail_failed', status: r ? r.status : 0 };
 }
@@ -94,13 +95,10 @@ export async function sendMail(to, subject, text) {
 // coming from many IP addresses, which the per-visitor lock alone cannot stop.
 export const GLOBAL_FAIL_MAX = 60, GLOBAL_FAIL_WINDOW = 60 * 60 * 1000;
 
-// The dashboard is also served on the main address (Vercel), which proxies /api/admin/* here.
-const TRUSTED_HOSTS = ['rached-chakchouk.vercel.app'];
+// The dashboard is only served by this Netlify site (the Vercel address redirects to it), so the
+// admin API accepts requests from its own origin only, and per-visitor limits see the real client IP.
 export function sameOrigin(req) {
   const o = req.headers.get('origin');
   if (!o) return true;
-  try {
-    const h = new URL(o).host;
-    return h === new URL(req.url).host || TRUSTED_HOSTS.includes(h);
-  } catch { return false; }
+  try { return new URL(o).host === new URL(req.url).host; } catch { return false; }
 }

@@ -69,11 +69,11 @@ Logged into `/dashboard/`, the owner can edit the site without touching the code
 
 ## Deployment
 
-Hosted on **Netlify**. Every push to `main` redeploys the site automatically.
+Hosted on **Vercel** (main address) and **Netlify** (backup address + back-end). Every push to `main` redeploys both.
 
 ## Security
 
-Security headers (CSP, HSTS, clickjacking protection, strict referrer and permissions policies) are defined in `_headers`. See [SECURITY.md](SECURITY.md) to report a vulnerability.
+Security headers (CSP, HSTS, clickjacking protection, strict referrer and permissions policies) are defined in `vercel.json` and `_headers` (checked identical in CI). Conformity checklist: [docs/SECURITE.md](docs/SECURITE.md). See [SECURITY.md](SECURITY.md) to report a vulnerability.
 
 ## License
 
@@ -88,23 +88,37 @@ Security headers (CSP, HSTS, clickjacking protection, strict referrer and permis
 
 - **Main address:** https://rached-chakchouk.vercel.app — indexed by search engines, canonical URL of the site.
 - **Backup address:** https://rached-chakchouk.netlify.app — same site, `noindex` (robots.txt + `X-Robots-Tag`), and home of the back-end:
-  dashboard, content API, CV/photo storage (Netlify Blobs), visit analytics and the Netlify contact form.
+  dashboard, content API, CV/photo storage (Netlify Blobs), visit analytics and the contact function.
 - `vercel.json` + `scripts/vercel-build.mjs`: Vercel publishes only the public static files (no dashboard, no server code), same security headers.
+- `netlify.toml` + `scripts/netlify-build.mjs`: Netlify publishes `dist/` (public files + dashboard), never the repository itself.
 - `api/` (Vercel functions): content, CV and photo are read from the Netlify back-end, with the static files as fallback;
-  the contact form is forwarded to the Netlify form, so messages still arrive by e-mail.
+  `/api/contact` is rewritten to the Netlify contact function (reCAPTCHA + e-mail).
 - Visits on both addresses are counted: on Vercel the tracker sends its beacon to the Netlify `/api/track` (allowed origin, CSP `connect-src`).
-- `/dashboard/` on Vercel redirects to the Netlify dashboard.
+- `/dashboard/` on Vercel redirects to the Netlify dashboard (the admin API is no longer proxied by Vercel, so login limits see the real visitor address).
 
-### Contact form anti-spam: Google reCAPTCHA v3 (Vercel address)
+### Contact form, reCAPTCHA and e-mail
 
-Messages sent from the Vercel address carry an invisible reCAPTCHA v3 token, checked server-side in `api/contact.js`
-(`api/_recaptcha.js`: success, action `contact`, hostname, token age and minimum score). Google's script is only loaded
-when the visitor starts using the form. Vercel → Project → Settings → Environment Variables:
+`POST /api/contact` is a Netlify function (`netlify/functions/contact.mjs`); the Vercel address rewrites it there.
+It checks the origin, the fields and a honeypot, verifies an invisible **Google reCAPTCHA v3** token
+(`netlify/lib/recaptcha.mjs`: success, action, hostname, token age, minimum score), applies global rate limits,
+then e-mails the message through **Resend** (reply-to = the sender). Netlify Forms is no longer used, so there is
+no public form endpoint that skips these checks. The dashboard login and "forgotten password" use reCAPTCHA too.
 
-| Variable | Role |
-|---|---|
-| `RECAPTCHA_SITE_KEY` | public site key, injected into the page at build time (`<meta name="recaptcha-site-key">`) |
-| `RECAPTCHA_SECRET_KEY` | secret key; when set, every message **must** pass the check |
-| `RECAPTCHA_MIN_SCORE` | optional, `0.0`–`1.0`, default `0.5` |
+| Variable | Where | Role |
+|---|---|---|
+| `RECAPTCHA_SITE_KEY` | Netlify **and** Vercel | public site key, injected into the pages at build time |
+| `RECAPTCHA_SECRET_KEY` | Netlify | secret key; when set, contact / login / forgotten password **require** a valid token |
+| `RECAPTCHA_MIN_SCORE` | Netlify | optional, `0.0`–`1.0`, default `0.5` |
+| `RESEND_API_KEY`, `MAIL_FROM`, `ADMIN_EMAIL` | Netlify | e-mail delivery (already used by "forgotten password") |
+| `LICENCE_EXIGER_CLE` | Netlify | `1` = the Omori licence check requires the full key (once every Omori version sends it) |
 
-Keys: https://www.google.com/recaptcha/admin/create → reCAPTCHA v3, domain `rached-chakchouk.vercel.app`. Redeploy after setting them.
+Keys: https://www.google.com/recaptcha/admin/create → reCAPTCHA v3, domains `rached-chakchouk.vercel.app` and
+`rached-chakchouk.netlify.app`. Redeploy both sites after setting them.
+
+### Builds and tests
+
+- `npm test` — security unit tests (rate-limit counters, reCAPTCHA, session tokens, URL sanitizing, upload checks).
+- `scripts/vercel-build.mjs` → `public/`, `scripts/netlify-build.mjs` → `dist/`: only the public files are published
+  (list in `scripts/build-common.mjs`); server code, repo docs and config are never served. The dashboard is only on Netlify.
+- CI (`.github/workflows/tests.yml`): tests, both builds, no server file published, same security headers on both hosts.
+- Security conformity checklist (OWASP Top 10 / ASVS level 1): [docs/SECURITE.md](docs/SECURITE.md).

@@ -1,4 +1,4 @@
-import { authorized, makeToken, visitorHash, bump, peek } from '../lib/analytics.mjs';
+import { authorized, makeToken, visitorHash, hit, count } from '../lib/analytics.mjs';
 import { secStore, loadState, saveState, signingKey, checkPassword, hashPassword, passwordProblem, sameOrigin, GLOBAL_FAIL_WINDOW } from '../lib/auth.mjs';
 
 // POST /api/admin/password {current?, next} (Bearer session token) -> new {token, exp}.
@@ -25,12 +25,12 @@ export default async (req, context) => {
   if (kind === 'm') {
     const who = await visitorHash(context.ip || '', 'login', Netlify.env.get('ANALYTICS_SALT') || 'rc-portfolio', 'auth');
     const key = 'login-fail/' + who;
-    const lock = await peek(sec, key);
+    const lock = await count(sec, key);
     if (lock && lock.n >= MAX_FAILS) return json({ error: 'locked', retryAfter: Math.ceil((lock.until - Date.now()) / 1000) }, 429);
     if ((await checkPassword(body.current, state)) !== 'main') {
       await new Promise(r => setTimeout(r, 700));
-      await bump(sec, key, LOCK_MS);
-      await bump(sec, 'login-fail/all', GLOBAL_FAIL_WINDOW);
+      await hit(sec, key, LOCK_MS);
+      await hit(sec, 'login-fail/all', GLOBAL_FAIL_WINDOW);
       return json({ error: 'wrong_current' }, 403);
     }
   }

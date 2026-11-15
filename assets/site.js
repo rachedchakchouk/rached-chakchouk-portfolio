@@ -235,14 +235,13 @@
     }
   }
 
-  // contact form: sends automatically to the configured endpoint (Formspree-compatible JSON POST)
-  // Netlify Forms: the form is detected at deploy time (data-netlify) and submissions arrive in Netlify → Forms + e-mail notification.
-  var CONTACT_ENDPOINT = location.hostname === BACKUP_HOST ? '/' : MIRROR ? '/api/contact' : '';
+  // contact form -> /api/contact (Netlify function; Vercel rewrites it there): reCAPTCHA v3 check, then e-mail via Resend
+  var CONTACT_ENDPOINT = PROD ? '/api/contact' : '';
   var form = document.getElementById('contactForm');
   if (form) {
     var T = {
-      fr: { name: 'Indiquez votre nom.', email: 'Indiquez un e-mail valide (ex. nom@domaine.com).', msg: 'Écrivez un message d\u2019au moins 10 caractères.', sending: 'Envoi en cours…', ok: 'Message envoyé. Je vous réponds rapidement.', ko: 'L\u2019envoi a échoué. Copiez mon e-mail ci-dessous et écrivez-moi directement.', bot: 'La vérification anti-spam (reCAPTCHA) a échoué. Réessayez, ou copiez mon e-mail ci-dessous.', off: 'L\u2019envoi automatique n\u2019est pas encore activé. Copiez mon e-mail ci-dessous.' },
-      en: { name: 'Enter your name.', email: 'Enter a valid e-mail (e.g. name@domain.com).', msg: 'Write a message of at least 10 characters.', sending: 'Sending…', ok: 'Message sent. I will get back to you shortly.', ko: 'Sending failed. Copy my e-mail below and write to me directly.', bot: 'The anti-spam check (reCAPTCHA) failed. Please try again, or copy my e-mail below.', off: 'Automatic sending is not enabled yet. Copy my e-mail below.' }
+      fr: { name: 'Indiquez votre nom.', email: 'Indiquez un e-mail valide (ex. nom@domaine.com).', msg: 'Écrivez un message d\u2019au moins 10 caractères.', sending: 'Envoi en cours…', ok: 'Message envoyé. Je vous réponds rapidement.', ko: 'L\u2019envoi a échoué. Copiez mon e-mail ci-dessous et écrivez-moi directement.', bot: 'La vérification anti-spam (reCAPTCHA) a échoué. Réessayez, ou copiez mon e-mail ci-dessous.', busy: 'Trop de messages reçus en ce moment. Réessayez plus tard ou copiez mon e-mail ci-dessous.', off: 'L\u2019envoi automatique n\u2019est pas encore activé. Copiez mon e-mail ci-dessous.' },
+      en: { name: 'Enter your name.', email: 'Enter a valid e-mail (e.g. name@domain.com).', msg: 'Write a message of at least 10 characters.', sending: 'Sending…', ok: 'Message sent. I will get back to you shortly.', ko: 'Sending failed. Copy my e-mail below and write to me directly.', bot: 'The anti-spam check (reCAPTCHA) failed. Please try again, or copy my e-mail below.', busy: 'Too many messages right now. Please try again later or copy my e-mail below.', off: 'Automatic sending is not enabled yet. Copy my e-mail below.' }
     };
     function t(k) { return T[root.getAttribute('data-lang') === 'en' ? 'en' : 'fr'][k]; }
     function check(id, ok, key) {
@@ -259,17 +258,17 @@
       if (f._gotcha.value) return;
       if (!CONTACT_ENDPOINT) { st.textContent = t('off'); return; }
       var btn = form.querySelector('.send'); btn.disabled = true; st.textContent = t('sending');
-      var payload = new URLSearchParams({ 'form-name': 'contact', name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim(), _gotcha: '' });
+      var payload = new URLSearchParams({ name: f.name.value.trim(), email: f.email.value.trim(), message: f.message.value.trim(), _gotcha: '' });
       (RC_KEY ? rcToken().then(function (tk) { payload.set('recaptcha', tk); }) : Promise.resolve())
         .then(function () { return fetch(CONTACT_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: payload.toString() }); })
         .then(function (r) { if (!r.ok) { var er = new Error(r.status); er.status = r.status; throw er; } st.textContent = t('ok'); form.reset(); })
-        .catch(function (er) { st.textContent = t(er && (er.rc || er.status === 403) && RC_KEY ? 'bot' : 'ko'); })
+        .catch(function (er) { st.textContent = t(er && (er.rc || er.status === 403) && RC_KEY ? 'bot' : er && er.status === 429 ? 'busy' : 'ko'); })
         .then(function () { btn.disabled = false; });
     });
-    // Google reCAPTCHA v3 (Vercel address only, when a site key was injected at build time).
+    // Google reCAPTCHA v3 (when a site key was injected at build time).
     // The Google script is only loaded once the visitor starts using the form.
     var rcMeta = document.querySelector('meta[name="recaptcha-site-key"]');
-    var RC_KEY = MIRROR && rcMeta && /^[\w-]{20,80}$/.test(rcMeta.content) ? rcMeta.content : '';
+    var RC_KEY = PROD && rcMeta && /^[\w-]{20,80}$/.test(rcMeta.content) ? rcMeta.content : '';
     var rcLoading = null;
     function rcLoad() {
       if (!rcLoading) rcLoading = new Promise(function (ok, ko) {

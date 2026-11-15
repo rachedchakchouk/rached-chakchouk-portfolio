@@ -1,45 +1,23 @@
 // Vercel build (main address): copies only the public static files into ./public
-// (server code and repo docs stay on the Netlify back-end; the dashboard page is served here too,
-// its /api/admin/* and /api/stats calls are proxied to Netlify by the rewrites in vercel.json).
-import { cpSync, mkdirSync, rmSync, existsSync, writeFileSync, readFileSync, readdirSync, statSync } from 'node:fs';
+// (server code, repo docs and the private dashboard stay on the Netlify back-end).
+import { writeFileSync, readFileSync, readdirSync, statSync } from 'node:fs';
+import { copyPublic, injectSiteKey } from './build-common.mjs';
 
 const OUT = 'public';
-const KEEP = [
-  'index.html', 'content.json', 'photo.jpg', 'preview.webp', 'favicon-32.png', 'apple-touch-icon.png',
-  'Rached_Chakchouk_CV_FR.pdf', 'Rached_Chakchouk_CV_EN.pdf', 'LICENSE',
-  'assets/site.js', 'assets/va.js', 'assets/dashboard.js', 'dashboard', 'assets/a11y.js', 'assets/carbon.js', 'assets/totop.js', 'assets/float.js', 'merci', 'offshore-it-tunisie','entretien','jobradar','conditions','og-image.jpg','google08e1049584d7cb5a.html', 'feuille-de-route-ad11909f710d66a6', 'cv', 'bg', 'logos', 'projects', '.well-known'
-];
-rmSync(OUT, { recursive: true, force: true });
-mkdirSync(OUT + '/assets', { recursive: true });
-for (const p of KEEP) if (existsSync(p)) cpSync(p, OUT + '/' + p, { recursive: true });
+copyPublic(OUT); // the dashboard is not published here: /dashboard redirects to the Netlify back-end
 // Vercel Web Analytics on every public page (not on the private dashboard)
 const VA = '<script defer src="/assets/va.js"></script>';
 (function inject(dir) {
   for (const f of readdirSync(dir)) {
     const p = dir + '/' + f;
-    if (statSync(p).isDirectory()) { if (p !== OUT + '/dashboard') inject(p); continue; }
+    if (statSync(p).isDirectory()) { inject(p); continue; }
     if (!f.endsWith('.html')) continue;
     const h = readFileSync(p, 'utf8');
     if (h.includes('/assets/va.js') || !h.includes('</head>')) continue;
     writeFileSync(p, h.replace('</head>', VA + '\n</head>'));
   }
 })(OUT);
-// reCAPTCHA v3 public site key (Vercel env RECAPTCHA_SITE_KEY) -> <meta name="recaptcha-site-key"> of the home page.
-// Without it the contact form works as before (no captcha on the client side).
-{
-  const key = (process.env.RECAPTCHA_SITE_KEY || '').trim();
-  const page = OUT + '/index.html';
-  if (key && !/^[\w-]{20,80}$/.test(key)) throw new Error('RECAPTCHA_SITE_KEY has an unexpected format');
-  if (key) {
-    const h = readFileSync(page, 'utf8');
-    const out = h.replace('<meta name="recaptcha-site-key" content="">', '<meta name="recaptcha-site-key" content="' + key + '">');
-    if (out === h) throw new Error('recaptcha-site-key placeholder not found in index.html');
-    writeFileSync(page, out);
-    console.log('reCAPTCHA v3 site key injected');
-  } else if (process.env.RECAPTCHA_SECRET_KEY) {
-    throw new Error('RECAPTCHA_SECRET_KEY is set but RECAPTCHA_SITE_KEY is missing: the contact form would reject every message');
-  }
-}
+injectSiteKey(OUT, ['index.html']);
 // Vercel is the main address: open to search engines (the repo robots.txt is the Netlify backup's, which blocks them)
 writeFileSync(OUT + '/robots.txt', 'User-agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /api/\nDisallow: /merci/\n\nSitemap: https://rached-chakchouk.vercel.app/sitemap.xml\n');
 // Plan du site pour les moteurs de recherche (pages publiques, versions FR / EN)

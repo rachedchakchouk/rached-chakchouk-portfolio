@@ -6,27 +6,32 @@
   "redirects": [
     {
       "source": "/dashboard",
-      "destination": "/dashboard/",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
+      "permanent": false
+    },
+    {
+      "source": "/dashboard/:path*",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     },
     {
       "source": "/dashborad",
-      "destination": "/dashboard/",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     },
     {
-      "source": "/dashborad/",
-      "destination": "/dashboard/",
+      "source": "/dashborad/:path*",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     },
     {
       "source": "/admin",
-      "destination": "/dashboard/",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     },
     {
-      "source": "/admin/",
-      "destination": "/dashboard/",
+      "source": "/admin/:path*",
+      "destination": "https://rached-chakchouk.netlify.app/dashboard/",
       "permanent": false
     }
   ],
@@ -36,12 +41,8 @@
       "destination": "https://rached-chakchouk.netlify.app/api/licences-dddb99be0d/:path*"
     },
     {
-      "source": "/api/admin/:path*",
-      "destination": "https://rached-chakchouk.netlify.app/api/admin/:path*"
-    },
-    {
-      "source": "/api/stats",
-      "destination": "https://rached-chakchouk.netlify.app/api/stats"
+      "source": "/api/contact",
+      "destination": "https://rached-chakchouk.netlify.app/api/contact"
     },
     {
       "source": "/media/:name",
@@ -100,19 +101,6 @@
         {
           "key": "Cache-Control",
           "value": "public, max-age=0, must-revalidate"
-        }
-      ]
-    },
-    {
-      "source": "/dashboard/(.*)",
-      "headers": [
-        {
-          "key": "X-Robots-Tag",
-          "value": "noindex, nofollow"
-        },
-        {
-          "key": "Cache-Control",
-          "value": "no-store"
         }
       ]
     }

@@ -161,7 +161,36 @@ export async function authorized(req, secret) {
   return false;
 }
 
-// ---- simple counters in Netlify Blobs (rate limiting) ----
+// ---- security counters (login, forgotten password, contact, licences) ----
+// Append-only: every hit is its own blob "<key>/<expiry>-<random>", and counting lists the prefix.
+// Unlike read-modify-write counters, parallel requests cannot overwrite each other's hit
+// (no lost updates => limits cannot be bypassed by sending many requests at the same time).
+// Use them on a store opened with { consistency: 'strong' }.
+const HIT_RE = /\/(\d{13})-[a-z0-9]+$/;
+export async function hit(store, key, ttlMs, now = Date.now()) {
+  await store.set(`${key}/${now + ttlMs}-${Math.random().toString(36).slice(2, 10)}`, '1');
+  return (await count(store, key, now)) || { n: 1, until: now + ttlMs };
+}
+// -> { n, until } or null; until = expiry of the most recent active hit (conservative retry-after)
+export async function count(store, key, now = Date.now()) {
+  const { blobs } = await store.list({ prefix: key + '/' }).catch(() => ({ blobs: [] }));
+  let n = 0, until = 0;
+  const expired = [];
+  for (const b of blobs) {
+    const m = HIT_RE.exec(b.key);
+    if (!m || !b.key.startsWith(key + '/') || b.key.slice(key.length + 1).includes('/')) continue;
+    const exp = Number(m[1]);
+    if (exp > now) { n++; if (exp > until) until = exp; } else expired.push(b.key);
+  }
+  if (expired.length) Promise.all(expired.slice(0, 50).map(k => store.delete(k).catch(() => {}))).catch(() => {});
+  return n ? { n, until } : null;
+}
+export async function clearHits(store, key) {
+  const { blobs } = await store.list({ prefix: key + '/' }).catch(() => ({ blobs: [] }));
+  await Promise.all(blobs.map(b => store.delete(b.key).catch(() => {})));
+}
+
+// ---- simple counters in Netlify Blobs (visit analytics only: approximate under concurrency) ----
 export async function bump(store, key, ttlMs) {
   const now = Date.now();
   const cur = await store.get(key, { type: 'json' }).catch(() => null);
