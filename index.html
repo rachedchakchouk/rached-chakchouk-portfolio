@@ -7,6 +7,7 @@
 <title>Rached Chakchouk – Ingénieur Full Stack Java / Spring Boot / Angular · Tunis</title>
 <meta name="description" content="Rached Chakchouk, ingénieur Full Stack Java / Spring Boot / Angular à Tunis : 4 ans d'expérience en applications métier (facturation et gestion de stock, GRH et paie), PostgreSQL, Docker, IA. CV, projets et contact.">
 <meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="recaptcha-site-key" content="">
 <link rel="alternate" hreflang="fr" href="https://rached-chakchouk.vercel.app/">
 <link rel="alternate" hreflang="en" href="https://rached-chakchouk.vercel.app/?lang=en">
 <link rel="alternate" hreflang="x-default" href="https://rached-chakchouk.vercel.app/">
@@ -338,6 +339,10 @@ body.has-pointer .cursor-glow { opacity: 1; }
 .cform .send:disabled { opacity: .6; cursor: progress; }
 .cform .status { font-size: 14px; color: #fff; min-height: 20px; }
 .hp { position: absolute; left: -9999px; }
+.cform .rc-note { margin: 0; font-size: 12px; line-height: 1.5; color: rgba(255,255,255,.7); }
+.cform .rc-note a { color: #fff; }
+/* the reCAPTCHA badge is hidden: the notice above replaces it, as allowed by Google */
+.grecaptcha-badge { visibility: hidden; }
 @media (max-width: 640px) { .cform .frow { grid-template-columns: 1fr; } }
 
 .edu > div { align-items: flex-start; }
@@ -715,6 +720,7 @@ main:focus{outline:none}
       <input class="hp" type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true">
       <button class="send" type="submit"><span data-l="fr">Envoyer</span><span data-l="en">Send</span> →</button>
       <div class="status" id="cf-status" role="status" aria-live="polite"></div>
+      <p class="rc-note" id="cf-recaptcha" hidden><span data-l="fr">Ce formulaire est protégé par reCAPTCHA : les <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">règles de confidentialité</a> et les <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">conditions d’utilisation</a> de Google s’appliquent.</span><span data-l="en">This form is protected by reCAPTCHA and the Google <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer">Terms of Service</a> apply.</span></p>
     </form>
     <div class="contact-grid">
       <div class="ccard">

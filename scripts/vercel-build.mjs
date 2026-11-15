@@ -24,6 +24,22 @@ const VA = '<script defer src="/assets/va.js"></script>';
     writeFileSync(p, h.replace('</head>', VA + '\n</head>'));
   }
 })(OUT);
+// reCAPTCHA v3 public site key (Vercel env RECAPTCHA_SITE_KEY) -> <meta name="recaptcha-site-key"> of the home page.
+// Without it the contact form works as before (no captcha on the client side).
+{
+  const key = (process.env.RECAPTCHA_SITE_KEY || '').trim();
+  const page = OUT + '/index.html';
+  if (key && !/^[\w-]{20,80}$/.test(key)) throw new Error('RECAPTCHA_SITE_KEY has an unexpected format');
+  if (key) {
+    const h = readFileSync(page, 'utf8');
+    const out = h.replace('<meta name="recaptcha-site-key" content="">', '<meta name="recaptcha-site-key" content="' + key + '">');
+    if (out === h) throw new Error('recaptcha-site-key placeholder not found in index.html');
+    writeFileSync(page, out);
+    console.log('reCAPTCHA v3 site key injected');
+  } else if (process.env.RECAPTCHA_SECRET_KEY) {
+    throw new Error('RECAPTCHA_SECRET_KEY is set but RECAPTCHA_SITE_KEY is missing: the contact form would reject every message');
+  }
+}
 // Vercel is the main address: open to search engines (the repo robots.txt is the Netlify backup's, which blocks them)
 writeFileSync(OUT + '/robots.txt', 'User-agent: *\nAllow: /\nDisallow: /dashboard/\nDisallow: /api/\nDisallow: /merci/\n\nSitemap: https://rached-chakchouk.vercel.app/sitemap.xml\n');
 // Plan du site pour les moteurs de recherche (pages publiques, versions FR / EN)

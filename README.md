@@ -94,3 +94,17 @@ Security headers (CSP, HSTS, clickjacking protection, strict referrer and permis
   the contact form is forwarded to the Netlify form, so messages still arrive by e-mail.
 - Visits on both addresses are counted: on Vercel the tracker sends its beacon to the Netlify `/api/track` (allowed origin, CSP `connect-src`).
 - `/dashboard/` on Vercel redirects to the Netlify dashboard.
+
+### Contact form anti-spam: Google reCAPTCHA v3 (Vercel address)
+
+Messages sent from the Vercel address carry an invisible reCAPTCHA v3 token, checked server-side in `api/contact.js`
+(`api/_recaptcha.js`: success, action `contact`, hostname, token age and minimum score). Google's script is only loaded
+when the visitor starts using the form. Vercel → Project → Settings → Environment Variables:
+
+| Variable | Role |
+|---|---|
+| `RECAPTCHA_SITE_KEY` | public site key, injected into the page at build time (`<meta name="recaptcha-site-key">`) |
+| `RECAPTCHA_SECRET_KEY` | secret key; when set, every message **must** pass the check |
+| `RECAPTCHA_MIN_SCORE` | optional, `0.0`–`1.0`, default `0.5` |
+
+Keys: https://www.google.com/recaptcha/admin/create → reCAPTCHA v3, domain `rached-chakchouk.vercel.app`. Redeploy after setting them.
