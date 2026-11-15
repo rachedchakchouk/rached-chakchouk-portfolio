@@ -2,8 +2,16 @@
   "name": "rached-chakchouk-portfolio",
   "private": true,
   "type": "module",
-  "description": "Portfolio + privacy-friendly visit analytics (Netlify Functions + Blobs)",
+  "description": "Portfolio + privacy-friendly visit analytics, contact form and admin API (Netlify Functions + Blobs)",
   "dependencies": {
     "@netlify/blobs": "^10.7.13"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "build:vercel": "node scripts/vercel-build.mjs",
+    "build:netlify": "node scripts/netlify-build.mjs"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }

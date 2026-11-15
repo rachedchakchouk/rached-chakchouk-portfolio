@@ -1,0 +1,47 @@
+# Tests de sécurité (compteurs anti-abus, reCAPTCHA, jetons de session, URL et fichiers envoyés)
+# + vérification que les deux builds (Vercel, Netlify) passent, à chaque push et pull request.
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm test
+      - name: Build Vercel
+        run: node scripts/vercel-build.mjs
+      - name: Build Netlify
+        run: node scripts/netlify-build.mjs
+      - name: Aucun fichier serveur publié
+        run: |
+          for d in public dist; do
+            if find "$d" \( -name '*.mjs' -o -name 'netlify.toml' -o -name 'package.json' -o -name 'README.md' -o -name 'SECURITY.md' -o -path '*/netlify/*' -o -path '*/api/*' -o -path '*/scripts/*' \) | grep .; then
+              echo "::error::fichier serveur ou interne publié dans $d"; exit 1
+            fi
+          done
+          test ! -e public/dashboard || { echo "::error::le dashboard ne doit pas être publié sur Vercel"; exit 1; }
+      - name: En-têtes de sécurité identiques sur les deux hébergeurs
+        run: |
+          node -e '
+            const v = require("./vercel.json").headers.find(h => h.source === "/(.*)").headers;
+            const n = require("fs").readFileSync("_headers", "utf8");
+            const want = ["Strict-Transport-Security","Content-Security-Policy","X-Frame-Options","X-Content-Type-Options","Referrer-Policy","Permissions-Policy","Cross-Origin-Opener-Policy"];
+            for (const k of want) {
+              if (!v.find(h => h.key === k)) { console.error("vercel.json: " + k + " manquant"); process.exit(1); }
+              if (!n.includes(k + ":")) { console.error("_headers: " + k + " manquant"); process.exit(1); }
+            }
+            const csp = v.find(h => h.key === "Content-Security-Policy").value;
+            if (/script-src[^;]*unsafe-(inline|eval)/.test(csp)) { console.error("CSP: unsafe-inline/eval interdit dans script-src"); process.exit(1); }
+            console.log("en-têtes OK");'

@@ -19,6 +19,22 @@
   function armExpiry(exp) { clearTimeout(expTimer); expTimer = setTimeout(function () { pw = null; sset('rc_tok', null); showLogin('Session expirée (2 h) : reconnectez-vous.'); }, Math.max(0, exp - Date.now())); }
   if (tok) armExpiry(tok.exp);
 
+  // Google reCAPTCHA v3 on login / forgotten password (site key injected at build time into <meta name="recaptcha-site-key">)
+  var rcMeta = document.querySelector('meta[name="recaptcha-site-key"]');
+  var RC_KEY = rcMeta && /^[\w-]{20,80}$/.test(rcMeta.content) ? rcMeta.content : '', rcLoading = null;
+  function rcToken(action) {
+    if (!RC_KEY) return Promise.resolve('');
+    if (!rcLoading) rcLoading = new Promise(function (ok, ko) {
+      var sc = document.createElement('script');
+      sc.src = 'https://www.google.com/recaptcha/api.js?render=' + encodeURIComponent(RC_KEY); sc.async = true;
+      sc.onerror = function () { rcLoading = null; ko(new Error('recaptcha_load')); };
+      sc.onload = function () { window.grecaptcha.ready(ok); };
+      document.head.appendChild(sc);
+    });
+    return rcLoading.then(function () { return window.grecaptcha.execute(RC_KEY, { action: action }); });
+  }
+  function rcMsg(j) { return j && j.error === 'captcha_failed' ? 'Vérification anti-robot (reCAPTCHA) refusée : réessayez.' : j && j.error === 'captcha_unavailable' ? 'Vérification anti-robot momentanément indisponible : réessayez.' : ''; }
+
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function flag(cc) { return cc && /^[A-Z]{2}$/.test(cc) ? String.fromCodePoint.apply(null, cc.split('').map(function (c) { return 127397 + c.charCodeAt(0); })) + ' ' : ''; }
   function fmt(n) { return Number(n || 0).toLocaleString('fr-FR'); }
@@ -30,11 +46,12 @@
     e.preventDefault(); var v = document.getElementById('pw').value;
     if (!v) { document.getElementById('loginErr').textContent = 'Saisissez votre mot de passe.'; return; }
     var btn = this.querySelector('button[type=submit]'); btn.disabled = true;
-    fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: v }), cache: 'no-store' })
+    rcToken('login').then(function (tk) { return fetch('/api/admin/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ password: v, recaptcha: tk }), cache: 'no-store' }); })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
       .then(function (x) {
         document.getElementById('pw').value = '';
         if (x.r.status === 429) return showLogin('Trop de tentatives : réessayez dans ' + Math.ceil((x.j.retryAfter || 900) / 60) + ' min.');
+        if (rcMsg(x.j)) return showLogin(rcMsg(x.j));
         if (x.r.status === 503) return showLogin('Le dashboard n’est pas configuré (DASHBOARD_PASSWORD manquant dans Netlify).');
         if (!x.r.ok || !x.j.token) return showLogin('Mot de passe incorrect.' + (x.j.remaining != null ? ' Tentatives restantes : ' + x.j.remaining + '.' : ''));
         pw = x.j.token; demo = false; sset('rc_tok', JSON.stringify(x.j)); armExpiry(x.j.exp);
@@ -49,11 +66,12 @@
   document.getElementById('forgotBtn').addEventListener('click', function () {
     var b = this, err = document.getElementById('loginErr'), info = document.getElementById('loginInfo');
     b.disabled = true; err.textContent = ''; info.textContent = 'Envoi en cours…';
-    fetch('/api/admin/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}', cache: 'no-store' })
+    rcToken('forgot').then(function (tk) { return fetch('/api/admin/forgot', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ recaptcha: tk }), cache: 'no-store' }); })
       .then(function (r) { return r.json().catch(function () { return {}; }).then(function (j) { return { r: r, j: j }; }); })
       .then(function (x) {
         info.textContent = '';
         if (x.r.ok) { info.textContent = 'Un mot de passe provisoire a été envoyé à ' + (x.j.to || 'votre adresse') + '. Il est valable ' + (x.j.validMinutes || 15) + ' min et ne sert qu’une fois.'; return; }
+        if (rcMsg(x.j)) { err.textContent = rcMsg(x.j); return; }
         if (x.r.status === 429) { err.textContent = 'Trop de demandes : réessayez dans ' + Math.ceil((x.j.retryAfter || 3600) / 60) + ' min.'; return; }
         if (x.j.error === 'mail_not_configured') { err.textContent = 'L’envoi d’e-mails n’est pas configuré (RESEND_API_KEY manquant dans Netlify).'; return; }
         err.textContent = 'L’e-mail n’a pas pu être envoyé. Réessayez plus tard.';
